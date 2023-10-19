@@ -1,0 +1,19 @@
+.navList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.navListElem {
+    float: left;
+    padding: 16px;
+}
+
+.navListElem:last-child {
+    float: right;
+}
+
+.navListLink {
+    display: block;
+}

@@ -1,3 +1,5 @@
+/* If different CSS is desired for another component, name that file 
+"[ComponentName].module.css" */
 html,
 body {
   padding: 0;
@@ -18,7 +20,7 @@ body {
 }
 
 a {
-  color: inherit;
+  color: grey;
   text-decoration: none;
 }
 
