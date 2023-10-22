@@ -14,7 +14,10 @@ export default async function RootLayout({ children }) {
         <html lang='en'>
             <body>
                 <Navbar user={user} />
-                {children}
+                <main style={{ margin: '10px 100px' }}>
+                    {children}
+                </main>
+
             </body>
         </html>
     )

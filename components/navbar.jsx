@@ -1,6 +1,6 @@
 'use client';
 
-import { navList, navListElem, floatRight, navListLink } from '../styles/navbar.module.css';
+import { navList, navListElem, floatRight, navListLink, btn } from '../styles/navbar.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -8,7 +8,7 @@ export default function Navbar({ user }) {
     const router = useRouter()
 
     const logout = async () => {
-        await fetch(`http://localhost:3000/auth/logout`, {
+        await fetch(`/auth/logout`, {
             method: 'post',
         });
         router.refresh(); // HACK? This overrides the logout redirect, so that's gone.
@@ -30,7 +30,7 @@ export default function Navbar({ user }) {
                     </li>
                     <li className={`${navListElem} ${floatRight}`}>
                         {user
-                            ? <button onClick={logout}>Logout</button>
+                            ? <button onClick={logout} className={btn}>Logout</button>
                             : <Link className={navListLink} href='/login'>GET IN!</Link>
                         }
                     </li>

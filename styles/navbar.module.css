@@ -7,7 +7,9 @@
 
 .navListElem {
     float: left;
-    padding: 16px;
+    padding: 24px 32px;
+    /* MATCH1 */
+    font-size: 20px;
 }
 
 .navListElem:last-child {
@@ -16,4 +18,20 @@
 
 .navListLink {
     display: block;
+    color: black;
+    letter-spacing: 1px;
+}
+
+.btn {
+    padding: 0;
+    border: none;
+    background: none;
+    /* MATCH1 */
+    font-size: 20px;
+    color: black;
+    letter-spacing: 1px;
+}
+
+.btn:hover {
+    cursor: pointer;
 }
