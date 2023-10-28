@@ -4,8 +4,9 @@ import { navList, navListElem, floatRight, navListLink, btn } from '../styles/na
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+
 export default function Navbar({ user }) {
-    const router = useRouter()
+    const router = useRouter();
 
     const logout = async () => {
         await fetch(`/auth/logout`, {
@@ -30,7 +31,7 @@ export default function Navbar({ user }) {
                     </li>
                     <li className={`${navListElem} ${floatRight}`}>
                         {user
-                            ? <button onClick={logout} className={btn}>Logout</button>
+                            ? <button onClick={logout} className={btn}>Logout {user.id}</button>
                             : <Link className={navListLink} href='/login'>GET IN!</Link>
                         }
                     </li>

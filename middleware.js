@@ -5,15 +5,19 @@ export async function middleware(req) {
     const res = NextResponse.next();
     const supabase = createMiddlewareClient({ req, res });
     const { data: { session } } = await supabase.auth.getSession();
-    // NOT LOGGED IN
+
+    // Registered users only
     if (!session) {
+        // Guests cannot upload
         if (
             req.nextUrl.pathname.startsWith('/upload')
         ) {
             return NextResponse.redirect(new URL('/login', req.url));
         }
     }
+    // Unregistered users only only
     else {
+        //Registered users cannot login, register, or reset password
         if (
             req.nextUrl.pathname.startsWith('/login') ||
             req.nextUrl.pathname.startsWith('/register') ||

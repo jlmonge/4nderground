@@ -3,19 +3,25 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-function Status({ invalid, uploaded, path }) {
+function Status({ invalid, tooLong, uploaded, path }) {
     if (invalid) {
         return (
             <>
-                <p>Invalid file</p>
+                <p style={{ color: 'red' }}>Invalid file</p>
             </>
         )
+    }
+
+    if (tooLong) {
+        return (<>
+            <p style={{ color: 'red' }}>Tracks must be under 45 seconds</p>
+        </>)
     }
 
     if (uploaded) {
         return (
             <>
-                <p>
+                <p style={{ color: 'green' }}>
                     Upload successful! Click
                     <Link href={`/player/${encodeURIComponent(path)}`}> here</Link> to
                     listen to your track. (actually look below for now)
@@ -25,6 +31,15 @@ function Status({ invalid, uploaded, path }) {
             </>
         )
     }
+    /*
+    return (
+        <>
+            <p>
+                status debug: {String(invalid)} {String(tooLong)}
+            </p>
+        </>
+    )
+    */
 
 }
 
@@ -39,12 +54,14 @@ export default function Upload() {
     const [filePath, setFilePath] = useState('');
     const [isInvalid, setIsInvalid] = useState(false);
     const [isUploaded, setIsUploaded] = useState(false);
+    const [isTooLong, setIsTooLong] = useState(false);
 
     const handleChange = (e) => {
         let nextFile = e.target.files?.[0];
         setFile(nextFile);
         setFilePath('');
         setIsUploaded(false);
+        setIsTooLong(false);
         if (!nextFile?.type.match('audio.*')) {
             setIsInvalid(true);
         }
@@ -62,7 +79,7 @@ export default function Upload() {
         }
         setIsInvalid(false);
 
-        console.log(file); // PRINT!!!!!!!!!!!
+        // console.log(file); // PRINT!!!!!!!!!!!
         try {
             const data = new FormData();
             data.set('file', file);
@@ -72,8 +89,17 @@ export default function Upload() {
                 body: data,
             });
 
+
             if (!res.ok) {
-                throw new Error(await res.text());
+                res.json().then((json) => {
+                    if (json.reason == 'too-long') {
+                        setIsTooLong(true);
+                    } else if (json.reason == 'no-file') {
+                        console.log("what");
+                    }
+                    //throw new Error(json);
+                });
+
             } else {
                 setIsUploaded(true);
                 const resJson = await res.json();
@@ -96,7 +122,7 @@ export default function Upload() {
                 />
                 <button type='submit' disabled={!file || isInvalid}>Upload</button>
             </form>
-            <Status invalid={isInvalid} uploaded={isUploaded} path={filePath}></Status>
+            <Status invalid={isInvalid} tooLong={isTooLong} uploaded={isUploaded} path={filePath}></Status>
             <h1>...or record now</h1>
             <em>[FEATURE NOT YET AVAILABLE]</em>
         </>
