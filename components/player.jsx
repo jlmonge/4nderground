@@ -25,7 +25,7 @@ export default function Player({ user }) {
         }
         return (
             <>
-                <button style={{ backgroundColor: 'black' }} onClick={handleClick}>
+                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button'>
                     <Image
                         src="skip-back.svg"
                         width={btnSize}
@@ -44,7 +44,7 @@ export default function Player({ user }) {
         }
         return (
             <>
-                <button style={{ backgroundColor: 'black' }} onClick={handleClick}>
+                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button'>
                     <Image
                         src="skip-forward.svg"
                         width={btnSize}
@@ -64,7 +64,7 @@ export default function Player({ user }) {
         }
         return (
             <>
-                <button style={{ backgroundColor: 'black' }} onClick={handleClick}>
+                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button'>
                     <Image
                         src={playing ? "pause.svg" : "play.svg"}
                         width={btnSize}
@@ -94,19 +94,18 @@ export default function Player({ user }) {
         const fetchTracks = async () => {
             let { data, error } = await supabase
                 .from('tracks')
-                .select('*')
+                .select()
+                //.rangeGt('created_at', )
                 .order('created_at', { ascending: false });
 
             setTracks(data);
         }
         fetchTracks()
-        // HACK SOLUTION TO LOADING THE FIRST TRACK UPON LOADING PLAYER PAGE
-        setTrackIndex(0);
     }, [])
 
     useEffect(() => {
         if (tracks.length) {
-            let file_name = (tracks[trackIndex].file_path).slice(7)
+            let file_name = (tracks[trackIndex].file_path).slice(7);
             load(`${file_name}`, {
                 autoplay: true,
                 onend: () => setTrackIndex((trackIndex + 1) % tracks.length)
@@ -151,7 +150,7 @@ export default function Player({ user }) {
                         <p>By {track.uploader_id}</p>
                         <p>{track.duration}s</p>
                         <p>Posted {track.created_at}s</p>
-                        <p>Located {track.file_path}s</p>
+                        <p>Located at {track.file_path}s</p>
                         <hr />
                     </>)
 

@@ -1,11 +1,15 @@
 import './global.css';
+// run 'npx @next/codemod@latest built-in-next-font .'
 import { Roboto_Flex } from '@next/font/google'
 import createClient from '../components/supabase-server';
 import Navbar from '../components/navbar.jsx';
 
 export const metadata = {
-    title: '4nderground',
-};
+    title: {
+        template: '%s | 4nderground.com',
+        default: '4nderground.com',
+    }
+}
 
 const roboto = Roboto_Flex({
     subsets: ['latin'],
