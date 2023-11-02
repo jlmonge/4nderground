@@ -2,10 +2,23 @@
 "[ComponentName].module.css" */
 html,
 body {
-  padding: 0;
   margin: 0;
+  padding: 0;
+  position: relative;
+  height: 100%;
   background-color: black;
   color: white;
+  /*animation: 5s infinite alternate bg;*/
+}
+
+@keyframes bg {
+  from {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(43, 6, 14, 1) 72%, rgba(61, 10, 10, 1) 100%);
+  }
+
+  to {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(43, 6, 14, 1) 72%, rgba(61, 10, 10, 1) 100%);
+  }
 }
 
 a {
@@ -24,7 +37,7 @@ img {
 
 button:not([type]),
 button[type="submit"] {
-  background-color: black;
+  background-color: transparent;
   width: 256px;
   height: 32px;
   color: white;

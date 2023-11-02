@@ -4,9 +4,13 @@ import { NextResponse } from 'next/server'
 export async function middleware(req) {
     const res = NextResponse.next();
     const supabase = createMiddlewareClient({ req, res });
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session }, error } = await supabase.auth.getSession();
 
-    // Registered users only
+    if (error) {
+        res.cookies.delete(`sb-${process.env.SUPABASE_ID}-auth-token`);
+        console.log('deleting cookie');
+    }
+
     if (!session) {
         // Guests cannot upload
         if (

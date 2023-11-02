@@ -1,17 +1,23 @@
 'use client';
 
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useRef } from 'react';
+import Image from 'next/image';
 
-function Header({ title }) {
-    return <h1>{title ? title : 'Default title'}</h1>;
-}
-
-export default function Report() {
+export default function Report({ BTN_SIZE }) {
+    const dialogRef = useRef(null);
     const [reports, setReports] = useState(0);
 
     function handleSubmit(e) {
         e.preventDefault();
         setReports(reports + 1);
+    }
+
+    function handleOpen() {
+        dialogRef.current.showModal();
+    }
+
+    function handleClose() {
+        dialogRef.current.close();
     }
 
     const reportReasons = [{
@@ -25,21 +31,47 @@ export default function Report() {
     },]
 
     return (
-        <div>
-            <Header title='Report' />
-            <form method='post' onSubmit={handleSubmit}>
-                {reportReasons.map((reason) => (
-                    <Fragment key={reason.id}>
-                        <label>
-                            <input type='radio' name='report_reason' value={reason.value} required />
-                            {reason.str}
-                        </label>
-                        <br />
-                    </Fragment>
-                ))}
-                <button type='submit'>Submit</button>
-            </form>
-            <p>You have submitted {reports} {reports == 1 ? 'report' : 'reports'}</p>
-        </div>
+        <>
+            <dialog ref={dialogRef} style={{ backgroundColor: 'black', color: 'white' }}>
+                <button
+                    id='close'
+                    onClick={handleClose}
+                    type='button'
+                    style={{
+                        position: 'absolute',
+                        top: '0',
+                        right: '0',
+                        backgroundColor: 'transparent',
+                        borderStyle: 'none',
+                        padding: '0',
+                        margin: '2px',
+                        fontSize: '16px'
+                    }}>
+                    X
+                </button>
+                <h1>Report</h1>
+                <form method='post' onSubmit={handleSubmit} style={{ alignItems: 'flex-start', }}>
+                    {reportReasons.map((reason) => (
+                        <Fragment key={reason.id}>
+                            <label>
+                                <input type='radio' name='report_reason' value={reason.value} required />
+                                {reason.str}
+                            </label>
+                            <br />
+                        </Fragment>
+                    ))}
+                    <button type='submit'>Submit</button>
+                </form>
+                <p>You have submitted {reports} report{reports == 1 ? '' : 's'}</p>
+            </dialog>
+            <button style={{ backgroundColor: 'black' }} onClick={handleOpen} type='button'>
+                <Image
+                    src="flag.svg"
+                    width={BTN_SIZE}
+                    height={BTN_SIZE}
+                    alt="Skip Back"
+                />
+            </button>
+        </>
     );
 }

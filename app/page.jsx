@@ -6,15 +6,11 @@ export const metadata = {
     title: 'Discover the newest ideas in music | 4nderground',
 }
 
-function Header({ title }) {
-    return <h1>{title ? title : 'Default title'}</h1>;
-}
-
 export default function HomePage() {
 
     return (
         <>
-            <Header title='Welcome to site.com' />
+            <h1>Welcome to site.com</h1>
             <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

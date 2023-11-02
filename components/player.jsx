@@ -1,13 +1,23 @@
 // Must be client component since we're using onClick, useEffect, etc
 'use client';
 
+import styles from '../styles/Player.module.css';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Image from 'next/image';
-import { useEffect, useState, useRef } from 'react';
+import { Suspense, useEffect, useState, useRef } from 'react';
 import { useGlobalAudioPlayer } from 'react-use-audio-player';
 import Report from './report';
 
-const btnSize = 24;
+const BTN_SIZE = 24;
+const TESTING = false; // redundant; replace soon
+
+function Loading() {
+    return (
+        <>
+            <p>Loading content...</p>
+        </>
+    )
+}
 
 export default function Player({ user }) {
     const frameRef = useRef();
@@ -28,8 +38,8 @@ export default function Player({ user }) {
                 <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button'>
                     <Image
                         src="skip-back.svg"
-                        width={btnSize}
-                        height={btnSize}
+                        width={BTN_SIZE}
+                        height={BTN_SIZE}
                         alt="Skip Back"
                     />
                 </button>
@@ -47,8 +57,8 @@ export default function Player({ user }) {
                 <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button'>
                     <Image
                         src="skip-forward.svg"
-                        width={btnSize}
-                        height={btnSize}
+                        width={BTN_SIZE}
+                        height={BTN_SIZE}
                         alt="Skip Forward"
                     />
                 </button>
@@ -67,8 +77,8 @@ export default function Player({ user }) {
                 <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button'>
                     <Image
                         src={playing ? "pause.svg" : "play.svg"}
-                        width={btnSize}
-                        height={btnSize}
+                        width={BTN_SIZE}
+                        height={BTN_SIZE}
                         alt={playing ? "Pause" : "Play"}
                     />
                 </button>
@@ -82,12 +92,19 @@ export default function Player({ user }) {
         }
         return (
             <>
-                <div
+                <p>{Math.round(pos)}</p>
+                {/*<div
                     style={{ height: '100px', width: `${tracks ?? (pos / tracks[trackIndex].duration) * 100}%`, color: '#00FF00' }}
                     className="audioSeekBar__tick"
-                />
+                    onClick={handleClick}
+                />*/}
             </>
         )
+    }
+
+    const animate = () => {
+        setPos(getPosition())
+        frameRef.current = requestAnimationFrame(animate)
     }
 
     useEffect(() => {
@@ -101,6 +118,10 @@ export default function Player({ user }) {
             setTracks(data);
         }
         fetchTracks()
+        if (TESTING) {
+            frameRef.current = window.requestAnimationFrame(animate);
+            return () => cancelAnimationFrame(frameRef.current);
+        }
     }, [])
 
     useEffect(() => {
@@ -108,31 +129,19 @@ export default function Player({ user }) {
             let file_name = (tracks[trackIndex].file_path).slice(7);
             load(`${file_name}`, {
                 autoplay: true,
-                onend: () => setTrackIndex((trackIndex + 1) % tracks.length)
+                html5: true,
+                onend: () => setTrackIndex((trackIndex + 1) % tracks.length),
             })
             console.log(`track index changed, loading: ${file_name}`)
         }
-    }, [load, trackIndex])
 
-    /* Obtained directly from the react-use-audio-player docs
+    }, [load, tracks, trackIndex])
+
+    /* code straight from the react-use-audio-player docs
     useEffect(() => {
-        const animate = () => {
-            setPos(getPosition())
-            frameRef.current = requestAnimationFrame(animate)
-        }
-
-        frameRef.current = window.requestAnimationFrame(animate)
-
-        return () => {
-            if (frameRef.current) {
-                cancelAnimationFrame(frameRef.current)
-            }
-        }
+        
     }, [getPosition])
     */
-
-
-
 
     return (
         <>
@@ -141,21 +150,23 @@ export default function Player({ user }) {
             <SkipBack />
             <PlayPause />
             <SkipForward />
-            <Report />
+            <Report BTN_SIZE={BTN_SIZE} />
             <hr />
-            {tracks?.map((track) => {
-                return (
-                    <>
-                        <p>ID: {track.id}</p>
-                        <p>By {track.uploader_id}</p>
-                        <p>{track.duration}s</p>
-                        <p>Posted {track.created_at}s</p>
-                        <p>Located at {track.file_path}s</p>
-                        <hr />
-                    </>)
+            <Suspense fallback={<Loading />}>
+                {tracks?.map((track) => {
+                    return (
+                        <>
+                            <p>ID: {track.id}</p>
+                            <p>By {track.uploader_id}</p>
+                            <p>{track.duration}s</p>
+                            <p>Posted {track.created_at}</p>
+                            <p>Located at {track.file_path}</p>
+                            <hr />
+                        </>)
 
-            })}
-            <p>debug:{JSON.stringify(tracks, null, 2)}</p>
+                })}
+                <p>full load:{JSON.stringify(tracks, null, 2)}</p>
+            </Suspense>
         </>
     )
 }

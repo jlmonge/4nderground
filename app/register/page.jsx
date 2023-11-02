@@ -1,6 +1,5 @@
 import { EmailField, PasswordField, TCPPField } from '../../components/Shared/form-fields.jsx';
 import Link from 'next/link';
-import AuthButton from '../../components/auth-button.jsx';
 
 export const metadata = {
     title: 'Register',
