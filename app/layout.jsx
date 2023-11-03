@@ -24,7 +24,7 @@ export default async function RootLayout({ children }) {
         <html lang='en' className={roboto.className}>
             <body>
                 <Navbar user={user} />
-                <main style={{ margin: '10px 100px' }}>
+                <main style={{ margin: '32px 128px' }}>
                     {children}
                 </main>
 

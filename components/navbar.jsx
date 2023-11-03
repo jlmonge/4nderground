@@ -24,6 +24,9 @@ export default function Navbar({ user }) {
                         <Link className={navListLink} href='/'>Logo</Link>
                     </li>
                     <li className={navListElem}>
+                        <Link className={navListLink} href='/'>Home</Link>
+                    </li>
+                    <li className={navListElem}>
                         <Link className={navListLink} href='/player'>Player</Link>
                     </li>
                     <li className={`${navListElem} ${floatRight}`}>
