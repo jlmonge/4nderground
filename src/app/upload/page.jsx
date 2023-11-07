@@ -6,7 +6,7 @@ import { uploadFileHelper } from '../service/uploadFileHelper';
 
 const MB = 1000000;
 // TODO: implement. restructure dict into array of objects (sigh) (~10m)
-const GENRES = {
+const GENRES = Object.freeze({
     "": "-",
     "hip-hop": "Hip-Hop",
     "rnb": "R&B",
@@ -22,7 +22,7 @@ const GENRES = {
     "ambient": "Ambient",
     "noise": "Noise",
     "experimental": "Experimental"
-}
+})
 
 function Status({ error, uploadSuccess, uploadURL }) {
     if (error) {

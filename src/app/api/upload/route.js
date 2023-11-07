@@ -14,7 +14,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const MB = 1000000;
 
-// Initialize S3 (outside of the route function? interesting...)
+// Initialize S3
 const client = new S3Client({
     region: process.env.S3_REGION,
     credentials: {
@@ -23,6 +23,26 @@ const client = new S3Client({
     },
 })
 
+// DOES: check if user is logged in, then
+//       check if user has posted in last 24 hours (5 min for testing)
+// RETURN: supabase route client
+function processUser() {
+
+}
+
+// DOES: 
+// RETURN: object consisting of file information
+function processFile() {
+
+}
+
+function uploadS3() {
+
+}
+
+function uploadSupabase() {
+
+}
 
 // TODO: try to refactor by splitting into functions for specifically
 // checking for errors, writing to database, and uploading to S3
