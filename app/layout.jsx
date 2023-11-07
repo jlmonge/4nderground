@@ -1,6 +1,6 @@
 import './global.css';
 // run 'npx @next/codemod@latest built-in-next-font .'
-import { Roboto_Flex } from '@next/font/google'
+import { Roboto_Flex } from 'next/font/google'
 import createClient from '../components/supabase-server';
 import Navbar from '../components/navbar.jsx';
 

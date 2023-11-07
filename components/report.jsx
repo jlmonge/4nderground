@@ -45,7 +45,8 @@ export default function Report({ BTN_SIZE }) {
                         borderStyle: 'none',
                         padding: '0',
                         margin: '2px',
-                        fontSize: '16px'
+                        fontSize: '16px',
+                        color: 'white',
                     }}>
                     X
                 </button>

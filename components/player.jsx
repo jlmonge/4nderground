@@ -126,13 +126,13 @@ export default function Player({ user }) {
 
     useEffect(() => {
         if (tracks.length) {
-            let file_name = (tracks[trackIndex].file_path).slice(7);
-            load(`${file_name}`, {
+            let file_path = tracks[trackIndex].file_path;
+            load(`${file_path}`, {
                 autoplay: true,
                 html5: true,
                 onend: () => setTrackIndex((trackIndex + 1) % tracks.length),
             })
-            console.log(`track index changed, loading: ${file_name}`)
+            console.log(`track index changed, loading filepath: ${file_path}`)
         }
 
     }, [load, tracks, trackIndex])
