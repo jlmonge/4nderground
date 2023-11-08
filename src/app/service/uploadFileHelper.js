@@ -30,8 +30,6 @@ export const uploadFileHelper = async (formData) => {
 
 
         // Perform upload
-        // TODO: Figure out why use PUT..? POST
-        // (creating new resources) should work too
         const file = formData.get('file');
         const uploadRes = await fetch(putUrl, {
             body: file,
