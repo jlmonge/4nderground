@@ -3,50 +3,22 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { uploadFileHelper } from '../service/uploadFileHelper';
+import {
+    GENRES, MAX_SIZE,
+    ERR_NO_FILE, ERR_TOO_BIG, ERR_NO_EXT, ERR_TOO_SHORT, ERR_TOO_LONG,
+    ERR_NOT_AUDIO, ERR_ARRAY, ERR_NOT_LOGGED_IN
+} from '../../constants';
 
-const MB = 1000000;
-// TODO: implement. restructure dict into array of objects (sigh) (~10m)
-const GENRES = Object.freeze({
-    "": "-",
-    "hip-hop": "Hip-Hop",
-    "rnb": "R&B",
-    "electronic": "Electronic",
-    "pop": "Pop",
-    "rock": "Rock",
-    "punk": "Punk",
-    "metal": "Metal",
-    "jazz": "Jazz",
-    "classical": "Classical",
-    "reggae": "Reggae",
-    "world": "World",
-    "ambient": "Ambient",
-    "noise": "Noise",
-    "experimental": "Experimental"
-})
-
-function Status({ error, uploadSuccess, uploadURL }) {
+function Status({ error, uploadSuccess, path }) {
     if (error) {
-        switch (error) {
-            case 'not-audio':
-                return <p style={{ color: 'red' }}>The file you uploaded was not an audio file.</p>
-            case 'too-short':
-                return <p style={{ color: 'red' }}>Tracks must be more than 30 seconds.</p>
-            case 'too-long':
-                return <p style={{ color: 'red' }}>Tracks must be under 10 minutes.</p>
-            case 'no-file':
-                return <p style={{ color: 'red' }}>No file was selected.</p>
-            case 'too-big':
-                return <p style={{ color: 'red' }}>Exceeded the file size limit of <strong>128MB</strong>.</p>
-            default:
-                return <p style={{ color: 'red' }}>Unknown error. Contact site admin.</p>
-        }
+        return <p style={{ color: 'red' }}>{error.message}</p>
     }
 
     if (uploadSuccess) {
         return (
             <>
                 <p style={{ color: 'green' }}>
-                    Click <Link href={`/player${uploadURL}`}>here</Link> to
+                    Click <Link href={`/player${path}`}>here</Link> to
                     listen to your track.
                 </p>
             </>
@@ -69,7 +41,10 @@ export default function Upload() {
     const [file, setFile] = useState();
     const [genre, setGenre] = useState('');
     const [filePath, setFilePath] = useState('');
-    const [error, setError] = useState('');
+    const [error, setError] = useState({
+        reason: '',
+        message: '',
+    });
     // TODO: use isUploaded for upload progress bar (~30m)
     const [isUploaded, setIsUploaded] = useState(false);
 
@@ -85,14 +60,30 @@ export default function Upload() {
         if (nextFile) {
             const audioRegex = new RegExp('audio.*')
             if (audioRegex.test(nextFile.type)) {
-                setError(nextFile.size >= 128 * MB ? 'too-big' : '')
+                if (nextFile.size >= MAX_SIZE) {
+                    setError({
+                        reason: ERR_TOO_BIG.reason,
+                        message: ERR_TOO_BIG.message,
+                    })
+                } else {
+                    setError({
+                        reason: '',
+                        message: '',
+                    })
+                }
             } else {
-                setError('not-audio')
+                setError({
+                    reason: ERR_NOT_AUDIO.reason,
+                    message: ERR_NOT_AUDIO.message,
+                })
             }
         } else {
-            setError('no-file')
+            setError({
+                reason: ERR_NO_FILE.reason,
+                message: ERR_NO_FILE.message,
+            })
         }
-
+        console.log(nextFile);
     }
 
     const handleSubmit = async (e) => {
@@ -100,10 +91,13 @@ export default function Upload() {
         console.log("submitting")
         // Empty file
         if (!file) {
-            setError('no-file')
+            setError({
+                reason: ERR_NO_FILE.reason,
+                message: ERR_NO_FILE.message,
+            })
             return;
         }
-        setError('');
+        //setError('');
 
         try {
             const data = new FormData();
@@ -114,7 +108,10 @@ export default function Upload() {
             const resJson = await res.json();
 
             if (!res.ok) {
-                setError(resJson.reason)
+                setError({
+                    reason: resJson.reason,
+                    message: resJson.message,
+                })
             } else {
                 setIsUploaded(true);
                 setFilePath(resJson.path);
@@ -135,24 +132,14 @@ export default function Upload() {
                     required
                 />
                 <label htmlFor="genre">Genre:</label>
-                <select name="genre" onChange={handleSelectChange}>
-                    <option value="">-</option>
-                    <option value="hip-hop">Hip-Hop</option>
-                    <option value="rnb">R&B</option>
-                    <option value="electronic">Electronic</option>
-                    <option value="pop">Pop</option>
-                    <option value="rock">Rock</option>
-                    <option value="punk">Punk</option>
-                    <option value="metal">Metal</option>
-                    <option value="jazz">Jazz</option>
-                    <option value="classical">Classical</option>
-                    <option value="reggae">Reggae</option>
-                    <option value="world">World</option>
-                    <option value="ambient">Ambient</option>
-                    <option value="noise">Noise</option>
-                    <option value="experimental">Experimental</option>
+                <select id="genre" name="genre" onChange={handleSelectChange}>
+                    {
+                        Object.entries(GENRES).map(([key, str]) =>
+                            <option key={key} value={key}>{str}</option>
+                        )
+                    }
                 </select>
-                <button type='submit' disabled={!file || error}>Upload</button>
+                <button type='submit' disabled={!file || error.message || isUploaded}>Upload</button>
             </form>
             <Status error={error} uploadSuccess={isUploaded} path={filePath}></Status>
             <h1>...or record now</h1>

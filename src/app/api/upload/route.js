@@ -1,21 +1,19 @@
 import { NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises'
-import { join } from 'path'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { parseBuffer } from 'music-metadata';
 import { v4 as uuidv4 } from 'uuid';
-import {
-    S3Client,
-    PutObjectCommand,
-    GetObjectCommand,
-} from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-
-const MB = 1000000;
+import {
+    MAX_SIZE, MIN_DURATION, MAX_DURATION,
+    ERR_NO_FILE, ERR_TOO_BIG, ERR_NO_EXT, ERR_TOO_SHORT, ERR_TOO_LONG,
+    ERR_NOT_AUDIO, ERR_ARRAY, ERR_NOT_LOGGED_IN
+} from '../../../constants';
+import { UploadError } from '../../../errors';
 
 // Initialize S3
-const client = new S3Client({
+const s3Client = new S3Client({
     region: process.env.S3_REGION,
     credentials: {
         accessKeyId: process.env.S3_ACCESS_KEY,
@@ -26,110 +24,74 @@ const client = new S3Client({
 // DOES: check if user is logged in, then
 //       check if user has posted in last 24 hours (5 min for testing)
 // RETURN: supabase route client
-function processUser() {
-
-}
-
-// DOES: 
-// RETURN: object consisting of file information
-function processFile() {
-
-}
-
-function uploadS3() {
-
-}
-
-function uploadSupabase() {
-
-}
-
-// TODO: try to refactor by splitting into functions for specifically
-// checking for errors, writing to database, and uploading to S3
-export async function POST(req) {
-    // Initiate connection to Supabase.
+async function processUser() {
     const cookieStore = cookies()
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw UploadError(ERR_NOT_LOGGED_IN.reason)
 
+    return supabase;
+}
+
+// DOES: obtain information about the file (size, duration, etc) and make sure it is valid
+// RETURN: object consisting of file information
+async function processFile(req) {
     // Obtain audio file from helper's req body.
-
     const formData = await req.formData();
     const file = formData.get('file'); // returns File object
     const genre = formData.get('genre');
+    if (!file) throw new UploadError(ERR_NO_FILE.reason)
 
-    //throw Error('GO NO FURTHER. INTENTIONAL ERROR FROM ROUTE.JS')
-    // TODO: for consistency, store reasons in constants.js.
-    // share w/ upload/page.jsx. (~10m)
-    if (!file) {
-        console.log("no file found.")
-        return NextResponse.json({
-            success: false,
-            reason: 'no-file',
-        }, { status: 500 });
-    }
     const fileSize = file.size;
     const fileType = file.type;
-
-    if (fileSize >= 128 * MB) {
-        console.log("file too big.")
-        return NextResponse.json({
-            success: false,
-            reason: 'too-big',
-        }, { status: 500 });
-    }
+    if (fileSize >= MAX_SIZE) throw new UploadError(ERR_TOO_BIG.reason)
 
     // Convert audio file into something that can be more universally
     // worked with (bytes).
-    // Sometimes I don't know the types.. may be the time for
-    // TYPESCRIPT
-    // we still need to do this but not for S3. this is for metadata.
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
     // Retrieve duration using music-metadata.
     const metadata = await parseBuffer(buffer, fileType);
     const duration = Math.trunc(metadata.format.duration);
+    if (duration < MIN_DURATION) throw new UploadError(ERR_TOO_SHORT.reason)
+    if (duration >= MAX_DURATION) throw new UploadError(ERR_TOO_LONG.reason)
 
     let fileName = file.name; // Initially set to file name as submitted by user
     const extensionRegex = /\.[0-9a-z]+$/i;
     let fileExtension = fileName.match(extensionRegex) // type 'Array'
-    if (!fileExtension) {
-        console.log("no extension found. odd error, so report to site admin.")
-        return NextResponse.json({
-            success: false,
-            reason: 'extension-not-found',
-        }, { status: 500 });
-    }
-
-    if (duration <= 30) {
-        return NextResponse.json({
-            success: false,
-            reason: 'too-short',
-        }, { status: 500 });
-    } else if (duration >= 600) { // 10 minutes; shorten later? 
-        return NextResponse.json({
-            success: false,
-            reason: 'too-long',
-        }, { status: 500 });
-    }
+    if (!fileExtension) throw new UploadError(ERR_NO_EXT.reason)
 
     // Create track information for database + storage
     fileExtension = fileExtension[0]; // type 'String'
-    const preupId = uuidv4();
-    fileName = preupId + fileExtension;
+    const fileId = uuidv4();
+    fileName = fileId + fileExtension;
 
-    const preupPath = process.env.S3_BASE_URL + fileName;
+    const filePath = process.env.S3_BASE_URL + fileName;
     const localPath = `/${fileName}`;
-    console.log(`prenupPath lol!: ${preupPath}`);
+    console.log(`filePath: ${filePath}`);
+    const fileObj = {
+        path: filePath,
+        localPath: localPath,
+        duration: duration,
+        size: fileSize,
+        type: fileType,
+        genre: genre,
+        id: fileId,
+        name: fileName,
+    }
 
-    // Send buffer (file) to S3.
+    return fileObj;
+}
+
+async function uploadStorage(fileObj) {
     const putCommand = new PutObjectCommand({
-        Key: fileName,
-        ContentType: fileType,
+        Key: fileObj.name,
+        ContentType: fileObj.type,
         Bucket: process.env.S3_BUCKET_NAME,
     })
 
-    const putUrl = await getSignedUrl(client, putCommand, { expiresIn: 600 })
+    const putUrl = await getSignedUrl(s3Client, putCommand, { expiresIn: 600 })
 
     /*
     const getCommand = new GetObjectCommand({
@@ -137,45 +99,53 @@ export async function POST(req) {
         Bucket: process.env.S3_BUCKET_NAME,
     })
 
-    const getUrl = await getSignedUrl(client, getCommand, { expiresIn: 600 })
+    const getUrl = await getSignedUrl(s3Client, getCommand, { expiresIn: 600 })
     */
 
-    // Insert track information into database
-    const { data, error } = await supabase
+    return putUrl
+}
+
+async function uploadDatabase(dbClient, fileObj) {
+    const { data, error } = await dbClient
         .from('tracks')
         .insert([
             {
-                id: preupId,
-                file_path: preupPath,
-                duration: duration,
-                file_size: fileSize,
-                genre: genre,
+                id: fileObj.id,
+                file_path: fileObj.path,
+                duration: fileObj.duration,
+                file_size: fileObj.size,
+                genre: fileObj.genre,
             },
         ])
         .select()
 
-    if (error) {
-        console.log(error);
-        return NextResponse.json({ success: false });
-    } else {
-        console.log(`sql data[0].file_path:${data[0].file_path}`)
+    if (error) throw error
+    console.log(`sql data[0].file_path:${data[0].file_path}`)
+
+    // return statement intentionally omitted
+}
+
+export async function POST(req) {
+    try {
+        const dbClient = await processUser();
+        const fileObj = await processFile(req);
+        const putUrl = await uploadStorage(fileObj);
+        await uploadDatabase(dbClient, fileObj);
+
+        return NextResponse.json({
+            putUrl,
+            //getUrl,
+            path: fileObj.localPath,
+        }, {
+            status: 200
+        });
+    } catch (e) {
+        if (e instanceof UploadError) {
+            console.log(e.message)
+            return e.response;
+        } else {
+            console.log("STRANGE ERROR. CONTACT SITE ADMIN.")
+            throw e; // can't handle this; rethrow
+        }
     }
-
-
-    // Write file to specified location.
-    // TODO: Remove after implementing S3 Get.
-    //await writeFile(preupPath, buffer);
-
-    return NextResponse.json({
-        putUrl,
-        //getUrl,
-        path: localPath,
-    }, { status: 200 });
-
-
-    /* Why is this here?
-    return NextResponse.redirect(`${requestUrl.origin}/player`, {
-        status: 201,
-    })
-    */
 }

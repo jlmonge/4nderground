@@ -8,7 +8,7 @@ export default async function Track({ params }) {
     return (
         <>
             <p>This is track {params.id}</p>
-            <audio controls src={`${process.env.S3_BASE_URL}/${params.id}`}></audio>
+            <audio controls src={`${process.env.S3_BASE_URL}${params.id}`}></audio>
         </>
     )
 }
