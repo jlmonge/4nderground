@@ -1,3 +1,5 @@
+import { ERR_ARRAY } from './constants';
+import { NextResponse } from 'next/server';
 // Uses a reason field instead of error. REASON MUST MATCH ANY ERRORS IN ERR_ARRAY!
 export class UploadError extends Error {
     constructor(reason) {

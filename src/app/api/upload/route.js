@@ -8,9 +8,10 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import {
     MAX_SIZE, MIN_DURATION, MAX_DURATION,
     ERR_NO_FILE, ERR_TOO_BIG, ERR_NO_EXT, ERR_TOO_SHORT, ERR_TOO_LONG,
-    ERR_NOT_AUDIO, ERR_ARRAY, ERR_NOT_LOGGED_IN
-} from '../../../constants';
-import { UploadError } from '../../../errors';
+    ERR_NOT_AUDIO, ERR_ARRAY, ERR_NOT_LOGGED_IN, ERR_UPLOAD_COOLDOWN
+} from '../../../utils/constants';
+import { UploadError } from '../../../utils/errors';
+import { DAY_MS, getDayAgo } from '../../../utils/helpers';
 
 // Initialize S3
 const s3Client = new S3Client({
@@ -25,12 +26,28 @@ const s3Client = new S3Client({
 //       check if user has posted in last 24 hours (5 min for testing)
 // RETURN: supabase route client
 async function processUser() {
-    const cookieStore = cookies()
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) throw UploadError(ERR_NOT_LOGGED_IN.reason)
+    const cookieStore = cookies();
+    const dbClient = createRouteHandlerClient({ cookies: () => cookieStore });
+    const { data: { user } } = await dbClient.auth.getUser();
+    if (!user) throw new UploadError(ERR_NOT_LOGGED_IN.reason);
 
-    return supabase;
+    const { data: profilesData, error } = await dbClient
+        .from('profiles')
+        .select('last_posted_at')
+        .eq('id', user.id);
+
+    if (error) throw error;
+    console.log(`last_posted_at of ( ${user.email} ) AKA (${user.id} ): 
+        ( ${profilesData} ) with date ${profilesData[0].last_posted_at}`);
+
+
+    const dayAgo = new Date(getDayAgo())
+    const lastPostedAt = new Date(profilesData[0].last_posted_at)
+    console.log(`dayAgo: ${dayAgo}, lastPostedAt: ${lastPostedAt}`)
+    if (lastPostedAt > dayAgo) throw new UploadError(ERR_UPLOAD_COOLDOWN.reason)
+    throw new Error("LMAO! LMAO! BALLS! ")
+
+    return { dbClient, user };
 }
 
 // DOES: obtain information about the file (size, duration, etc) and make sure it is valid
@@ -101,12 +118,11 @@ async function uploadStorage(fileObj) {
 
     const getUrl = await getSignedUrl(s3Client, getCommand, { expiresIn: 600 })
     */
-
     return putUrl
 }
 
-async function uploadDatabase(dbClient, fileObj) {
-    const { data, error } = await dbClient
+async function uploadDatabase(dbClient, fileObj, user) {
+    const { data: tracksData, error: tracksError } = await dbClient
         .from('tracks')
         .insert([
             {
@@ -118,20 +134,31 @@ async function uploadDatabase(dbClient, fileObj) {
             },
         ])
         .select()
+    if (tracksError) throw tracksError;
+    console.log(`sql data[0].file_path:${tracksData[0].file_path}`);
 
-    if (error) throw error
-    console.log(`sql data[0].file_path:${data[0].file_path}`)
-
+    /*
+    const last_posted_at = new Date().toISOString()
+    console.log(`last_posted_at: ${last_posted_at}`)
+    const { data: profilesData, error: profilesError } = await dbClient
+        .from('profiles')
+        .update({ last_posted_at: last_posted_at })
+        .eq('id', user.id)
+        .select()
+    if (profilesError) throw profilesError;
+    console.log(`EXPECTING last_posted_at CHANGE ++ profilesData of ${user.id}: ${JSON.stringify(profilesData)}`)
+        */
     // return statement intentionally omitted
 }
 
 export async function POST(req) {
     try {
-        const dbClient = await processUser();
+        const { dbClient, user } = await processUser();
         const fileObj = await processFile(req);
         const putUrl = await uploadStorage(fileObj);
-        await uploadDatabase(dbClient, fileObj);
+        await uploadDatabase(dbClient, fileObj, user);
 
+        console.log(`ROUTE.JS IS DONE! RETURNING!`)
         return NextResponse.json({
             putUrl,
             //getUrl,

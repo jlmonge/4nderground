@@ -3,7 +3,7 @@
 import { Fragment, useState, useRef } from 'react';
 import Image from 'next/image';
 
-export default function Report({ BTN_SIZE }) {
+export default function Report({ BTN_SIZE, areTracks }) {
     const dialogRef = useRef(null);
     const [reports, setReports] = useState(0);
 
@@ -65,7 +65,7 @@ export default function Report({ BTN_SIZE }) {
                 </form>
                 <p>You have submitted {reports} report{reports == 1 ? '' : 's'}</p>
             </dialog>
-            <button style={{ backgroundColor: 'black' }} onClick={handleOpen} type='button'>
+            <button style={{ backgroundColor: 'black' }} onClick={handleOpen} type='button' disabled={areTracks}>
                 <Image
                     src="flag.svg"
                     width={BTN_SIZE}

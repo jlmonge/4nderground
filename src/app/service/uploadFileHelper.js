@@ -43,6 +43,7 @@ export const uploadFileHelper = async (formData) => {
             console.log('uploadRes L')
         }
 
+        console.log(`UPLOADFILEHELPER.JS IS DONE! RETURNING!`)
         return NextResponse.json({
             success: true,
             path: path,

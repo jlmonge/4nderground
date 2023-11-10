@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import Player from '../../components/player.jsx'
+import CommentSection from '../../components/comment-section.jsx';
 
 export const metadata = {
     title: 'Player',

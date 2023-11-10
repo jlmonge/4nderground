@@ -21,7 +21,7 @@ export const GENRES = Object.freeze({
 const MB = 1_000_000;
 const NUM_MB = 5
 export const MAX_SIZE = NUM_MB * MB;
-export const MIN_DURATION = 30;
+export const MIN_DURATION = 1;
 export const MAX_DURATION = 600;
 
 // Errors

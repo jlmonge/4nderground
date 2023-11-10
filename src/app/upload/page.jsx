@@ -7,10 +7,18 @@ import {
     GENRES, MAX_SIZE,
     ERR_NO_FILE, ERR_TOO_BIG, ERR_NO_EXT, ERR_TOO_SHORT, ERR_TOO_LONG,
     ERR_NOT_AUDIO, ERR_ARRAY, ERR_NOT_LOGGED_IN
-} from '../../constants';
+} from '../../utils/constants';
+
+function Debug({ error, uploadSuccess, path }) {
+    return (
+        <>
+            <p>DEBUG: error: {JSON.stringify(error)}, uploadSuccess: {uploadSuccess.toString()}, path: {path}</p>
+        </>
+    )
+}
 
 function Status({ error, uploadSuccess, path }) {
-    if (error) {
+    if (error.reason || error.message) {
         return <p style={{ color: 'red' }}>{error.message}</p>
     }
 
@@ -141,7 +149,8 @@ export default function Upload() {
                 </select>
                 <button type='submit' disabled={!file || error.message || isUploaded}>Upload</button>
             </form>
-            <Status error={error} uploadSuccess={isUploaded} path={filePath}></Status>
+            <Debug error={error} uploadSuccess={isUploaded} path={filePath} />
+            <Status error={error} uploadSuccess={isUploaded} path={filePath} />
             <h1>...or record now</h1>
             <em>[FEATURE NOT YET AVAILABLE]</em>
         </>

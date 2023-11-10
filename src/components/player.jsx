@@ -4,12 +4,13 @@
 import styles from '../styles/Player.module.css';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Image from 'next/image';
-import { Suspense, useEffect, useState, useRef } from 'react';
+import { Fragment, Suspense, useEffect, useState, useRef } from 'react';
 import { useGlobalAudioPlayer } from 'react-use-audio-player';
 import Report from './report';
+import { getDayAgo } from '../utils/helpers';
 
 const BTN_SIZE = 24;
-const TESTING = false; // redundant; replace soon
+const DEBUG = false; // redundant; replace soon
 
 function Loading() {
     return (
@@ -35,7 +36,7 @@ export default function Player({ user }) {
         }
         return (
             <>
-                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button'>
+                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button' disabled={!tracks.length}>
                     <Image
                         src="skip-back.svg"
                         width={BTN_SIZE}
@@ -54,7 +55,7 @@ export default function Player({ user }) {
         }
         return (
             <>
-                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button'>
+                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button' disabled={!tracks.length}>
                     <Image
                         src="skip-forward.svg"
                         width={BTN_SIZE}
@@ -74,7 +75,7 @@ export default function Player({ user }) {
         }
         return (
             <>
-                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button'>
+                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button' disabled={!tracks.length}>
                     <Image
                         src={playing ? "pause.svg" : "play.svg"}
                         width={BTN_SIZE}
@@ -101,27 +102,31 @@ export default function Player({ user }) {
             </>
         )
     }
-
+    /*
     const animate = () => {
         setPos(getPosition())
         frameRef.current = requestAnimationFrame(animate)
     }
+    */
 
     useEffect(() => {
         const fetchTracks = async () => {
+            const dayAgo = getDayAgo();
             let { data, error } = await supabase
                 .from('tracks')
                 .select()
-                //.rangeGt('created_at', )
+                .gt('created_at', dayAgo)
                 .order('created_at', { ascending: false });
 
             setTracks(data);
         }
         fetchTracks()
+        /*
         if (TESTING) {
             frameRef.current = window.requestAnimationFrame(animate);
             return () => cancelAnimationFrame(frameRef.current);
         }
+        */
     }, [])
 
     useEffect(() => {
@@ -150,22 +155,23 @@ export default function Player({ user }) {
             <SkipBack />
             <PlayPause />
             <SkipForward />
-            <Report BTN_SIZE={BTN_SIZE} />
-            <hr />
+            <Report BTN_SIZE={BTN_SIZE} areTracks={!tracks.length} />
             <Suspense fallback={<Loading />}>
-                {tracks?.map((track) => {
-                    return (
-                        <>
-                            <p>ID: {track.id}</p>
-                            <p>By {track.uploader_id}</p>
-                            <p>{track.duration}s</p>
-                            <p>Posted {track.created_at}</p>
-                            <p>Located at {track.file_path}</p>
-                            <hr />
-                        </>)
+                <div style={{ display: DEBUG ? 'block' : 'none' }}>
+                    {tracks?.map((track) => {
+                        return (
+                            <Fragment key={track.id}>
+                                <p>ID: {track.id}</p>
+                                <p>By {track.uploader_id}</p>
+                                <p>{track.duration}s</p>
+                                <p>Posted {track.created_at}</p>
+                                <p>Located at {track.file_path}</p>
+                                <hr />
+                            </Fragment>)
 
-                })}
-                <p>full load:{JSON.stringify(tracks, null, 2)}</p>
+                    })}
+                    <p>full load:{JSON.stringify(tracks, null, 2)}</p>
+                </div>
             </Suspense>
         </>
     )
