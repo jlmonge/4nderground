@@ -136,18 +136,6 @@ async function uploadDatabase(dbClient, fileObj, user) {
         .select()
     if (tracksError) throw tracksError;
     console.log(`sql data[0].file_path:${tracksData[0].file_path}`);
-
-    /*
-    const last_posted_at = new Date().toISOString()
-    console.log(`last_posted_at: ${last_posted_at}`)
-    const { data: profilesData, error: profilesError } = await dbClient
-        .from('profiles')
-        .update({ last_posted_at: last_posted_at })
-        .eq('id', user.id)
-        .select()
-    if (profilesError) throw profilesError;
-    console.log(`EXPECTING last_posted_at CHANGE ++ profilesData of ${user.id}: ${JSON.stringify(profilesData)}`)
-        */
     // return statement intentionally omitted
 }
 
