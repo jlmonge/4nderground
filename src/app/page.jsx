@@ -4,7 +4,7 @@ import Report from '../components/report.jsx';
 
 export const metadata = {
     title: 'Discover the newest ideas in music | 4nderground',
-}
+};
 
 export default function HomePage() {
 

@@ -30,7 +30,7 @@ function Status({ error, uploadSuccess, path }) {
                     listen to your track.
                 </p>
             </>
-        )
+        );
     }
     /*
     return (
@@ -96,7 +96,7 @@ export default function Upload() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("submitting")
+        console.log('submitting')
         // Empty file
         if (!file) {
             setError({

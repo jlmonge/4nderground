@@ -28,15 +28,15 @@ export default function Report({ BTN_SIZE, areTracks }) {
         id: 1,
         value: 'illegal_content',
         str: 'Illegal Content',
-    },]
+    }];
 
     return (
         <>
             <dialog ref={dialogRef} style={{ backgroundColor: 'black', color: 'white' }}>
                 <button
-                    id='close'
+                    id="close"
                     onClick={handleClose}
-                    type='button'
+                    type="button"
                     style={{
                         position: 'absolute',
                         top: '0',
@@ -51,21 +51,21 @@ export default function Report({ BTN_SIZE, areTracks }) {
                     X
                 </button>
                 <h1>Report</h1>
-                <form method='post' onSubmit={handleSubmit} style={{ alignItems: 'flex-start', }}>
+                <form method="POST" onSubmit={handleSubmit} style={{ alignItems: 'flex-start', }}>
                     {reportReasons.map((reason) => (
                         <Fragment key={reason.id}>
                             <label>
-                                <input type='radio' name='report_reason' value={reason.value} required />
+                                <input type="radio" name="report_reason" value={reason.value} required />
                                 {reason.str}
                             </label>
                             <br />
                         </Fragment>
                     ))}
-                    <button type='submit'>Submit</button>
+                    <button type="submit">Submit</button>
                 </form>
                 <p>You have submitted {reports} report{reports == 1 ? '' : 's'}</p>
             </dialog>
-            <button style={{ backgroundColor: 'black' }} onClick={handleOpen} type='button' disabled={areTracks}>
+            <button style={{ backgroundColor: 'black' }} onClick={handleOpen} type="button" disabled={areTracks}>
                 <Image
                     src="flag.svg"
                     width={BTN_SIZE}

@@ -2,12 +2,12 @@ function FormField({ attr, text }) {
     return (
         <>
             <label>
-                <input {...attr} autoComplete='on' required />
+                <input {...attr} autoComplete="on" required />
                 {text ?? ''}
             </label>
             <br />
         </>
-    )
+    );
 }
 
 export function EmailField() {
@@ -19,7 +19,7 @@ export function EmailField() {
                 placeholder: 'E-mail',
             }}
         />
-    )
+    );
 }
 
 export function PasswordField({ name, placeholder }) {
@@ -32,7 +32,7 @@ export function PasswordField({ name, placeholder }) {
                 placeholder: placeholder ?? 'Password',
             }}
         />
-    )
+    );
 }
 
 function CheckboxField({ name, text }) {
@@ -44,14 +44,14 @@ function CheckboxField({ name, text }) {
             }}
             text={text}
         />
-    )
+    );
 }
 
 export function TCPPField() {
     return (
         <CheckboxField
-            name='tcpp-agree'
-            text='I agree to the Terms & Conditions and Privacy Policy.'
+            name="tcpp-agree"
+            text="I agree to the Terms & Conditions and Privacy Policy."
         />
-    )
+    );
 }

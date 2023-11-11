@@ -1,5 +1,5 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
-import { NextResponse } from 'next/server'
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { NextResponse } from 'next/server';
 
 export async function middleware(req) {
     const res = NextResponse.next();
@@ -13,9 +13,7 @@ export async function middleware(req) {
 
     if (!session) {
         // Guests cannot upload
-        if (
-            req.nextUrl.pathname.startsWith('/upload')
-        ) {
+        if (req.nextUrl.pathname.startsWith('/upload')) {
             return NextResponse.redirect(new URL('/login', req.url));
         }
     }

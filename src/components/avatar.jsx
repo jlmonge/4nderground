@@ -3,5 +3,5 @@ export default function Avatar() {
         <div style>
 
         </div>
-    )
+    );
 }

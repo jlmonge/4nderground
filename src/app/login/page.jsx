@@ -7,14 +7,14 @@ export const metadata = {
 
 export default function Login() {
     return (
-        <div className='auth'>
-            <form action='/auth/login' method='post'>
+        <div className="auth">
+            <form action="/auth/login" method="POST">
                 <EmailField />
                 <PasswordField />
-                <button type='submit'>Log In</button>
+                <button type="submit">Log In</button>
             </form>
-            <Link href='/forgot-password'>Forgot password?</Link>
-            <Link href='/register'>Sign up</Link>
+            <Link href="/forgot-password">Forgot password?</Link>
+            <Link href="/register">Sign up</Link>
         </div>
-    )
+    );
 }

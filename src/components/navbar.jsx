@@ -10,10 +10,10 @@ export default function Navbar({ user }) {
 
     const logout = async () => {
         await fetch(`/auth/logout`, {
-            method: 'post',
+            method: 'POST',
         });
         router.refresh(); // HACK? This overrides the logout redirect, so that's gone.
-        console.log('logout lol')
+        console.log('logout lol');
     };
 
     return (
@@ -21,25 +21,25 @@ export default function Navbar({ user }) {
             <nav>
                 <ul className={navList}>
                     <li className={navListElem}>
-                        <Link className={navListLink} href='/'>Logo</Link>
+                        <Link className={navListLink} href="/">Logo</Link>
                     </li>
                     <li className={navListElem}>
-                        <Link className={navListLink} href='/'>Home</Link>
+                        <Link className={navListLink} href="/">Home</Link>
                     </li>
                     <li className={navListElem}>
-                        <Link className={navListLink} href='/player'>Player</Link>
+                        <Link className={navListLink} href="/player">Player</Link>
                     </li>
                     <li className={`${navListElem} ${floatRight}`}>
-                        <Link className={navListLink} href='/upload'>Upload</Link>
+                        <Link className={navListLink} href="/upload">Upload</Link>
                     </li>
                     <li className={`${navListElem} ${floatRight}`}>
                         {user
                             ? <button onClick={logout} className={btn}>Logout {user.id}</button>
-                            : <Link className={navListLink} href='/login'>GET IN!</Link>
+                            : <Link className={navListLink} href="/login">GET IN!</Link>
                         }
                     </li>
                 </ul>
             </nav>
         </>
-    )
+    );
 }

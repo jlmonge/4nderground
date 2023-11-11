@@ -22,23 +22,24 @@ function Comment({ text }) {
             <Avatar />
             <p>{text}</p>
         </>
-    )
+    );
 }
 
 function MakeComment() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         // const res = await uploadCommentHelper();
-    }
+    };
+
     return (
         <>
-            <form method="post" onSubmit={handleSubmit}>
+            <form method="POST" onSubmit={handleSubmit}>
                 <label htmlFor="make-comment">Make a comment:</label>
                 <input type="text" id="make-comment" />
                 <button type="submit">Comment</button>
             </form>
         </>
-    )
+    );
 }
 
 export default function CommentSection() {
@@ -47,5 +48,5 @@ export default function CommentSection() {
             <h3>Comments</h3>
             <MakeComment />
         </>
-    )
+    );
 }

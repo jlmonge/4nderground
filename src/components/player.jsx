@@ -17,7 +17,7 @@ function Loading() {
         <>
             <p>Loading content...</p>
         </>
-    )
+    );
 }
 
 export default function Player({ user }) {
@@ -25,18 +25,18 @@ export default function Player({ user }) {
     const [tracks, setTracks] = useState([]);
     const [trackIndex, setTrackIndex] = useState(0);
     const [pos, setPos] = useState(0);
-    //const posRef = useRef()
+    //const posRef = useRef();
     const supabase = createClientComponentClient();
     const { load, playing, togglePlayPause, src, getPosition } = useGlobalAudioPlayer();
 
     function SkipBack() {
         const handleClick = () => {
-            console.log("Skip Back");
+            console.log('Skip Back');
             setTrackIndex(trackIndex > 0 ? trackIndex - 1 : tracks.length - 1);
-        }
+        };
         return (
             <>
-                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button' disabled={!tracks.length}>
+                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type="button" disabled={!tracks.length}>
                     <Image
                         src="skip-back.svg"
                         width={BTN_SIZE}
@@ -45,17 +45,17 @@ export default function Player({ user }) {
                     />
                 </button>
             </>
-        )
+        );
     }
 
     function SkipForward() {
         const handleClick = () => {
-            console.log("Skip Forward");
+            console.log('Skip Forward');
             setTrackIndex((trackIndex + 1) % tracks.length);
-        }
+        };
         return (
             <>
-                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button' disabled={!tracks.length}>
+                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type="button" disabled={!tracks.length}>
                     <Image
                         src="skip-forward.svg"
                         width={BTN_SIZE}
@@ -64,7 +64,7 @@ export default function Player({ user }) {
                     />
                 </button>
             </>
-        )
+        );
     }
 
     function PlayPause() {
@@ -72,25 +72,25 @@ export default function Player({ user }) {
         //const [isPlaying, setIsPlaying] = useState('false')
         const handleClick = () => {
             togglePlayPause();
-        }
+        };
         return (
             <>
-                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type='button' disabled={!tracks.length}>
+                <button style={{ backgroundColor: 'black' }} onClick={handleClick} type="button" disabled={!tracks.length}>
                     <Image
-                        src={playing ? "pause.svg" : "play.svg"}
+                        src={playing ? 'pause.svg' : 'play.svg'}
                         width={BTN_SIZE}
                         height={BTN_SIZE}
-                        alt={playing ? "Pause" : "Play"}
+                        alt={playing ? 'Pause' : 'Play'}
                     />
                 </button>
             </>
-        )
+        );
     }
 
     function ProgressBar() {
         const handleClick = () => {
-            console.log("confetti");
-        }
+            console.log('confetti');
+        };
         return (
             <>
                 <p>{Math.round(pos)}</p>
@@ -100,13 +100,13 @@ export default function Player({ user }) {
                     onClick={handleClick}
                 />*/}
             </>
-        )
+        );
     }
     /*
     const animate = () => {
         setPos(getPosition())
         frameRef.current = requestAnimationFrame(animate)
-    }
+    };
     */
 
     useEffect(() => {
@@ -119,15 +119,15 @@ export default function Player({ user }) {
                 .order('created_at', { ascending: false });
 
             setTracks(data);
-        }
-        fetchTracks()
+        };
+        fetchTracks();
         /*
         if (TESTING) {
             frameRef.current = window.requestAnimationFrame(animate);
             return () => cancelAnimationFrame(frameRef.current);
         }
         */
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (tracks.length) {
@@ -136,22 +136,15 @@ export default function Player({ user }) {
                 autoplay: true,
                 html5: true,
                 onend: () => setTrackIndex((trackIndex + 1) % tracks.length),
-            })
-            console.log(`track index changed, loading filepath: ${file_path}`)
+            });
+            console.log(`track index changed, loading filepath: ${file_path}`);
         }
-
-    }, [load, tracks, trackIndex])
-
-    /* code straight from the react-use-audio-player docs
-    useEffect(() => {
-        
-    }, [getPosition])
-    */
+    }, [load, tracks, trackIndex]);
 
     return (
         <>
-            <p>{playing ? "Now playing" : "Now paused"}</p>
-            <p>src: {src}</p>
+            <p>{playing ? 'Now playing' : 'Now paused'}</p>
+            < p > src : {src}</p>
             <SkipBack />
             <PlayPause />
             <SkipForward />
@@ -174,5 +167,5 @@ export default function Player({ user }) {
                 </div>
             </Suspense>
         </>
-    )
+    );
 }

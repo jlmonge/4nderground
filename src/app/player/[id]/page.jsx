@@ -1,5 +1,4 @@
-// TODO: no need for this page; get specific track in player w/
-// hash params.
+// TODO: no need for this page; get specific track in player w/ hash params.
 
 import { cookies } from 'next/headers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -10,5 +9,5 @@ export default async function Track({ params }) {
             <p>This is track {params.id}</p>
             <audio controls src={`${process.env.S3_BASE_URL}${params.id}`}></audio>
         </>
-    )
+    );
 }

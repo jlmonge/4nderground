@@ -20,11 +20,10 @@ const s3Client = new S3Client({
         accessKeyId: process.env.S3_ACCESS_KEY,
         secretAccessKey: process.env.S3_SECRET_KEY,
     },
-})
+});
 
 // DOES: check if user is logged in, then
 //       check if user has posted in last 24 hours (5 min for testing)
-// RETURN: supabase route client
 async function processUser() {
     const cookieStore = cookies();
     const dbClient = createRouteHandlerClient({ cookies: () => cookieStore });
@@ -41,27 +40,26 @@ async function processUser() {
         ( ${profilesData} ) with date ${profilesData[0].last_posted_at}`);
 
 
-    const dayAgo = new Date(getDayAgo())
-    const lastPostedAt = new Date(profilesData[0].last_posted_at)
-    console.log(`dayAgo: ${dayAgo}, lastPostedAt: ${lastPostedAt}`)
-    if (lastPostedAt > dayAgo) throw new UploadError(ERR_UPLOAD_COOLDOWN.reason)
-    throw new Error("LMAO! LMAO! BALLS! ")
+    const dayAgo = new Date(getDayAgo());
+    const lastPostedAt = new Date(profilesData[0].last_posted_at);
+    console.log(`dayAgo: ${dayAgo}, lastPostedAt: ${lastPostedAt}`);
+    if (lastPostedAt > dayAgo) throw new UploadError(ERR_UPLOAD_COOLDOWN.reason);
+    //throw new Error('LMAO! LMAO! BALLS!');
 
     return { dbClient, user };
 }
 
-// DOES: obtain information about the file (size, duration, etc) and make sure it is valid
-// RETURN: object consisting of file information
+// DOES: validate file (size, duration, etc)
 async function processFile(req) {
     // Obtain audio file from helper's req body.
     const formData = await req.formData();
     const file = formData.get('file'); // returns File object
     const genre = formData.get('genre');
-    if (!file) throw new UploadError(ERR_NO_FILE.reason)
+    if (!file) throw new UploadError(ERR_NO_FILE.reason);
 
     const fileSize = file.size;
     const fileType = file.type;
-    if (fileSize >= MAX_SIZE) throw new UploadError(ERR_TOO_BIG.reason)
+    if (fileSize >= MAX_SIZE) throw new UploadError(ERR_TOO_BIG.reason);
 
     // Convert audio file into something that can be more universally
     // worked with (bytes).
@@ -71,13 +69,13 @@ async function processFile(req) {
     // Retrieve duration using music-metadata.
     const metadata = await parseBuffer(buffer, fileType);
     const duration = Math.trunc(metadata.format.duration);
-    if (duration < MIN_DURATION) throw new UploadError(ERR_TOO_SHORT.reason)
-    if (duration >= MAX_DURATION) throw new UploadError(ERR_TOO_LONG.reason)
+    if (duration < MIN_DURATION) throw new UploadError(ERR_TOO_SHORT.reason);
+    if (duration >= MAX_DURATION) throw new UploadError(ERR_TOO_LONG.reason);
 
     let fileName = file.name; // Initially set to file name as submitted by user
     const extensionRegex = /\.[0-9a-z]+$/i;
-    let fileExtension = fileName.match(extensionRegex) // type 'Array'
-    if (!fileExtension) throw new UploadError(ERR_NO_EXT.reason)
+    let fileExtension = fileName.match(extensionRegex); // type 'Array'
+    if (!fileExtension) throw new UploadError(ERR_NO_EXT.reason);
 
     // Create track information for database + storage
     fileExtension = fileExtension[0]; // type 'String'
@@ -96,7 +94,7 @@ async function processFile(req) {
         genre: genre,
         id: fileId,
         name: fileName,
-    }
+    };
 
     return fileObj;
 }
@@ -106,19 +104,19 @@ async function uploadStorage(fileObj) {
         Key: fileObj.name,
         ContentType: fileObj.type,
         Bucket: process.env.S3_BUCKET_NAME,
-    })
+    });
 
-    const putUrl = await getSignedUrl(s3Client, putCommand, { expiresIn: 600 })
+    const putUrl = await getSignedUrl(s3Client, putCommand, { expiresIn: 600 });
 
     /*
     const getCommand = new GetObjectCommand({
         Key: fileName,
         Bucket: process.env.S3_BUCKET_NAME,
-    })
+    });
 
-    const getUrl = await getSignedUrl(s3Client, getCommand, { expiresIn: 600 })
+    const getUrl = await getSignedUrl(s3Client, getCommand, { expiresIn: 600 });
     */
-    return putUrl
+    return putUrl;
 }
 
 async function uploadDatabase(dbClient, fileObj, user) {
@@ -133,7 +131,8 @@ async function uploadDatabase(dbClient, fileObj, user) {
                 genre: fileObj.genre,
             },
         ])
-        .select()
+        .select();
+
     if (tracksError) throw tracksError;
     console.log(`sql data[0].file_path:${tracksData[0].file_path}`);
     // return statement intentionally omitted
@@ -146,7 +145,7 @@ export async function POST(req) {
         const putUrl = await uploadStorage(fileObj);
         await uploadDatabase(dbClient, fileObj, user);
 
-        console.log(`ROUTE.JS IS DONE! RETURNING!`)
+        console.log(`ROUTE.JS IS DONE! RETURNING!`);
         return NextResponse.json({
             putUrl,
             //getUrl,
@@ -156,10 +155,10 @@ export async function POST(req) {
         });
     } catch (e) {
         if (e instanceof UploadError) {
-            console.log(e.message)
+            console.log(e.message);
             return e.response;
         } else {
-            console.log("STRANGE ERROR. CONTACT SITE ADMIN.")
+            console.log('STRANGE ERROR. CONTACT SITE ADMIN.');
             throw e; // can't handle this; rethrow
         }
     }
