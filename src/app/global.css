@@ -84,6 +84,5 @@ input[type=text] {
 form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: -4px 0;
+  align-items: flex-start;
 }

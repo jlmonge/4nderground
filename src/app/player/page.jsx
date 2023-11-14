@@ -27,6 +27,7 @@ export default async function PlayerPage() {
         <>
             <UserStatus user={user} />
             <Player user={user} />
+            <CommentSection />
         </>
     );
     // const { load } = useGlobalAudioPlayer();
