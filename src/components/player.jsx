@@ -8,6 +8,7 @@ import { Fragment, Suspense, useEffect, useState, useRef } from 'react';
 import { useGlobalAudioPlayer } from 'react-use-audio-player';
 import Report from './report';
 import { getDayAgo } from '../utils/helpers';
+import CommentSection from '../components/comment-section';
 
 const BTN_SIZE = 24;
 const DEBUG = false; // redundant; replace soon
@@ -144,11 +145,14 @@ export default function Player({ user }) {
     return (
         <>
             <p>{playing ? 'Now playing' : 'Now paused'}</p>
-            < p > src : {src}</p>
+            <p> src : {src}</p>
             <SkipBack />
             <PlayPause />
             <SkipForward />
             <Report BTN_SIZE={BTN_SIZE} areTracks={!tracks.length} />
+
+            <CommentSection trackId={tracks[trackIndex]?.id} />
+
             <Suspense fallback={<Loading />}>
                 <div style={{ display: DEBUG ? 'block' : 'none' }}>
                     {tracks?.map((track) => {

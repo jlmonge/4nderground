@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import Player from '../../components/player.jsx';
-import CommentSection from '../../components/comment-section.jsx';
 
 export const metadata = {
     title: 'Player',
@@ -22,15 +21,19 @@ export default async function PlayerPage() {
     const userCookies = cookies();
     const supabase = createServerComponentClient({ cookies: () => userCookies });
     const { data: { user } } = await supabase.auth.getUser();
+    /*
+    const { data: tracksData, error: tracksError } = await supabase
+        .from('tracks')
+        .select()
+        .gt('created_at', dayAgo)
+        .lte()
+        .order('created_at', { ascending: false });
+    */
 
     return (
         <>
             <UserStatus user={user} />
             <Player user={user} />
-            <CommentSection />
         </>
     );
-    // const { load } = useGlobalAudioPlayer();
-
-
 }

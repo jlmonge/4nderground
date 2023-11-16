@@ -3,8 +3,9 @@
 
 import Report from './report'
 import Avatar from './avatar'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 /*
 DISPLAY WISE: A comment consists of:
@@ -20,7 +21,6 @@ DB WISE: A comment consists of:
 - created_at
 */
 
-let nextId = 0;
 const BTN_SIZE = 24;
 
 function Comment({ comment, onDelete }) {
@@ -35,8 +35,8 @@ function Comment({ comment, onDelete }) {
             margin: "10px 0",
             width: "100%",
         }}>
-            <Avatar />
-            <p style={{ margin: '0' }}>{comment.id}: {comment.text}</p>
+            <Avatar userId={comment.user_id} />
+            <p style={{ margin: '0' }}>comment {comment.id} by user {comment.user_id}: {comment.comment}</p>
             <button
                 onClick={() => onDelete(comment.id)}
                 type="button"
@@ -57,18 +57,33 @@ function Comment({ comment, onDelete }) {
                     style={{ objectFit: 'contain' }} // optional
                 />
             </button>
-
         </div>
     );
 }
 
-function AddComment({ onAddComment }) {
-    const [comment, setComment] = useState('')
+function AddComment({ onAddComment, trackId }) {
+    const [comment, setComment] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onAddComment(comment);
+        const data = new FormData();
+        data.append('comment', comment);
+        data.append('trackId', trackId);
+
+        const res = await fetch('/api/comment/add', {
+            method: 'POST',
+            body: data,
+        });
+        const resJson = await res.json();
+
+        if (!res.ok) {
+            console.log("COMMENT NOT ADDED");
+        } else {
+            onAddComment(resJson.commentObj); // add comment on the client-side
+        }
+
         setComment('');
+
     };
 
     return (
@@ -90,31 +105,68 @@ function AddComment({ onAddComment }) {
 }
 
 function CommentList({ comments, onDeleteComment }) {
+    let commentContent;
+    if (comments?.length) {
+        commentContent = (
+            <>
+                <ul style={{ width: "100%", padding: 0 }}>
+                    {comments.map(c =>
+                        <li key={c.id} style={{ listStyleType: "none", width: "100%" }}>
+                            <Comment
+                                comment={c}
+                                onDelete={onDeleteComment}
+                            />
+                        </li>
+                    )}
+                </ul>
+            </>
+        );
+    } else {
+        commentContent = (
+            <>
+                <p>No comments.</p>
+            </>
+        );
+    }
+
+    const debug = () => console.log(JSON.stringify(comments, null, `\t`));
+
     return (
         <>
-            <ul style={{ width: "100%", padding: 0 }}>
-                {comments.map(c => (
-                    <li key={c.id} style={{ listStyleType: "none", width: "100%" }}>
-                        <Comment
-                            comment={c}
-                            onDelete={onDeleteComment}
-                        />
-                    </li>
-                ))}
-            </ul>
+            {commentContent}
+            <p>debug - comments according to CList:</p>
+            <button onClick={debug}>ALL</button>
         </>
-    )
+    );
 }
 
-export default function CommentSection() {
+export default function CommentSection({ trackId }) {
+    let content;
+
     const [comments, setComments] = useState([]);
 
-    const handleAddComment = (text) => {
+    const supabase = createClientComponentClient();
+
+    useEffect(() => {
+        if (trackId) {
+            console.log(`new trackId, fetching new comments: ${trackId}`)
+            const fetchComments = async () => {
+                let { data, error } = await supabase
+                    .from('comments')
+                    .select('id, comment, user_id, posted_at')
+                    .eq('track_id', trackId)
+                    .order('posted_at', { ascending: false });
+                setComments(data);
+                console.log(`fetched comments: ${JSON.stringify(data)}`);
+            };
+            fetchComments();
+        }
+    }, [trackId]);
+
+    const handleAddComment = (commentObj) => {
+        console.log(`NEW COMMENT: ${JSON.stringify(commentObj, null, '\t')}`);
         setComments([
-            {
-                id: nextId++,
-                text: text,
-            },
+            commentObj,
             ...comments,
         ]);
         console.log(":o new comment")
@@ -127,14 +179,30 @@ export default function CommentSection() {
         console.log(":o bye comment");
     };
 
+    if (trackId) {
+        content = (
+            <>
+                <h3>Comments</h3>
+                <AddComment
+                    onAddComment={handleAddComment}
+                    trackId={trackId}
+                />
+                <CommentList
+                    comments={comments}
+                    onDeleteComment={handleDeleteComment}
+                />
+            </>
+        );
+    } else {
+        content = (
+            <p>Comments unavailable.</p>
+        );
+    }
+
+
     return (
         <>
-            <h3>Comments</h3>
-            <AddComment onAddComment={handleAddComment} />
-            <CommentList
-                comments={comments}
-                onDeleteComment={handleDeleteComment}
-            />
+            {content}
         </>
     );
 }
