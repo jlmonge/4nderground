@@ -8,6 +8,7 @@ import { Fragment, Suspense, useEffect, useState, useRef } from 'react';
 import { useGlobalAudioPlayer } from 'react-use-audio-player';
 import Report from './report';
 import { getDayAgo } from '../utils/helpers';
+import CommentSection from '../components/comment-section';
 
 const BTN_SIZE = 24;
 const DEBUG = false; // redundant; replace soon
@@ -20,13 +21,14 @@ function Loading() {
     );
 }
 
-export default function Player({ user }) {
+export default function Player() {
     const frameRef = useRef();
     const [tracks, setTracks] = useState([]);
     const [trackIndex, setTrackIndex] = useState(0);
     const [pos, setPos] = useState(0);
     //const posRef = useRef();
     const supabase = createClientComponentClient();
+    // src is url of file being played.
     const { load, playing, togglePlayPause, src, getPosition } = useGlobalAudioPlayer();
 
     function SkipBack() {
@@ -144,11 +146,15 @@ export default function Player({ user }) {
     return (
         <>
             <p>{playing ? 'Now playing' : 'Now paused'}</p>
-            < p > src : {src}</p>
+
+            <p> TRACK BY {tracks[trackIndex]?.uploader_id}</p>
             <SkipBack />
             <PlayPause />
             <SkipForward />
             <Report BTN_SIZE={BTN_SIZE} areTracks={!tracks.length} />
+
+            <CommentSection trackId={tracks[trackIndex]?.id} />
+
             <Suspense fallback={<Loading />}>
                 <div style={{ display: DEBUG ? 'block' : 'none' }}>
                     {tracks?.map((track) => {

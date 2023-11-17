@@ -11,7 +11,7 @@ import {
     ERR_NOT_AUDIO, ERR_ARRAY, ERR_NOT_LOGGED_IN, ERR_UPLOAD_COOLDOWN
 } from '../../../utils/constants';
 import { UploadError } from '../../../utils/errors';
-import { DAY_MS, getDayAgo } from '../../../utils/helpers';
+import { getDayAgo } from '../../../utils/helpers';
 
 // Initialize S3
 const s3Client = new S3Client({
