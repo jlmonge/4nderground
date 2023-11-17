@@ -33,7 +33,7 @@ export default async function PlayerPage() {
     return (
         <>
             <UserStatus user={user} />
-            <Player user={user} />
+            <Player />
         </>
     );
 }

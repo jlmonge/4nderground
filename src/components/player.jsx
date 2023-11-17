@@ -21,7 +21,7 @@ function Loading() {
     );
 }
 
-export default function Player({ user }) {
+export default function Player() {
     const frameRef = useRef();
     const [tracks, setTracks] = useState([]);
     const [trackIndex, setTrackIndex] = useState(0);

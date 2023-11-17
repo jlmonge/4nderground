@@ -3,7 +3,7 @@
 
 import Report from './report'
 import Avatar from './avatar'
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
@@ -21,9 +21,9 @@ DB WISE: A comment consists of:
 - created_at
 */
 
-const BTN_SIZE = 24;
+const BTN_SIZE = 20;
 
-function Comment({ comment, onDelete }) {
+function Comment({ comment, onDelete, isMyComment }) {
     const handleDelete = async () => {
         const data = new FormData();
         data.append('commentUserId', comment.user_id);
@@ -55,26 +55,28 @@ function Comment({ comment, onDelete }) {
         }}>
             <Avatar userId={comment.user_id} />
             <p style={{ margin: '0' }}>{comment.comment}</p>
-            <button
-                onClick={handleDelete}
-                type="button"
-                style={{
-                    width: `${BTN_SIZE}px`,
-                    height: `${BTN_SIZE}px`,
-                    position: 'relative',
-                    background: 'transparent',
-                    border: 'none',
-                    outline: 'none',
-                }}
-            >
-                <Image
-                    src="trash-2.svg"
-                    alt="Delete your comment"
-                    sizes={BTN_SIZE}
-                    fill
-                    style={{ objectFit: 'contain' }} // optional
-                />
-            </button>
+            {isMyComment &&
+                <button
+                    onClick={handleDelete}
+                    type="button"
+                    title="Delete comment"
+                    //aria-label="Delete comment" // TODO: accessibility update
+                    //role="button"
+                    style={{
+                        width: `${BTN_SIZE}px`,
+                        height: `${BTN_SIZE}px`,
+                        position: 'relative',
+                    }}
+                >
+                    <Image
+                        src="trash-2.svg"
+                        alt="Delete comment icon"
+                        sizes={BTN_SIZE}
+                        fill
+                        style={{ objectFit: 'contain' }} // optional
+                    />
+                </button>
+            }
         </div>
     );
 }
@@ -106,7 +108,10 @@ function AddComment({ onAddComment, trackId }) {
 
     return (
         <>
-            <form method="POST" onSubmit={handleSubmit}>
+            <form
+                method="POST"
+                onSubmit={handleSubmit}
+            >
                 <label htmlFor="make-comment">Make a comment:</label>
                 <input
                     placeholder="Thoughts..."
@@ -116,13 +121,13 @@ function AddComment({ onAddComment, trackId }) {
                     value={comment}
                     onChange={e => setComment(e.target.value)}
                 />
-                <button type="submit">Comment</button>
+                <button type="submit">Post comment</button>
             </form>
         </>
     );
 }
 
-function CommentList({ comments, onDeleteComment }) {
+function CommentList({ comments, onDeleteComment, curUserId }) {
     let commentContent;
     if (comments?.length) {
         commentContent = (
@@ -133,6 +138,7 @@ function CommentList({ comments, onDeleteComment }) {
                             <Comment
                                 comment={c}
                                 onDelete={onDeleteComment}
+                                isMyComment={curUserId === c.user_id}
                             />
                         </li>
                     )}
@@ -160,10 +166,17 @@ function CommentList({ comments, onDeleteComment }) {
 
 export default function CommentSection({ trackId }) {
     let content;
-
+    const curUserId = useRef(''); // 'Assignments to the 'curUserId' variable from inside React Hook useEffect will be lost after each render.'
     const [comments, setComments] = useState([]);
-
     const supabase = createClientComponentClient();
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            curUserId.current = user?.id;
+        }
+        getUser()
+    }, [])
 
     useEffect(() => {
         if (trackId) {
@@ -208,6 +221,7 @@ export default function CommentSection({ trackId }) {
                 <CommentList
                     comments={comments}
                     onDeleteComment={handleDeleteComment}
+                    curUserId={curUserId.current}
                 />
             </>
         );
