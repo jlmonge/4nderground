@@ -24,6 +24,24 @@ DB WISE: A comment consists of:
 const BTN_SIZE = 24;
 
 function Comment({ comment, onDelete }) {
+    const handleDelete = async () => {
+        const data = new FormData();
+        data.append('commentUserId', comment.user_id);
+        data.append('commentId', comment.id);
+
+        const res = await fetch('/api/comment/delete', {
+            method: 'POST',
+            body: data,
+        });
+
+        if (!res.ok) {
+            console.log("delete failed. dopey.")
+        } else {
+            onDelete(comment.id)
+        }
+
+    }
+
     return (
         <div style={{
             display: "grid",
@@ -36,9 +54,9 @@ function Comment({ comment, onDelete }) {
             width: "100%",
         }}>
             <Avatar userId={comment.user_id} />
-            <p style={{ margin: '0' }}>comment {comment.id} by user {comment.user_id}: {comment.comment}</p>
+            <p style={{ margin: '0' }}>{comment.comment}</p>
             <button
-                onClick={() => onDelete(comment.id)}
+                onClick={handleDelete}
                 type="button"
                 style={{
                     width: `${BTN_SIZE}px`,
@@ -157,7 +175,7 @@ export default function CommentSection({ trackId }) {
                     .eq('track_id', trackId)
                     .order('posted_at', { ascending: false });
                 setComments(data);
-                console.log(`fetched comments: ${JSON.stringify(data)}`);
+                //console.log(`fetched comments: ${JSON.stringify(data)}`);
             };
             fetchComments();
         }

@@ -14,7 +14,7 @@ export async function POST(req) {
     const formData = await req.formData();
     const comment = formData.get('comment');
     const trackId = formData.get('trackId');
-    console.log(trackId);
+    //console.log(trackId);
     const { data, error } = await supabase
         .from('comments')
         .insert([
@@ -26,8 +26,8 @@ export async function POST(req) {
         .select('id, comment, user_id, posted_at');
 
     if (error) throw new Error(JSON.stringify(error));
-    console.log(`you just posted a comment: ${JSON.stringify(data[0])}`);
-    if (!data[0]) throw new Error("nothing returned tho")
+    //console.log(`you just posted a comment: ${JSON.stringify(data[0])}`);
+    if (!data[0]) throw new Error("nothing returned tho");
 
     return NextResponse.json({
         commentObj: data[0],

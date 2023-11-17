@@ -28,6 +28,7 @@ export default function Player({ user }) {
     const [pos, setPos] = useState(0);
     //const posRef = useRef();
     const supabase = createClientComponentClient();
+    // src is url of file being played.
     const { load, playing, togglePlayPause, src, getPosition } = useGlobalAudioPlayer();
 
     function SkipBack() {
@@ -145,7 +146,8 @@ export default function Player({ user }) {
     return (
         <>
             <p>{playing ? 'Now playing' : 'Now paused'}</p>
-            <p> src : {src}</p>
+
+            <p> TRACK BY {tracks[trackIndex]?.uploader_id}</p>
             <SkipBack />
             <PlayPause />
             <SkipForward />
