@@ -3,19 +3,10 @@
 import { navList, navListElem, floatRight, navListLink, btn } from '../styles/navbar.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Avatar from './avatar';
 
 
 export default function Navbar({ user }) {
-    const router = useRouter();
-
-    const logout = async () => {
-        await fetch(`/auth/logout`, {
-            method: 'POST',
-        });
-        router.refresh(); // HACK? This overrides the logout redirect, so that's gone.
-        console.log('logout lol');
-    };
-
     return (
         <>
             <nav>
@@ -34,7 +25,7 @@ export default function Navbar({ user }) {
                     </li>
                     <li className={`${navListElem} ${floatRight}`}>
                         {user
-                            ? <button onClick={logout} className={btn}>Logout {user.id}</button>
+                            ? <Avatar userId={user.id} />
                             : <Link className={navListLink} href="/login">GET IN!</Link>
                         }
                     </li>
