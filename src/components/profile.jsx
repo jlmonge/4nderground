@@ -6,13 +6,43 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from '../styles/Profile.module.css';
 
-const testLinks = [
-    "https://www.youtube.com/",
-    "https://www.google.com/",
-    "https://www.heavensgate.com/",
+const myLinks = [
+    {
+        id: 0,
+        text: "youtube",
+        url: "https://www.youtube.com/",
+    },
+    {
+        id: 1,
+        text: "google",
+        url: "https://www.google.com/",
+    },
+    {
+        id: 2,
+        text: "personal site",
+        url: "https://www.heavensgate.com/",
+    },
 ];
 
-// we love liberal@6!
+const yourLinks = [
+    {
+        id: 3,
+        text: "my home <1 i am someone else",
+        url: "https://en.wikipedia.org/wiki/Main_Page",
+    },
+    {
+        id: 4,
+        text: "my home <2 also someone else",
+        url: "https://en.wikipedia.org/wiki/Main_Page",
+    },
+    {
+        id: 5,
+        text: "my home <3 someone else",
+        url: "https://en.wikipedia.org/wiki/Main_Page",
+    },
+];
+
+// we love jerry@jerry!
 // We are hardcoding this for now because this would create
 // an ungodly amount of calls to supabase auth if you check
 // a lot of profiles. 
@@ -22,7 +52,7 @@ const myUserId = 'e290162b-45fa-42c2-8ee1-bc702397b1c7';
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
 
-function ProfileLink({ link, userId }) {
+function ProfileLink({ url, text, userId }) {
     return (
         <>
             <li style={{ listStyle: 'none' }}>
@@ -36,14 +66,14 @@ function ProfileLink({ link, userId }) {
                         alt="Link icon"
                         width={ICON_SIZE}
                         height={ICON_SIZE}
-                        style={{ width: `${ICON_SIZE}`, height: `${ICON_SIZE}` }}
+                        style={{ width: 'auto', height: 'auto' }}
                     />
                     <a
-                        href={link}
+                        href={url}
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        {link}
+                        {text}
                     </a>
                     {userId === myUserId &&
                         <button
@@ -57,7 +87,7 @@ function ProfileLink({ link, userId }) {
                         >
                             <Image
                                 src="edit-2.svg"
-                                alt={`Edit link ${link}`}
+                                alt="Edit link"
                                 sizes={BTN_SIZE}
                                 fill
                                 style={{ objectFit: 'contain' }}
@@ -72,13 +102,19 @@ function ProfileLink({ link, userId }) {
 }
 
 function ProfileLinks({ userId }) {
+    const [links, setLinks] = useState(userId == myUserId ? myLinks : yourLinks)
+
+    useEffect(() => {
+        console.log(`getting the links of: ${userId}. im ${myUserId} btw`);
+    }, [])
+
     return (
         <>
             <section>
                 <h3>Links</h3>
                 <ul style={{ padding: '0' }}>
-                    {testLinks.map((link) =>
-                        <ProfileLink key={link} link={link} userId={userId} />
+                    {links.map((l) =>
+                        <ProfileLink key={l.id} url={l.url} text={l.text} userId={userId} />
                     )}
                 </ul>
             </section>
@@ -86,23 +122,11 @@ function ProfileLinks({ userId }) {
     );
 }
 
-function ProfileTab({ userId }) {
-    return (
-        <>
-            <ProfileLinks userId={userId} />
-            {userId !== myUserId && (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <button>Ignore user</button>
-                    <button>Block user</button>
-                </div>
-            )}
-        </>
-    );
-}
+export default function Profile({ userId }) {
 
-function SettingsTab({ userId }) {
     const router = useRouter(); // next/navigation
 
+    // TODO: see if we need to close dialog before refresh.
     const logout = async () => {
         await fetch(`/auth/logout`, {
             method: 'POST',
@@ -111,55 +135,19 @@ function SettingsTab({ userId }) {
         console.log('logout lol');
     };
 
-    return (
-        <>
-            <button onClick={logout}>Logout (TODO: ur id)</button>
-            <form action="/auth/change-email">
-                <input type="text" name="new-email" />
-                <button type="submit">Change email</button>
-            </form>
-            <form action="/auth/change-password">
-                <input type="password" name="new-password" />
-                <button>Change password</button>
-            </form>
-            <button>Delete account</button>
-        </>
-    );
-}
-
-export default function Profile({ userId }) {
-    const [tab, setTab] = useState('profile');
-
-    // TODO: see if we need to close dialog before refresh.
-
-
-    useEffect(() => {
-        console.log(`tab is now: ${tab}`)
-    }, [tab])
-
     //const cookieStore = cookies();
     //const supabase = createClientComponentClient({ cookies: () => cookieStore });
-    let content;
-    if (userId !== myUserId) {
-        content = (
-            <ProfileTab userId={userId} />
-        );
-    } else {
-        content = (
-            <>
-                <nav style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-                    <h2 onClick={() => setTab('profile')} className={tab === 'profile' ? styles.curTab : null}>Profile</h2>
-                    <h2 onClick={() => setTab('settings')} className={tab === 'settings' ? styles.curTab : null}>Settings</h2>
-                </nav>
-                {tab === 'profile' && <ProfileTab />}
-                {tab === 'settings' && <SettingsTab />}
-            </>
-        );
-    }
-
     return (
         <>
-            {content}
+            <p>Hi I&apos;m {userId}</p>
+            <ProfileLinks userId={userId} />
+            {userId !== myUserId && (
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <button>Ignore user</button>
+                    <button>Block user</button>
+                </div>
+            )}
+            {userId === myUserId && <button onClick={logout}>Logout</button>}
         </>
     );
 }

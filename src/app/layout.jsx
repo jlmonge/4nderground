@@ -18,7 +18,7 @@ const roboto = Roboto_Flex({
 
 export default async function RootLayout({ children }) {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error } = await supabase.auth.getUser();
 
     return (
         <html lang="en" className={roboto.className}>

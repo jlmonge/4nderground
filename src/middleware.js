@@ -12,8 +12,11 @@ export async function middleware(req) {
     }
 
     if (!session) {
-        // Guests cannot upload
-        if (req.nextUrl.pathname.startsWith('/upload')) {
+        // Guests cannot upload or change settings
+        if (
+            req.nextUrl.pathname.startsWith('/upload') ||
+            req.nextUrl.pathname.startsWith('/settings')
+        ) {
             return NextResponse.redirect(new URL('/login', req.url));
         }
     }

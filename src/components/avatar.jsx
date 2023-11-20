@@ -3,7 +3,7 @@
 // TODO: make the height 100% of its parent container,
 // TODO: and the width the same as its height
 
-import { useRef, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import Profile from './profile';
 
 export default function Avatar({ userId }) {
