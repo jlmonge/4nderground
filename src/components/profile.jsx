@@ -5,48 +5,41 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from '../styles/Profile.module.css';
-const myLinks = {
-    "0": {
-        id: "0",
+const myLinks = [
+    {
+        pos: "1",
         text: "youtube",
         url: "https://www.youtube.com/",
     },
-    "1": {
-        id: "1",
+    {
+        pos: "2",
         text: "google",
         url: "https://www.google.com/",
     },
-    "2": {
-        id: "2",
+    {
+        pos: "3",
         text: "personal site",
         url: "https://www.heavensgate.com/",
     },
-};
+];
 
-const yourLinks = {
-    "0": {
-        id: "0",
+const yourLinks = [
+    {
+        pos: "1",
         text: "my home <1 i am someone else",
         url: "https://en.wikipedia.org/wiki/Main_Page",
     },
-    "1": {
-        id: "1",
+    {
+        pos: "2",
         text: "my home <2 also someone else",
         url: "https://en.wikipedia.org/wiki/Main_Page",
     },
-    "2": {
-        id: "2",
+    {
+        pos: "3",
         text: "my home <3 someone else",
         url: "https://en.wikipedia.org/wiki/Main_Page",
     },
-};
-
-// we love jerry@jerry!
-// We are hardcoding this for now because this would create
-// an ungodly amount of calls to supabase auth if you check
-// a lot of profiles. 
-// TODO: create a context to retrieve the current user from
-const myUserId = 'e290162b-45fa-42c2-8ee1-bc702397b1c7';
+];
 
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
@@ -56,7 +49,7 @@ function ProfileLink({ link, isEditing, userId }) {
     if (isEditing) {
         linkContent = (
             <>
-                <input type="text" id="edit-link-url" name={`url-${link.id}`} placeholder="Link URL"
+                <input type="text" id="edit-link-url" name={`url-${link.pos}`} placeholder="Link URL"
                 // onChange={e => {
                 //     handleChange({
                 //         ...link,
@@ -64,7 +57,7 @@ function ProfileLink({ link, isEditing, userId }) {
                 //     });
                 // }}
                 />
-                <input type="text" id="edit-link-text" name={`text-${link.id}`} placeholder="Link text"
+                <input type="text" id="edit-link-text" name={`text-${link.pos}`} placeholder="Link text"
                 // onChange={e => {
                 //     handleChange({
                 //         ...link,
@@ -110,8 +103,8 @@ function ProfileLink({ link, isEditing, userId }) {
     );
 }
 
-function ProfileLinks({ userId }) {
-    const [links, setLinks] = useState(userId == myUserId ? myLinks : yourLinks)
+function ProfileLinks({ userId, isMe }) {
+    const [links, setLinks] = useState(null)
     const [isEditing, setIsEditing] = useState(false);
 
     const handleSaveChanges = (e) => {
@@ -121,7 +114,6 @@ function ProfileLinks({ userId }) {
         const formData = new FormData(form);
         console.log(`before: ${JSON.stringify(links, null, 2)}`);
         console.log(`formData:`);
-        formData.forEach((value, key));
         const fieldRegex = new RegExp('^(.+?)-');
         const idRegex = new RegExp('\-(.*)');
         /*
@@ -139,49 +131,53 @@ function ProfileLinks({ userId }) {
     }
 
     useEffect(() => {
-        console.log(`getting the links of: ${userId}. im ${myUserId} btw`);
-    }, []);
+        console.log(`isMe: ${isMe.toString()}`)
+        setLinks(isMe ? myLinks : yourLinks);
+    }, [isMe]);
 
     let linksContent;
 
-    if (isEditing && userId === myUserId) {
-        linksContent = (
-            <>
-                <form onSubmit={handleSaveChanges}>
-                    {links.map((l) =>
-                        <ProfileLink key={l.id} link={l} isEditing={isEditing} userId={userId} />
-                    )}
-                    <button type="submit">Save changes</button>
-                </form>
-            </>
-        );
-    } else if (!isEditing && userId === myUserId) {
-        linksContent = (
-            <>
-                <ul style={{ padding: '0' }}>
-                    {links.map((l) =>
-                        <ProfileLink key={l.id} link={l} isEditing={isEditing} userId={userId} />
-                    )}
-                </ul>
-                <button
-                    type="button"
-                    onClick={() => setIsEditing(true)}
-                >
-                    Edit links
-                </button>
-            </>
-        );
-    } else {
-        linksContent = (
-            <>
-                <ul style={{ padding: '0' }}>
-                    {links.map((l) =>
-                        <ProfileLink key={l.id} link={l} isEditing={isEditing} userId={userId} />
-                    )}
-                </ul>
-            </>
-        );
+    if (links) {
+        if (isEditing && isMe) {
+            linksContent = (
+                <>
+                    <form onSubmit={handleSaveChanges}>
+                        {links.map((l) =>
+                            <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} />
+                        )}
+                        <button type="submit">Save changes</button>
+                    </form>
+                </>
+            );
+        } else if (!isEditing && isMe) {
+            linksContent = (
+                <>
+                    <ul style={{ padding: '0' }}>
+                        {links.map((l) =>
+                            <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} />
+                        )}
+                    </ul>
+                    <button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                    >
+                        Edit links
+                    </button>
+                </>
+            );
+        } else {
+            linksContent = (
+                <>
+                    <ul style={{ padding: '0' }}>
+                        {links.map((l) =>
+                            <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} />
+                        )}
+                    </ul>
+                </>
+            );
+        }
     }
+
 
 
     return (
@@ -195,11 +191,21 @@ function ProfileLinks({ userId }) {
 }
 
 export default function Profile({ userId }) {
-
+    const [isMe, setIsMe] = useState(false);
+    const supabase = createClientComponentClient();
     const router = useRouter(); // next/navigation
 
-    // TODO: see if we need to close dialog before refresh, or if refresh
-    // TODO: closes it for us.
+    useEffect(() => {
+        const getUserId = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setIsMe(user?.id === userId);
+            console.log(`my user id: ${user?.id}`);
+            console.log(`THE user id: ${userId}`)
+            console.log(`are they the same?: ${(user?.id === userId).toString()}`)
+        };
+        getUserId();
+    }, [supabase, userId]);
+
     const logout = async () => {
         await fetch(`/auth/logout`, {
             method: 'POST',
@@ -213,17 +219,14 @@ export default function Profile({ userId }) {
     return (
         <>
             <p>Hi I&apos;m {userId}</p>
-            <ProfileLinks userId={userId} />
-            {userId !== myUserId && (
+            <ProfileLinks userId={userId} isMe={isMe} />
+            {!isMe && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <button>Ignore user</button>
                     <button>Block user</button>
-                    <button onClick={logout}>Logout</button>
                 </div>
             )}
-            {// TODO: remove logout from above ^^ only for debugging lol 
-            }
-            {userId === myUserId && <button onClick={logout}>Logout</button>}
+            {isMe && <button onClick={logout}>Logout</button>}
         </>
     );
 }

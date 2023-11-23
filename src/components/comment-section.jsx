@@ -3,7 +3,7 @@
 
 import Report from './report'
 import Avatar from './avatar'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
@@ -166,16 +166,16 @@ function CommentList({ comments, onDeleteComment, curUserId }) {
 
 export default function CommentSection({ trackId }) {
     let content;
-    const curUserId = useRef(''); // 'Assignments to the 'curUserId' variable from inside React Hook useEffect will be lost after each render.'
+    const [curUserId, setCurUserId] = useState(''); // 'Assignments to the 'curUserId' variable from inside React Hook useEffect will be lost after each render.'
     const [comments, setComments] = useState([]);
     const supabase = createClientComponentClient();
 
     useEffect(() => {
         const getUser = async () => {
             const { data: { user } } = await supabase.auth.getUser();
-            curUserId.current = user?.id;
+            setCurUserId(user?.id);
         }
-        getUser()
+        getUser();
     }, [])
 
     useEffect(() => {
@@ -221,7 +221,7 @@ export default function CommentSection({ trackId }) {
                 <CommentList
                     comments={comments}
                     onDeleteComment={handleDeleteComment}
-                    curUserId={curUserId.current}
+                    curUserId={curUserId}
                 />
             </>
         );
