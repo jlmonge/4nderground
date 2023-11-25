@@ -70,7 +70,7 @@ input[type=password] {
 
 input[type=text] {
   padding: 2px;
-  width: 512px;
+  width: 80vw;
 }
 
 .auth {
@@ -101,4 +101,8 @@ kbd {
   line-height: 1;
   padding: 2px 4px;
   white-space: nowrap;
+}
+
+input.link-input {
+  width: 36vw;
 }
