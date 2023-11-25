@@ -23,7 +23,7 @@ export default function Avatar({ userId }) {
                 backgroundColor: 'black',
                 color: 'white',
                 height: '512px',
-                width: '512px',
+                width: '90vw',
             }}>
                 <button
                     id="close"
