@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from '../styles/Profile.module.css';
+import { varLog } from '../utils/helpers';
+import Link from 'next/link';
 
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
@@ -21,6 +23,7 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                         name="edit-link-url"
                         placeholder="Link URL"
                         className="link-input"
+                        required
                         value={link.url}
                         onChange={e => {
                             onChange({
@@ -38,6 +41,7 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                         placeholder="Link text"
                         className="link-input"
                         value={link.text}
+                        required
                         onChange={e => {
                             onChange({
                                 ...link,
@@ -111,11 +115,25 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
     );
 }
 
-function ProfileLinks({ userId, isMe }) {
+function ProfileLinks({ userId, isMe, db }) {
     const [links, setLinks] = useState([]); // links that are displayed to everyone
     const [draftLinks, setDraftLinks] = useState([]); // links as seen in edit mode
-    const [draftPos, setDraftPos] = useState(1)
+    const [draftPos, setDraftPos] = useState(1);
+    const [status, setStatus] = useState('');
     const [isEditing, setIsEditing] = useState(false);
+
+    useEffect(() => {
+        const fetchLinks = async () => {
+            const { data, error } = await db
+                .from('links')
+                .select('pos, url, text')
+                .eq('user_id', userId)
+                .neq('url', '');
+            varLog({ data });
+            setLinks(data);
+        };
+        fetchLinks();
+    }, [db, userId]);// do not put links in this array.moron.
 
     const handleStartEdit = () => {
         setIsEditing(true);
@@ -156,7 +174,7 @@ function ProfileLinks({ userId, isMe }) {
         setDraftPos(draftPos - 1)
     }
 
-    const handleSaveChanges = (e) => {
+    const handleSaveChanges = async (e) => {
         e.preventDefault();
 
         const form = e.target;
@@ -186,8 +204,19 @@ function ProfileLinks({ userId, isMe }) {
             }
         }
 
-        setIsEditing(false);
-        setLinks([...newLinks]);
+        const res = await fetch('/api/save-links', {
+            method: 'POST',
+            body: JSON.stringify({ oldLinks: links, newLinks, userId }),
+        });
+        const resJson = await res.json()
+        if (!res.ok) {
+            console.log("changes could not be saved. tough.")
+        } else {
+            setIsEditing(false);
+            setLinks([...newLinks]);
+        }
+        setStatus(resJson.message)
+
     };
 
     // useEffect(() => {
@@ -206,9 +235,9 @@ function ProfileLinks({ userId, isMe }) {
                     )}
                     <button
                         type="submit"
-                    // TODO: disable save if no new information (is this worth the)
-                    // TODO: possible performance hit?)
-                    //disabled={JSON.stringify(draftLinks) === JSON.stringify(links)}
+                        // TODO: disable save if no new information (is this worth the)
+                        // TODO: possible performance hit?)
+                        disabled={JSON.stringify(draftLinks) === JSON.stringify(links)}
                     >
                         Save changes
                     </button>
@@ -221,6 +250,7 @@ function ProfileLinks({ userId, isMe }) {
                     Add link
                 </button>
                 <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+                <p>{status}</p>
                 <p>draftLinks debug: {JSON.stringify(draftLinks)}</p>
             </>
         );
@@ -290,14 +320,19 @@ export default function Profile({ userId }) {
     return (
         <>
             <p>{userId} {isMe && '(you)'}</p>
-            <ProfileLinks userId={userId} isMe={isMe} />
+            <ProfileLinks userId={userId} isMe={isMe} db={supabase} />
             {!isMe && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <button>Ignore user</button>
                     <button>Block user</button>
                 </div>
             )}
-            {isMe && <button onClick={logout}>Logout</button>}
+            {isMe &&
+                <>
+                    <Link href="/settings">Settings</Link>
+                    <button onClick={logout}>Logout</button>
+                </>
+            }
         </>
     );
 }
