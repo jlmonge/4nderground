@@ -307,6 +307,7 @@ export default function Profile({ userId }) {
         getUserId();
     }, [supabase, userId]);
 
+
     const logout = async () => {
         await fetch(`/auth/logout`, {
             method: 'POST',
