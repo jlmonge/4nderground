@@ -3,18 +3,22 @@
 import { navList, navListElem, floatRight, navListLink, btn } from '../styles/navbar.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Avatar from './avatar';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useEffect, useState } from 'react';
 
 
-export default function Navbar({ user }) {
-    const router = useRouter();
+export default function Navbar() {
+    const [curUser, setCurUser] = useState(null);
+    const supabase = createClientComponentClient();
 
-    const logout = async () => {
-        await fetch(`/auth/logout`, {
-            method: 'POST',
-        });
-        router.refresh(); // HACK? This overrides the logout redirect, so that's gone.
-        console.log('logout lol');
-    };
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setCurUser(user);
+        }
+        getUser();
+    }, [])
 
     return (
         <>
@@ -33,9 +37,14 @@ export default function Navbar({ user }) {
                         <Link className={navListLink} href="/upload">Upload</Link>
                     </li>
                     <li className={`${navListElem} ${floatRight}`}>
-                        {user
-                            ? <button onClick={logout} className={btn}>Logout {user.id}</button>
-                            : <Link className={navListLink} href="/login">GET IN!</Link>
+                        {curUser ?
+                            (
+                                <>
+                                    <p>debug: {curUser.email}</p>
+                                    <Avatar userId={curUser.id} />
+                                </>
+                            ) :
+                            <Link className={navListLink} href="/login">GET IN!</Link>
                         }
                     </li>
                 </ul>

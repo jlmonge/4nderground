@@ -8,3 +8,8 @@ export const getDayAgo = () => {
     return dayAgo;
 };
 
+export const varLog = (vObj) => {
+    let name = Object.keys(vObj)[0];
+    let value = vObj[name];
+    console.log(`${name} (type ${typeof vObj}): ${JSON.stringify(value, null, 2)}`);
+}

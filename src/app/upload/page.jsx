@@ -134,8 +134,8 @@ export default function Upload() {
             <h1>Upload a file</h1>
             <form onSubmit={handleSubmit}>
                 <input
-                    type='file'
-                    name='user-file'
+                    type="file"
+                    name="user-file"
                     onChange={handleChange}
                     required
                 />
@@ -147,7 +147,7 @@ export default function Upload() {
                         )
                     }
                 </select>
-                <button type='submit' disabled={!file || error.message || isUploaded}>Upload</button>
+                <button type="submit" disabled={!file || error.message || isUploaded}>Upload</button>
             </form>
             <Debug error={error} uploadSuccess={isUploaded} path={filePath} />
             <Status error={error} uploadSuccess={isUploaded} path={filePath} />

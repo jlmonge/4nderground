@@ -47,7 +47,8 @@ export default function Report({ BTN_SIZE, areTracks }) {
                         margin: '2px',
                         fontSize: '16px',
                         color: 'white',
-                    }}>
+                    }}
+                >
                     X
                 </button>
                 <h1>Report</h1>
@@ -70,7 +71,7 @@ export default function Report({ BTN_SIZE, areTracks }) {
                     src="flag.svg"
                     width={BTN_SIZE}
                     height={BTN_SIZE}
-                    alt="Skip Back"
+                    alt="Report icon"
                 />
             </button>
         </>

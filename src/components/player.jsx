@@ -116,7 +116,7 @@ export default function Player() {
             const dayAgo = getDayAgo();
             let { data, error } = await supabase
                 .from('tracks')
-                .select()
+                .select('*')
                 .gt('created_at', dayAgo)
                 .order('created_at', { ascending: false });
 
