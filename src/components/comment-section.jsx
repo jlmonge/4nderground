@@ -3,9 +3,10 @@
 
 import Report from './report'
 import Avatar from './avatar'
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { UserContext } from '../user-provider';
 
 /*
 DISPLAY WISE: A comment consists of:
@@ -166,17 +167,17 @@ function CommentList({ comments, onDeleteComment, curUserId }) {
 
 export default function CommentSection({ trackId }) {
     let content;
-    const [curUserId, setCurUserId] = useState(''); // 'Assignments to the 'curUserId' variable from inside React Hook useEffect will be lost after each render.'
+    //const [curUserId, setCurUserId] = useState(''); // 'Assignments to the 'curUserId' variable from inside React Hook useEffect will be lost after each render.'
     const [comments, setComments] = useState([]);
     const supabase = createClientComponentClient();
+    const { user, setUser } = useContext(UserContext);
 
-    useEffect(() => {
-        const getUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setCurUserId(user?.id);
-        }
-        getUser();
-    }, [])
+    // useEffect(() => {
+    //     const getUser = async () => {            
+    //         setCurUserId(user?.id);
+    //     }
+    //     getUser();
+    // }, [user])
 
     useEffect(() => {
         if (trackId) {
@@ -192,7 +193,7 @@ export default function CommentSection({ trackId }) {
             };
             fetchComments();
         }
-    }, [trackId]);
+    }, [trackId, supabase]);
 
     const handleAddComment = (commentObj) => {
         console.log(`NEW COMMENT: ${JSON.stringify(commentObj, null, '\t')}`);
@@ -221,7 +222,7 @@ export default function CommentSection({ trackId }) {
                 <CommentList
                     comments={comments}
                     onDeleteComment={handleDeleteComment}
-                    curUserId={curUserId}
+                    curUserId={user?.id}
                 />
             </>
         );

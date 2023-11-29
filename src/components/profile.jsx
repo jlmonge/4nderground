@@ -3,10 +3,11 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from '../styles/Profile.module.css';
 import { varLog } from '../utils/helpers';
 import Link from 'next/link';
+import { UserContext } from '../user-provider';
 
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
@@ -129,7 +130,7 @@ function ProfileLinks({ userId, isMe, db }) {
                 .select('pos, url, text')
                 .eq('user_id', userId)
                 .neq('url', '');
-            varLog({ data });
+            //varLog({ data });
             setLinks(data);
         };
         fetchLinks();
@@ -291,27 +292,25 @@ function ProfileLinks({ userId, isMe, db }) {
     );
 }
 
-export default function Profile({ userId }) {
+export default function Profile({ userId, handleClose }) {
     const [isMe, setIsMe] = useState(false);
     const supabase = createClientComponentClient();
     const router = useRouter(); // next/navigation
+    const { user, setUser } = useContext(UserContext);
 
     useEffect(() => {
-        const getUserId = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setIsMe(user?.id === userId);
-            console.log(`my user id: ${user?.id}`);
-            console.log(`THE user id: ${userId}`)
-            console.log(`are they the same?: ${(user?.id === userId).toString()}`)
-        };
-        getUserId();
-    }, [supabase, userId]);
+        setIsMe(user?.id === userId);
+        // console.log(`my user id: ${user?.id}`);
+        // console.log(`THE user id: ${userId}`);
+        // console.log(`are they the same?: ${(user?.id === userId).toString()}`);
+    }, [user, userId]);
 
 
     const logout = async () => {
         await fetch(`/auth/logout`, {
             method: 'POST',
         });
+        handleClose();
         router.refresh();
         console.log('logout lol');
     };
