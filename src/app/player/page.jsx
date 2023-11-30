@@ -1,5 +1,3 @@
-import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import Player from '../../components/player.jsx';
 
 export const metadata = {
