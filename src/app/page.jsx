@@ -1,7 +1,3 @@
-import Login from './login/page.jsx';
-import Upload from './upload/page.jsx';
-import Report from '../components/report.jsx';
-
 export const metadata = {
     title: 'Discover the newest ideas in music | 4nderground',
 };

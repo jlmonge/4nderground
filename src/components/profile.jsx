@@ -185,7 +185,7 @@ function ProfileLinks({ userId, isMe, db }) {
         const fieldRegex = new RegExp('^(.+?)-');
         const idRegex = new RegExp('\-(.*)');
         let newLinks = [];
-        let newLink = {}
+        let newLink = {};
         let pos = 1;
 
         for (let entry of formData.entries()) {
@@ -310,6 +310,7 @@ export default function Profile({ userId, handleClose }) {
         await fetch(`/auth/logout`, {
             method: 'POST',
         });
+        setUser(null);
         handleClose();
         router.refresh();
         console.log('logout lol');
