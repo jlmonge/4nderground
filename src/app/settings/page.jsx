@@ -7,19 +7,12 @@ export default function SettingsPage() {
             flexDirection: 'column',
             gap: '24px'
         }}>
-            <form action="/auth/change-email" method="POST">
-                <label htmlFor="new-email">Change email</label>
-                <input type="email" name="new-email" />
-                <button type="submit">Confirm new email</button>
-            </form>
-            <form action="/auth/change-password" method="POST">
-                <label htmlFor="new-password">Change password</label>
-                <input type="password" name="new-password" />
-                <button type="submit">Confirm new password</button>
-            </form>
+
+            <Link href="/settings/update/email">Update email</Link>
+            <Link href="/settings/update/password">Update password</Link>
             <Link href="/settings/ignored">Manage ignored users</Link>
             <Link href="/settings/blocked">Manage blocked users</Link>
-            <button>Delete account</button>
+            <Link href="/settings/delete-account">Delete account</Link>
         </div>
     );
 }

@@ -330,7 +330,7 @@ export default function Profile({ userId, handleClose }) {
             )}
             {isMe &&
                 <>
-                    <Link href="/settings">Settings</Link>
+                    <Link href="/settings" onClick={handleClose}>Settings</Link>
                     <button onClick={logout}>Logout</button>
                 </>
             }

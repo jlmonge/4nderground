@@ -15,7 +15,7 @@ export async function POST(req) {
     console.log(`changed password, see data: ${JSON.stringify(data)}`);
     if (error) {
         return NextResponse.redirect(
-            `${reqUrl.origin}/login?error=Password not changed, database error`,
+            `${reqUrl.origin}/settings?error=Password not changed, database error`,
             {
                 status: 301,
             }
@@ -23,7 +23,7 @@ export async function POST(req) {
     }
 
     return NextResponse.redirect(
-        `${reqUrl.origin}/login?message=Password changed, try logging in`,
+        `${reqUrl.origin}/settings?message=Password changed`,
         {
             status: 301,
         }

@@ -7,25 +7,24 @@ import { NextResponse } from 'next/server';
 export async function POST(req) {
     const requestUrl = new URL(req.url);
     const formData = await req.formData();
-    const newEmail = formData.get('new-email');
+    const newEmail = formData.get('email');
     console.log(`newEmail: ${newEmail}`);
 
-    //const cookieStore = cookies();
-    //const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-    //const { data, error } = await supabase.auth.updateUser({ email: newEmail });
-    /*
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+    const { data, error } = await supabase.auth.updateUser({ email: newEmail });
+
     if (error) return NextResponse.redirect(
-        `${requestUrl.origin}/settings?message=Email change failed`,
+        `${requestUrl.origin}/settings?error=Email change failed`,
         {
             status: 301,
         }
     );
-    */
 
-    console.log(`from change email route, newEmail: ${newEmail}`);
+    console.log(`from change email route, here's the new data: ${data}`);
     return NextResponse.redirect(
         //`${requestUrl.origin}/settings?message=Email changed successfully`,
-        `${requestUrl.origin}/settings?message=email decoy`,
+        `${requestUrl.origin}/settings?message=Email successfully womg`,
         {
             status: 301,
         }

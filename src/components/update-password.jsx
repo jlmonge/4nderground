@@ -1,10 +1,10 @@
 import { PasswordField } from './Shared/form-fields';
 
-export default function ChangePass() {
+export default function UpdatePassword({ route }) {
     return (
         <>
             <p>Change your password here:</p>
-            <form action="/auth/reset-password" method="POST">
+            <form action={route} method="POST">
                 <PasswordField />
                 <button type="submit">Save</button>
             </form>
