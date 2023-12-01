@@ -14,17 +14,20 @@ export async function POST(req) {
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const { data, error } = await supabase.auth.updateUser({ email: newEmail });
 
-    if (error) return NextResponse.redirect(
-        `${requestUrl.origin}/settings?error=Email change failed`,
-        {
-            status: 301,
-        }
-    );
+    if (error) {
+        console.log(`sad. tell me why i failed: ${error}`);
+        return NextResponse.redirect(
+            `${requestUrl.origin}/settings?error=Email change failed LMAO`,
+            {
+                status: 301,
+            }
+        );
+    }
 
     console.log(`from change email route, here's the new data: ${data}`);
     return NextResponse.redirect(
         //`${requestUrl.origin}/settings?message=Email changed successfully`,
-        `${requestUrl.origin}/settings?message=Email successfully womg`,
+        `${requestUrl.origin}/update-email-waiting-room?message=Your email change will complete once both emails have confirmed the change.`,
         {
             status: 301,
         }
