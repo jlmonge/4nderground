@@ -205,7 +205,7 @@ function ProfileLinks({ userId, isMe, db }) {
             }
         }
 
-        const res = await fetch('/api/save-links', {
+        const res = await fetch('/api/links', {
             method: 'POST',
             body: JSON.stringify({ oldLinks: links, newLinks, userId }),
         });
@@ -316,16 +316,36 @@ export default function Profile({ userId, handleClose }) {
         console.log('logout lol');
     };
 
-    //const cookieStore = cookies();
-    //const supabase = createClientComponentClient({ cookies: () => cookieStore });
+    const handleIgnoreBlock = async (action, urID) => {
+        if (!user) {
+            console.log('You must be logged in to perform this action.')
+            return;
+        }
+        const data = new FormData();
+        data.append('action', action);
+        data.append('myID', user.id);
+        data.append('urID', urID);
+        const res = await fetch(`/api/ignore-block/add`, {
+            method: 'POST',
+            body: data
+        });
+        const resJson = await res.json();
+
+        if (!res.ok) {
+            console.log(`${action} failed`)
+        } else {
+            console.log(`${resJson.message}`)
+        }
+    };
+
     return (
         <>
             <p>{userId} {isMe && '(you)'}</p>
             <ProfileLinks userId={userId} isMe={isMe} db={supabase} />
             {!isMe && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <button>Ignore user</button>
-                    <button>Block user</button>
+                    <button onClick={() => handleIgnoreBlock('ignore', userId)}>Ignore user</button>
+                    <button onClick={() => handleIgnoreBlock('block', userId)}>Block user</button>
                 </div>
             )}
             {isMe &&
