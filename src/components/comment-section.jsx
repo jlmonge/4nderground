@@ -70,7 +70,7 @@ function Comment({ comment, onDelete, isMyComment }) {
                     }}
                 >
                     <Image
-                        src="trash-2.svg"
+                        src="/trash-2.svg"
                         alt="Delete comment icon"
                         sizes={BTN_SIZE}
                         fill
@@ -201,7 +201,6 @@ export default function CommentSection({ trackId }) {
             commentObj,
             ...comments,
         ]);
-        console.log(":o new comment")
     };
 
     const handleDeleteComment = (commentId) => {

@@ -11,7 +11,7 @@ import { getDayAgo } from '../utils/helpers';
 import CommentSection from '../components/comment-section';
 
 const BTN_SIZE = 24;
-const DEBUG = false; // redundant; replace soon
+const DEBUG = true; // redundant; replace soon
 
 function Loading() {
     return (
@@ -40,7 +40,7 @@ export default function Player() {
             <>
                 <button style={{ backgroundColor: 'black' }} onClick={handleClick} type="button" disabled={!tracks.length}>
                     <Image
-                        src="skip-back.svg"
+                        src="/skip-back.svg"
                         width={BTN_SIZE}
                         height={BTN_SIZE}
                         alt="Skip Back"
@@ -59,7 +59,7 @@ export default function Player() {
             <>
                 <button style={{ backgroundColor: 'black' }} onClick={handleClick} type="button" disabled={!tracks.length}>
                     <Image
-                        src="skip-forward.svg"
+                        src="/skip-forward.svg"
                         width={BTN_SIZE}
                         height={BTN_SIZE}
                         alt="Skip Forward"
@@ -79,7 +79,7 @@ export default function Player() {
             <>
                 <button style={{ backgroundColor: 'black' }} onClick={handleClick} type="button" disabled={!tracks.length}>
                     <Image
-                        src={playing ? 'pause.svg' : 'play.svg'}
+                        src={playing ? '/pause.svg' : '/play.svg'}
                         width={BTN_SIZE}
                         height={BTN_SIZE}
                         alt={playing ? 'Pause' : 'Play'}
@@ -169,7 +169,7 @@ export default function Player() {
                             </Fragment>)
 
                     })}
-                    <p>full load:{JSON.stringify(tracks, null, 2)}</p>
+                    <div>full load: <pre>{JSON.stringify(tracks, null, 2)}</pre></div>
                 </div>
             </Suspense>
         </>

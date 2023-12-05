@@ -67,7 +67,7 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                         }}
                     >
                         <Image
-                            src="trash-2.svg"
+                            src="/trash-2.svg"
                             alt="Delete comment icon"
                             sizes={BTN_SIZE}
                             fill
@@ -102,7 +102,7 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                     gap: '4px'
                 }}>
                     <Image
-                        src="link.svg"
+                        src="/link.svg"
                         alt="Link icon"
                         width={ICON_SIZE}
                         height={ICON_SIZE}
@@ -316,16 +316,15 @@ export default function Profile({ userId, handleClose }) {
         console.log('logout lol');
     };
 
-    const handleIgnoreBlock = async (action, urID) => {
+    const handleAddRestrict = async (urID, action) => {
         if (!user) {
             console.log('You must be logged in to perform this action.')
             return;
         }
         const data = new FormData();
-        data.append('action', action);
         data.append('myID', user.id);
         data.append('urID', urID);
-        const res = await fetch(`/api/ignore-block/add`, {
+        const res = await fetch(`/api/${action}/add`, {
             method: 'POST',
             body: data
         });
@@ -344,8 +343,8 @@ export default function Profile({ userId, handleClose }) {
             <ProfileLinks userId={userId} isMe={isMe} db={supabase} />
             {!isMe && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <button onClick={() => handleIgnoreBlock('ignore', userId)}>Ignore user</button>
-                    <button onClick={() => handleIgnoreBlock('block', userId)}>Block user</button>
+                    <button onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
+                    <button onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
                 </div>
             )}
             {isMe &&

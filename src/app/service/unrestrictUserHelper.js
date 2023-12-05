@@ -2,28 +2,35 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-export async function POST(req) {
+export async function unrestrictUserHelper(req, action) {
     const formData = await req.formData();
-    const action = formData.get('action');
     const myID = formData.get('myID');
     const urID = formData.get('urID');
-    let insertObj;
+    let myCol, urCol;
     if (action === 'ignore') {
-        insertObj = { ignorer_id: myID, ignored_id: urID };
+        myCol = 'ignorer_id';
+        urCol = 'ignored_id';
     }
     else if (action === 'block') {
-        insertObj = { blocker_id: myID, blocked_id: urID };
+        myCol = 'blocker_id';
+        urCol = 'blocked_id';
     }
+
+    console.log(`debug: (myCol, myID) => (${myCol},${myID})`);
+    console.log(`debug: (urCol, urID) => (${urCol},${urID})`);
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const { data, error } = await supabase
         .from(`${action}s`)
-        .insert(insertObj)
-        .select();
-    //console.log(`${action} data: ${JSON.stringify(data)}`);
+        .delete()
+        .eq(myCol, myID)
+        .eq(urCol, urID)
+        .select()
     if (error) throw new Error(error);
+    console.log(`un${action} data: ${JSON.stringify(data)}`);
+
 
     return NextResponse.json({
-        message: `${action}: ${myID} to ${urID}`
+        message: `OFFICIAL RESPONSE: un${action}: ${myID} to ${urID}`
     }, { status: 200 });
 }

@@ -68,7 +68,7 @@ export default function Report({ BTN_SIZE, areTracks }) {
             </dialog>
             <button style={{ backgroundColor: 'black' }} onClick={handleOpen} type="button" disabled={areTracks}>
                 <Image
-                    src="flag.svg"
+                    src="/flag.svg"
                     width={BTN_SIZE}
                     height={BTN_SIZE}
                     alt="Report icon"
