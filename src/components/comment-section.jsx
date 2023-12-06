@@ -181,7 +181,7 @@ export default function CommentSection({ trackId }) {
 
     useEffect(() => {
         if (trackId) {
-            console.log(`new trackId, fetching new comments: ${trackId}`)
+            //console.log(`new trackId, fetching new comments: ${trackId}`)
             const fetchComments = async () => {
                 let { data, error } = await supabase
                     .from('comments')

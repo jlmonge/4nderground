@@ -4,11 +4,12 @@
 import styles from '../styles/Player.module.css';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Image from 'next/image';
-import { Fragment, Suspense, useEffect, useState, useRef } from 'react';
+import { Fragment, Suspense, useEffect, useState, useRef, useContext } from 'react';
 import { useGlobalAudioPlayer } from 'react-use-audio-player';
 import Report from './report';
 import { getDayAgo } from '../utils/helpers';
 import CommentSection from '../components/comment-section';
+import { UserContext } from '../user-provider';
 
 const BTN_SIZE = 24;
 const DEBUG = true; // redundant; replace soon
@@ -26,6 +27,7 @@ export default function Player() {
     const [tracks, setTracks] = useState([]);
     const [trackIndex, setTrackIndex] = useState(0);
     const [pos, setPos] = useState(0);
+    const { user, setUser } = useContext(UserContext);
     //const posRef = useRef();
     const supabase = createClientComponentClient();
     // src is url of file being played.
@@ -114,22 +116,22 @@ export default function Player() {
     useEffect(() => {
         const fetchTracks = async () => {
             const dayAgo = getDayAgo();
-            let { data, error } = await supabase
-                .from('tracks')
-                .select('*')
-                .gt('created_at', dayAgo)
-                .order('created_at', { ascending: false });
+            let data, error;
+            console.log(`USER: ${JSON.stringify(user)}`);
+            if (!user) {
+                console.log('logged out');
+                ({ data, error } = await supabase.from('tracks').select('*').gt('created_at', dayAgo).order('created_at', { ascending: false }));
 
-            setTracks(data);
-        };
-        fetchTracks();
-        /*
-        if (TESTING) {
-            frameRef.current = window.requestAnimationFrame(animate);
-            return () => cancelAnimationFrame(frameRef.current);
+            } else {
+                console.log('logged in');
+                ({ data, error } = await supabase.rpc('select_tracks', { cur_user_id: user.id }));
+                console.log(`trax for ${user.id}: ${JSON.stringify(data, null, 2)}`);
+            }
+            console.log(`ERROR: ${JSON.stringify(error)}`);
+            setTracks(data ?? []);
         }
-        */
-    }, []);
+        fetchTracks();
+    }, [user?.id]);
 
     useEffect(() => {
         if (tracks.length) {
@@ -139,7 +141,7 @@ export default function Player() {
                 html5: true,
                 onend: () => setTrackIndex((trackIndex + 1) % tracks.length),
             });
-            console.log(`track index changed, loading filepath: ${file_path}`);
+            //console.log(`track index changed, loading filepath: ${file_path}`);
         }
     }, [load, tracks, trackIndex]);
 
@@ -147,7 +149,7 @@ export default function Player() {
         <>
             <p>{playing ? 'Now playing' : 'Now paused'}</p>
 
-            <p> TRACK BY {tracks[trackIndex]?.uploader_id}</p>
+            <p>TRACK BY {tracks[trackIndex]?.uploader_id}</p>
             <SkipBack />
             <PlayPause />
             <SkipForward />
@@ -157,7 +159,7 @@ export default function Player() {
 
             <Suspense fallback={<Loading />}>
                 <div style={{ display: DEBUG ? 'block' : 'none' }}>
-                    {tracks?.map((track) => {
+                    {/* {tracks?.map((track) => {
                         return (
                             <Fragment key={track.id}>
                                 <p>ID: {track.id}</p>
@@ -168,7 +170,7 @@ export default function Player() {
                                 <hr />
                             </Fragment>)
 
-                    })}
+                    })} */}
                     <div>full load: <pre>{JSON.stringify(tracks, null, 2)}</pre></div>
                 </div>
             </Suspense>
