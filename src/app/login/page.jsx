@@ -1,19 +1,15 @@
-import { EmailField, PasswordField } from '../../components/Shared/form-fields.jsx';
 import Link from 'next/link';
+import Login from '../../components/login';
 
 export const metadata = {
     title: 'Login',
 }
 
-export default function Login() {
+export default function LoginPage() {
     return (
         <div className="auth">
-            <form action="/auth/login" method="POST">
-                <EmailField />
-                <PasswordField />
-                <button type="submit">Log In</button>
-            </form>
-            <Link href="/forgot-password">Forgot password?</Link>
+            <Login />
+            <Link href="/recovery">Forgot password?</Link>
             <Link href="/register">Sign up</Link>
         </div>
     );

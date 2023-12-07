@@ -43,7 +43,7 @@ export default function Avatar({ userId }) {
                 >
                     X
                 </button>
-                <Profile userId={userId} />
+                <Profile userId={userId} handleClose={handleClose} />
             </dialog>
             <div
                 style={{

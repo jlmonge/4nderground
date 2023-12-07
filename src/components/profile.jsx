@@ -3,10 +3,11 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from '../styles/Profile.module.css';
 import { varLog } from '../utils/helpers';
 import Link from 'next/link';
+import { UserContext } from '../user-provider';
 
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
@@ -66,7 +67,7 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                         }}
                     >
                         <Image
-                            src="trash-2.svg"
+                            src="/trash-2.svg"
                             alt="Delete comment icon"
                             sizes={BTN_SIZE}
                             fill
@@ -101,7 +102,7 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                     gap: '4px'
                 }}>
                     <Image
-                        src="link.svg"
+                        src="/link.svg"
                         alt="Link icon"
                         width={ICON_SIZE}
                         height={ICON_SIZE}
@@ -129,7 +130,7 @@ function ProfileLinks({ userId, isMe, db }) {
                 .select('pos, url, text')
                 .eq('user_id', userId)
                 .neq('url', '');
-            varLog({ data });
+            //varLog({ data });
             setLinks(data);
         };
         fetchLinks();
@@ -184,7 +185,7 @@ function ProfileLinks({ userId, isMe, db }) {
         const fieldRegex = new RegExp('^(.+?)-');
         const idRegex = new RegExp('\-(.*)');
         let newLinks = [];
-        let newLink = {}
+        let newLink = {};
         let pos = 1;
 
         for (let entry of formData.entries()) {
@@ -204,7 +205,7 @@ function ProfileLinks({ userId, isMe, db }) {
             }
         }
 
-        const res = await fetch('/api/save-links', {
+        const res = await fetch('/api/links', {
             method: 'POST',
             body: JSON.stringify({ oldLinks: links, newLinks, userId }),
         });
@@ -291,46 +292,64 @@ function ProfileLinks({ userId, isMe, db }) {
     );
 }
 
-export default function Profile({ userId }) {
+export default function Profile({ userId, handleClose }) {
     const [isMe, setIsMe] = useState(false);
     const supabase = createClientComponentClient();
     const router = useRouter(); // next/navigation
+    const { user, setUser } = useContext(UserContext);
 
     useEffect(() => {
-        const getUserId = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setIsMe(user?.id === userId);
-            console.log(`my user id: ${user?.id}`);
-            console.log(`THE user id: ${userId}`)
-            console.log(`are they the same?: ${(user?.id === userId).toString()}`)
-        };
-        getUserId();
-    }, [supabase, userId]);
+        setIsMe(user?.id === userId);
+        // console.log(`my user id: ${user?.id}`);
+        // console.log(`THE user id: ${userId}`);
+        // console.log(`are they the same?: ${(user?.id === userId).toString()}`);
+    }, [user, userId]);
 
 
     const logout = async () => {
         await fetch(`/auth/logout`, {
             method: 'POST',
         });
+        setUser(null);
+        handleClose();
         router.refresh();
         console.log('logout lol');
     };
 
-    //const cookieStore = cookies();
-    //const supabase = createClientComponentClient({ cookies: () => cookieStore });
+    const handleAddRestrict = async (urID, action) => {
+        if (!user) {
+            console.log('You must be logged in to perform this action.')
+            return;
+        }
+        const data = new FormData();
+        data.append('myID', user.id);
+        data.append('urID', urID);
+        const res = await fetch(`/api/${action}/add`, {
+            method: 'POST',
+            body: data
+        });
+        const resJson = await res.json();
+
+        if (!res.ok) {
+            console.log(`${action} failed`)
+        } else {
+            console.log(`${resJson.message}`)
+        }
+    };
+
     return (
         <>
             <p>{userId} {isMe && '(you)'}</p>
             <ProfileLinks userId={userId} isMe={isMe} db={supabase} />
             {!isMe && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <button>Ignore user</button>
-                    <button>Block user</button>
+                    <button onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
+                    <button onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
                 </div>
             )}
             {isMe &&
                 <>
-                    <Link href="/settings">Settings</Link>
+                    <Link href="/settings" onClick={handleClose}>Settings</Link>
                     <button onClick={logout}>Logout</button>
                 </>
             }

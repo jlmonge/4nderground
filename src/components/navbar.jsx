@@ -5,20 +5,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Avatar from './avatar';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../user-provider';
 
 
 export default function Navbar() {
-    const [curUser, setCurUser] = useState(null);
-    const supabase = createClientComponentClient();
+    const { user, setUser } = useContext(UserContext);
+    //const supabase = createClientComponentClient();
 
-    useEffect(() => {
-        const getUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setCurUser(user);
-        }
-        getUser();
-    }, [])
+    // useEffect(() => {
+    //     const getUser = async () => {
+    //         const { data: { user } } = await supabase.auth.getUser();
+    //         setCurUser(user);
+    //     }
+    //     getUser();
+    // }, [supabase.auth])
 
     return (
         <>
@@ -37,11 +38,11 @@ export default function Navbar() {
                         <Link className={navListLink} href="/upload">Upload</Link>
                     </li>
                     <li className={`${navListElem} ${floatRight}`}>
-                        {curUser ?
+                        {user ?
                             (
                                 <>
-                                    <p>debug: {curUser.email}</p>
-                                    <Avatar userId={curUser.id} />
+                                    <p>debug: {user.email}</p>
+                                    <Avatar userId={user.id} />
                                 </>
                             ) :
                             <Link className={navListLink} href="/login">GET IN!</Link>

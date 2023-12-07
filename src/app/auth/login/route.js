@@ -13,7 +13,7 @@ export async function POST(request) {
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
     });
@@ -26,6 +26,7 @@ export async function POST(request) {
             }
         );
     }
+    //console.log(`signInWithPassword data: ${JSON.stringify(data)}`)
 
     return NextResponse.redirect(`${requestUrl.origin}/player`, {
         status: 301,
