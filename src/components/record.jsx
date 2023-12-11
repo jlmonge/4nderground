@@ -2,18 +2,56 @@
 
 import Image from 'next/image';
 import { useEffect, useReducer, useRef, useState } from 'react';
-const BTN_SIZE = 32;
+import { GENRES } from '../utils/constants';
+const BTN_SIZE = 128;
 const constraints = {
     audio: true,
     video: false,
 };
 
-function Preview({ src }) {
+function PrepareUpload({ src }) {
+    const [genre, setGenre] = useState('');
+    const [isUploaded, setIsUploaded] = useState(false);
+
+    const handleSelectChange = (e) => {
+        setGenre(e.target.value)
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        console.log("submitting");
+
+        if (!src) {
+            console.log("Recording not found.");
+            return;
+        }
+
+        try {
+            console.log("we're trying.");
+            setIsUploaded(true);
+        } catch (e) {
+            console.log(e);
+        }
+
+    }
     return (
         <>
             <audio src={src} controls>
                 Your browser does not support the {'<audio>'} HTML element.
             </audio>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="genre">Genre:</label>
+                <select id="genre" name="genre" onChange={handleSelectChange}>
+                    {
+                        Object.entries(GENRES).map(([key, str]) =>
+                            <option key={key} value={key}>{str}</option>
+                        )
+                    }
+                </select>
+                <button type="submit" disabled={!src || isUploaded}>Upload</button>
+            </form>
+            {isUploaded && <p>Upload was a success (not really we just testing)</p>}
         </>
     )
 }
@@ -87,8 +125,7 @@ export default function Record() {
                     style={{ objectFit: 'contain' }} // optional
                 />
             </button>
-            <p>{JSON.stringify(chunks.current)}</p>
-            {recordingURL.current && <Preview src={recordingURL.current} />}
+            {(recordingURL.current && !isRecording) && <PrepareUpload src={recordingURL.current} />}
         </>
     );
 }

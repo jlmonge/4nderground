@@ -101,7 +101,7 @@ export default function UploadPage() {
             setError({
                 reason: ERR_NO_FILE.reason,
                 message: ERR_NO_FILE.message,
-            })
+            });
             return;
         }
         //setError('');
