@@ -22,7 +22,7 @@ const MB = 1_000_000;
 const NUM_MB = 5 // TODO: change to 128MB once deployed
 export const MAX_SIZE = NUM_MB * MB;
 export const MIN_DURATION = 1; // TODO: change to 30s once deployed
-export const MAX_DURATION = 600;
+export const MAX_DURATION = 600; // 600s (10m)
 
 // Errors
 // -Status codes:https://en.wikipedia.org/wiki/List_of_HTTP_status_codes

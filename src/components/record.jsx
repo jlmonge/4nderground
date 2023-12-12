@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useReducer, useRef, useState } from 'react';
-import { GENRES } from '../utils/constants';
+import { GENRES, MAX_DURATION } from '../utils/constants';
 const BTN_SIZE = 128;
 const constraints = {
     audio: true,
@@ -52,18 +52,34 @@ function PrepareUpload({ src }) {
                 <button type="submit" disabled={!src || isUploaded}>Upload</button>
             </form>
             {isUploaded && <p>Upload was a success (not really we just testing)</p>}
+            <p>debug: {src}</p>
         </>
     )
 }
 
 export default function Record() {
+    const [seconds, setSeconds] = useState(0);
+    const [prevSeconds, setPrevSeconds] = useState(0);
     const [hasPermision, setHasPermission] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [blob, setBlob] = useState(null)
+    const intervalRef = useRef(null)
     const stream = useRef(null)
     const mediaRecorder = useRef(null);
     const chunks = useRef([]);
     const recordingURL = useRef(null);
+
+    const startTimer = () => {
+        console.log(`seconds: ${seconds}`);
+        intervalRef.current = setInterval(() => {
+            setSeconds(s => s + 1);
+        }, 1000)
+    }
+    const stopTimer = () => {
+        clearInterval(intervalRef.current);
+        setPrevSeconds(seconds);
+        setSeconds(0);
+    }
 
     const saveChunks = (e) => {
         chunks.current.push(e.data)
@@ -77,19 +93,29 @@ export default function Record() {
         chunks.current = [];
     }
 
+    const handleStartRecording = async () => {
+        await initializeAudio();
+        mediaRecorder.current.start();
+        startTimer();
+        setIsRecording(true);
+    }
+
+    const handleStopRecording = async () => {
+        mediaRecorder.current.stop();
+        // we only have one track (audio)
+        stream.current.getTracks()[0].stop();
+        stopTimer();
+        console.log('recorder has stopped');
+        setIsRecording(false);
+    }
+
     const handleRecording = async () => {
         if (!isRecording) {
-            await initializeAudio();
-            mediaRecorder.current.start();
-            setIsRecording(true);
+            setSeconds(s => 0);
+            await handleStartRecording();
         } else {
-            mediaRecorder.current.stop();
-            // we only have one track (audio)
-            stream.current.getTracks()[0].stop();
-            console.log('recorder has stopped');
-            setIsRecording(false);
+            await handleStopRecording();
         }
-
     }
 
     const initializeAudio = async () => {
@@ -105,9 +131,16 @@ export default function Record() {
         }
     }
 
+    useEffect(() => {
+        if (seconds >= MAX_DURATION) {
+            handleStopRecording();
+        }
+    }, [seconds, handleStopRecording])
+
     return (
         <>
             <p>Press the button to start recording.</p>
+            {isRecording && <p>Elapsed time: {`${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`}</p>}
             <button
                 type="button"
                 style={{
