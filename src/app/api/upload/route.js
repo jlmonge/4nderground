@@ -55,20 +55,30 @@ async function processFile(req) {
     const formData = await req.formData();
     const file = formData.get('file'); // returns File object
     const genre = formData.get('genre');
+    let duration = formData.get('duration');
+    console.log(`duration: ${duration}`)
+    const isRecording = formData.get('isrecording'); // detect if file from recording
     if (!file) throw new UploadError(ERR_NO_FILE.reason);
 
     const fileSize = file.size;
     const fileType = file.type;
+    console.log(`fileSize: ${fileSize}`);
+    console.log(`fileType: ${fileType}`);
     if (fileSize >= MAX_SIZE) throw new UploadError(ERR_TOO_BIG.reason);
 
-    // Convert audio file into something that can be more universally
-    // worked with (bytes).
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    if (!duration) {
+        // Convert audio file into bytes, then buffer, for the 'metadata' module to get
+        // the duration.
+        const bytes = await file.arrayBuffer(); // confusing naming
+        const buffer = Buffer.from(bytes); // confusing naming
 
-    // Retrieve duration using music-metadata.
-    const metadata = await parseBuffer(buffer, fileType);
-    const duration = Math.trunc(metadata.format.duration);
+        // Retrieve duration using music-metadata.
+        const metadata = await parseBuffer(buffer, fileType);
+        duration = Math.trunc(metadata.format.duration);
+        console.log(`duration: ${duration}`);
+    }
+
+    if (!duration) throw new Error("No duration found.");
     if (duration < MIN_DURATION) throw new UploadError(ERR_TOO_SHORT.reason);
     if (duration >= MAX_DURATION) throw new UploadError(ERR_TOO_LONG.reason);
 
@@ -77,10 +87,17 @@ async function processFile(req) {
     let fileExtension = fileName.match(extensionRegex); // type 'Array'
     if (!fileExtension) throw new UploadError(ERR_NO_EXT.reason);
 
-    // Create track information for database + storage
-    fileExtension = fileExtension[0]; // type 'String'
-    const fileId = uuidv4();
-    fileName = fileId + fileExtension;
+    // fileId: strictly the UUID of the file
+    // fileName: UUID AND file extension
+    let fileId;
+    if (!isRecording) {
+        // Create track information for database + storage
+        fileExtension = fileExtension[0]; // type 'String'
+        fileId = uuidv4();
+        fileName = fileId + fileExtension;
+    } else {
+        fileId = fileName.substring(0, fileName.indexOf('.'));
+    }
 
     const filePath = process.env.S3_BASE_URL + fileName;
     const localPath = `/${fileName}`;
@@ -120,6 +137,8 @@ async function uploadStorage(fileObj) {
 }
 
 async function uploadDatabase(dbClient, fileObj, user) {
+    // user not used bc supabase uses currently logged in user
+    // by default
     const { data: tracksData, error: tracksError } = await dbClient
         .from('tracks')
         .insert([

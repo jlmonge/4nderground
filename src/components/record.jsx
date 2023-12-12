@@ -1,15 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { GENRES, MAX_DURATION } from '../utils/constants';
+import { uploadFileHelper } from '../app/service/uploadFileHelper';
+
 const BTN_SIZE = 128;
 const constraints = {
     audio: true,
     video: false,
 };
 
-function PrepareUpload({ src }) {
+function PrepareUpload({ recordingURL, blob }) {
     const [genre, setGenre] = useState('');
     const [isUploaded, setIsUploaded] = useState(false);
 
@@ -17,19 +19,43 @@ function PrepareUpload({ src }) {
         setGenre(e.target.value)
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         console.log("submitting");
 
-        if (!src) {
+        if (!recordingURL) {
             console.log("Recording not found.");
             return;
         }
 
         try {
-            console.log("we're trying.");
-            setIsUploaded(true);
+            const data = new FormData();
+            const fileName = `${recordingURL.substring(recordingURL.lastIndexOf('/') + 1)}.webm`;
+            const file = new File([blob], fileName, {
+                type: "audio/webm;codecs=opus"
+            })
+            const context = new AudioContext();
+            const buffer = await file.arrayBuffer();
+            const audio = await context.decodeAudioData(buffer);
+            const duration = Math.trunc(audio.duration);
+
+            data.append('file', file);
+            data.append('genre', genre);
+            data.append('duration', duration);
+            data.append('isrecording', true);
+            const res = await uploadFileHelper(data);
+            const resJson = await res.json();
+
+            if (!res.ok) {
+                console.log(`${resJson.reason}: ${resJson.message}`)
+                // setError({
+                //     reason: resJson.reason,
+                //     message: resJson.message,
+                // })
+            } else {
+                setIsUploaded(true);
+            }
         } catch (e) {
             console.log(e);
         }
@@ -37,7 +63,7 @@ function PrepareUpload({ src }) {
     }
     return (
         <>
-            <audio src={src} controls>
+            <audio src={recordingURL} controls>
                 Your browser does not support the {'<audio>'} HTML element.
             </audio>
             <form onSubmit={handleSubmit}>
@@ -49,10 +75,10 @@ function PrepareUpload({ src }) {
                         )
                     }
                 </select>
-                <button type="submit" disabled={!src || isUploaded}>Upload</button>
+                <button type="submit" disabled={!recordingURL || isUploaded}>Upload</button>
             </form>
-            {isUploaded && <p>Upload was a success (not really we just testing)</p>}
-            <p>debug: {src}</p>
+            {isUploaded && <p>Upload was a success. See player.</p>}
+            <p>debug: {recordingURL}</p>
         </>
     )
 }
@@ -75,18 +101,18 @@ export default function Record() {
             setSeconds(s => s + 1);
         }, 1000)
     }
-    const stopTimer = () => {
+    const stopTimer = useCallback(() => {
         clearInterval(intervalRef.current);
         setPrevSeconds(seconds);
         setSeconds(0);
-    }
+    }, [seconds])
 
     const saveChunks = (e) => {
         chunks.current.push(e.data)
     }
 
     const stopRecording = () => {
-        const blob = new Blob(chunks.current, { type: "audio/ogg; codecs=opus" });
+        const blob = new Blob(chunks.current, { type: "audio/webm;codecs=opus" });
         setIsRecording(false)
         recordingURL.current = URL.createObjectURL(blob);
         setBlob(blob);
@@ -100,21 +126,21 @@ export default function Record() {
         setIsRecording(true);
     }
 
-    const handleStopRecording = async () => {
+    const handleStopRecording = useCallback(() => {
         mediaRecorder.current.stop();
         // we only have one track (audio)
         stream.current.getTracks()[0].stop();
         stopTimer();
         console.log('recorder has stopped');
         setIsRecording(false);
-    }
+    }, [stopTimer])
 
     const handleRecording = async () => {
         if (!isRecording) {
             setSeconds(s => 0);
             await handleStartRecording();
         } else {
-            await handleStopRecording();
+            handleStopRecording();
         }
     }
 
@@ -122,7 +148,9 @@ export default function Record() {
         try {
             stream.current = await navigator.mediaDevices.getUserMedia(constraints);
             setHasPermission(true);
-            mediaRecorder.current = new MediaRecorder(stream.current);
+            mediaRecorder.current = new MediaRecorder(stream.current, {
+                mimeType: 'audio/webm;codecs=opus'
+            });
             mediaRecorder.current.ondataavailable = saveChunks;
             mediaRecorder.current.onstop = stopRecording;
         } catch (e) {
@@ -158,7 +186,7 @@ export default function Record() {
                     style={{ objectFit: 'contain' }} // optional
                 />
             </button>
-            {(recordingURL.current && !isRecording) && <PrepareUpload src={recordingURL.current} />}
+            {(recordingURL.current && !isRecording) && <PrepareUpload recordingURL={recordingURL.current} blob={blob} />}
         </>
     );
 }
