@@ -44,8 +44,7 @@ function Status({ error, uploadSuccess, path }) {
 
 }
 
-export default function Upload() {
-    // Refactor with useReducer in the future?
+export default function UploadPage() {
     const [file, setFile] = useState();
     const [genre, setGenre] = useState('');
     const [filePath, setFilePath] = useState('');
@@ -102,7 +101,7 @@ export default function Upload() {
             setError({
                 reason: ERR_NO_FILE.reason,
                 message: ERR_NO_FILE.message,
-            })
+            });
             return;
         }
         //setError('');
@@ -151,8 +150,7 @@ export default function Upload() {
             </form>
             <Debug error={error} uploadSuccess={isUploaded} path={filePath} />
             <Status error={error} uploadSuccess={isUploaded} path={filePath} />
-            <h1>...or record now</h1>
-            <em>[FEATURE NOT YET AVAILABLE]</em>
+            <h1><Link href="/upload/record">...or record now</Link></h1>
         </>
     )
 }

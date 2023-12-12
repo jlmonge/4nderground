@@ -19,13 +19,13 @@ export const GENRES = Object.freeze({
 
 // Numerical constants
 const MB = 1_000_000;
-const NUM_MB = 5 // TODO: change to 128MB once deployed
+const NUM_MB = 5 // TODO: must be 128MB on deploy
 export const MAX_SIZE = NUM_MB * MB;
-export const MIN_DURATION = 1; // TODO: change to 30s once deployed
-export const MAX_DURATION = 600;
+export const MIN_DURATION = 1; // TODO: must be 30s on deploy
+export const MAX_DURATION = 600; // TODO: must be 600s on deploy (10m)
 
 // Errors
-// -Status codes:https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+// Status codes:https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 export const ERR_NO_FILE = Object.freeze({
     message: 'No file was uploaded',
     reason: 'no-file',
