@@ -1,7 +1,8 @@
 'use client';
 
-import { Fragment, useState, useRef } from 'react';
+import { Fragment, useState, useRef, useContext } from 'react';
 import Image from 'next/image';
+import { UserContext } from '../user-provider';
 
 const BTN_SIZE = 16;
 const DIALOG_WIDTH_VW = 90;
@@ -92,32 +93,39 @@ function ReportTooltip({ info }) {
 export default function Report({ areTracks, contentType, contentId }) {
     const dialogRef = useRef(null);
     const [reason, setReason] = useState('');
+    const [isReported, setIsReported] = useState(false);
+    const { user, setUser } = useContext(UserContext);
 
     async function handleSubmit(e) {
         e.preventDefault();
 
         if (!reason) return; // pls error
-        console.log(`congrats u reorted with reason ${reason}`);
+        if (!user) return; // pls error
 
-        // try {
-        //     const data = new FormData();
-        //     data.append(reason);
+        try {
+            const data = new FormData();
+            data.append('reportedid', contentId)
+            data.append('reporterid', user.id)
+            data.append('reason', reason);
+            data.append('type', contentType);
 
-        //     const res = await fetch('/api/report/add', {
-        //         method: 'POST',
-        //         body: data,
-        //     });
-        //     const resJson = await res.json();
+            const res = await fetch('/api/report/add', {
+                method: 'POST',
+                body: data,
+            });
+            const resJson = await res.json();
 
-        //     if (!resJson) {
-        //         console.log("report fail.");
-        //     } else {
-        //         console.log("report success.")
-        //     }
+            if (!res.ok) {
+                console.log("report fail.");
+            } else {
+                console.log("report success.");
+                console.log(`${JSON.stringify(resJson.data)}`);
+                setIsReported(true);
+            }
 
-        // } catch (e) {
-        //     console.log(e)
-        // }
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     function handleOpen() {
@@ -171,10 +179,11 @@ export default function Report({ areTracks, contentType, contentId }) {
                             <ReportTooltip info={r.desc} />
                         </div>
                     ))}
-                    <button type="submit" disabled={!reason}>Submit</button>
+                    <button type="submit" disabled={!reason || isReported}>Submit</button>
+                    <p>{isReported && 'Your report has been received. Thank you.'}</p>
                 </form>
             </dialog>
-            <button style={{ backgroundColor: 'black' }} onClick={handleOpen} type="button" disabled={contentType === 'tracks' && !areTracks}>
+            <button style={{ backgroundColor: 'black' }} onClick={handleOpen} type="button" disabled={(contentType === 'tracks' && !areTracks)}>
                 <Image
                     src="/flag.svg"
                     width={BTN_SIZE}

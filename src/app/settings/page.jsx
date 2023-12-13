@@ -12,6 +12,7 @@ export default function SettingsPage() {
             <Link href="/settings/update/password">Update password</Link>
             <Link href="/settings/ignored">Manage ignored users</Link>
             <Link href="/settings/blocked">Manage blocked users</Link>
+            <Link href="/settings/reports">View report history</Link>
             <Link href="/settings/delete-account">Delete account</Link>
         </div>
     );
