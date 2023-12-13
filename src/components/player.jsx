@@ -153,7 +153,7 @@ export default function Player() {
             <SkipBack />
             <PlayPause />
             <SkipForward />
-            <Report BTN_SIZE={BTN_SIZE} areTracks={!tracks.length} />
+            <Report areTracks={!!tracks.length} contentType='track' contentId={tracks[trackIndex]?.id} />
 
             <CommentSection trackId={tracks[trackIndex]?.id} />
 

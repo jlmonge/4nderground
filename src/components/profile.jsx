@@ -8,6 +8,7 @@ import styles from '../styles/Profile.module.css';
 import { varLog } from '../utils/helpers';
 import Link from 'next/link';
 import { UserContext } from '../user-provider';
+import Report from './report';
 
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
@@ -345,13 +346,14 @@ export default function Profile({ userId, handleClose }) {
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <button onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
                     <button onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
+                    <Report contentType={'profile'} contentId={userId} />
                 </div>
             )}
             {isMe &&
-                <>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <Link href="/settings" onClick={handleClose}>Settings</Link>
                     <button onClick={logout}>Logout</button>
-                </>
+                </div>
             }
         </>
     );
