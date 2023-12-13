@@ -47,7 +47,7 @@ function Comment({ comment, onDelete, isMyComment }) {
         <div style={{
             display: "grid",
             gridTemplateColumns: "48px 1fr 50px", // sync left col w/ avi size
-            gridTemplateAreas: "avi comment delete", // TODO: add report
+            gridTemplateAreas: "avi comment option", // TODO: add report
             columnGap: "8px",
             justifyItems: "start", // can combine with alignItems in placeItems
             alignItems: "start",
@@ -56,8 +56,8 @@ function Comment({ comment, onDelete, isMyComment }) {
         }}>
             <Avatar userId={comment.user_id} />
             <p style={{ margin: '0' }}>{comment.comment}</p>
-            {isMyComment &&
-                <button
+            {isMyComment ?
+                (<button
                     onClick={handleDelete}
                     type="button"
                     title="Delete comment"
@@ -76,7 +76,8 @@ function Comment({ comment, onDelete, isMyComment }) {
                         fill
                         style={{ objectFit: 'contain' }} // optional
                     />
-                </button>
+                </button>) :
+                <Report contentType='comment' contentId={comment.id} />
             }
         </div>
     );
