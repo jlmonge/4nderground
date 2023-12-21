@@ -1,4 +1,4 @@
 # 4nderground
-The newest ideas in music.
+Skip the games. Get heard.
 
-*Note: you must provide your own environment variables for local use.*
+*Open beta deploys in January 2024*
