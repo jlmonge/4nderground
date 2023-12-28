@@ -1,0 +1,30 @@
+@import "mixins";
+
+$font-white: #FFFFFF;
+
+.header {
+    @include flex-row;
+    padding: 0 2rem;
+    align-items: center;
+    gap: 0 2rem;
+}
+
+.header-logo {
+    position: relative;
+    width: 64px;
+    height: 64px;
+}
+
+.nav {
+    @include nav;
+}
+
+.guestnav {
+    @include nav;
+    justify-content: space-between;
+}
+
+.nav-link {
+    font-size: 1.25em;
+    color: $font-white;
+}

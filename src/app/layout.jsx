@@ -1,6 +1,6 @@
 import './global.css';
 // run 'npx @next/codemod@latest built-in-next-font .'
-import { Roboto_Flex } from 'next/font/google';
+import { Public_Sans } from 'next/font/google';
 import Navbar from '../components/navbar.jsx';
 import UserProvider from '../user-provider.jsx';
 
@@ -11,14 +11,13 @@ export const metadata = {
     }
 };
 
-const roboto = Roboto_Flex({
+const publicSans = Public_Sans({
     subsets: ['latin'],
-    axes: ['wdth']
 });
 
 export default async function RootLayout({ children }) {
     return (
-        <html lang="en" className={roboto.className}>
+        <html lang="en" className={publicSans.className}>
             <body>
                 <UserProvider>
                     <Navbar />

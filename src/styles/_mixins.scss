@@ -1,0 +1,11 @@
+@mixin flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+@mixin nav {
+    @include flex-row;
+    align-items: center;
+    gap: 0 2rem;
+    flex: 1;
+}
