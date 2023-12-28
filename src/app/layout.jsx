@@ -1,4 +1,5 @@
 import './global.css';
+import styles from '../styles/Background.module.scss';
 // run 'npx @next/codemod@latest built-in-next-font .'
 import { Public_Sans } from 'next/font/google';
 import Navbar from '../components/navbar.jsx';
@@ -20,6 +21,13 @@ export default async function RootLayout({ children }) {
     return (
         <html lang="en" className={publicSans.className}>
             <body>
+                <div className={styles["bg"]}>
+                    <div className={`${styles["gl"]} ${styles["bg-h1"]}`}></div>
+                    <div className={`${styles["gl"]} ${styles["bg-h2"]}`}></div>
+                    <div className={`${styles["gl"]} ${styles["bg-v1"]}`}></div>
+                    <div className={`${styles["gl"]} ${styles["bg-v2"]}`}></div>
+                    <div className={`${styles["gl"]} ${styles["bg-v3"]}`}></div>
+                </div>
                 <UserProvider>
                     <Navbar />
                     <main>

@@ -1,0 +1,49 @@
+$grid-color: #CA0000;
+
+.bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.gl {
+    background-color: $grid-color;
+    position: absolute;
+    filter: blur(30px)
+}
+
+.bg-h1 {
+    left: 281px;
+    top: 273px;
+    width: 100%;
+    height: 73px;
+}
+
+.bg-h2 {
+    left: 179px;
+    top: 712px;
+    width: 1230px;
+    height: 76px;
+}
+
+.bg-v1 {
+    left: 515px;
+    top: 106px;
+    width: 57px;
+    height: 517px;
+}
+
+.bg-v2 {
+    left: 787px;
+    top: 133px;
+    width: 22px;
+    height: 393px;
+}
+
+.bg-v3 {
+    left: 1310px;
+    top: 75px;
+    width: 117px;
+    height: 920px;
+}
