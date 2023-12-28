@@ -28,7 +28,7 @@ body {
 }
 
 main {
-  padding: 32px min(5%, 128px);
+  padding: 32px clamp(1.5rem, 10%, 10rem);
 }
 
 a {

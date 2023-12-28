@@ -44,7 +44,9 @@ export default function Navbar() {
                         <Link className={styles["nav-link"]} href="/player">PLAYER</Link>
                         <Link className={styles["nav-link"]} href="/upload">UPLOAD</Link>
                     </nav>
-                    <Avatar userId={user.id} />
+                    <div className={styles["avatar-container"]}>
+                        <Avatar userId={user.id} />
+                    </div>
                 </header>
             </>
         )

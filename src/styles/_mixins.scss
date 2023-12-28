@@ -12,6 +12,6 @@
 
 @mixin logo {
     position: relative;
-    width: clamp(2em, 10vw, 64px);
-    height: clamp(2em, 10vh, 64px);
+    width: clamp(3em, 10vw, 4em);
+    height: clamp(3em, 10vh, 4em);
 }
