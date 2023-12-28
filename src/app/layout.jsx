@@ -3,6 +3,7 @@ import './global.css';
 import { Public_Sans } from 'next/font/google';
 import Navbar from '../components/navbar.jsx';
 import UserProvider from '../user-provider.jsx';
+import Footer from '../components/footer.jsx';
 
 export const metadata = {
     title: {
@@ -21,9 +22,10 @@ export default async function RootLayout({ children }) {
             <body>
                 <UserProvider>
                     <Navbar />
-                    <main style={{ margin: '32px 128px' }}>
+                    <main>
                         {children}
                     </main>
+                    <Footer />
                 </UserProvider>
             </body>
         </html>

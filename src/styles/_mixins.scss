@@ -9,3 +9,9 @@
     gap: 0 2rem;
     flex: 1;
 }
+
+@mixin logo {
+    position: relative;
+    width: clamp(2em, 10vw, 64px);
+    height: clamp(2em, 10vh, 64px);
+}

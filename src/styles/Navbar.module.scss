@@ -10,9 +10,7 @@ $font-white: #FFFFFF;
 }
 
 .header-logo {
-    position: relative;
-    width: 64px;
-    height: 64px;
+    @include logo;
 }
 
 .nav {
