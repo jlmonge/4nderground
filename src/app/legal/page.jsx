@@ -1,9 +1,10 @@
 export default function LegalPage() {
     return (
         <>
-            <p>I don&apos;t have a lawyer to write this out. I try not to do
-                things I shouldn&apos;t, but should I severely misstep, do not hesitate to&nbsp;
-                <a href="mailto:legal@4nderground.com">contact me</a>.</p>
+            <p>We don&apos;t have a lawyer to write this out. Contact us immediately if any
+                copyrighted material is posted here. Otherwise, we try not to do
+                things we shouldn&apos;t, but should we severely misstep, do not hesitate to&nbsp;
+                <a href="mailto:legal@4nderground.com">contact us</a>.</p>
         </>
     );
 }
