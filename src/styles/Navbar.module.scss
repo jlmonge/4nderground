@@ -6,7 +6,7 @@ $font-white: #FFFFFF;
     @include flex-row;
     padding: 0 2rem;
     align-items: center;
-    gap: 0 max(1rem, 5%);
+    gap: 0 clamp(0.5rem, 5%, 1rem);
 }
 
 .header-logo {
@@ -23,6 +23,15 @@ $font-white: #FFFFFF;
 }
 
 .nav-link {
-    font-size: clamp(0.75em, 90%, 1.25em);
+    display: flex;
+    padding: 0 1em;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    font-size: 1em;
     color: $font-white;
+
+    &:hover {
+        background-color: white;
+    }
 }

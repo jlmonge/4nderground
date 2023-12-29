@@ -22,11 +22,15 @@ export default async function RootLayout({ children }) {
         <html lang="en" className={publicSans.className}>
             <body>
                 <div className={styles["bg"]}>
-                    <div className={`${styles["gl"]} ${styles["gl-h1"]}`}></div>
-                    <div className={`${styles["gl"]} ${styles["gl-h2"]}`}></div>
-                    <div className={`${styles["gl"]} ${styles["gl-v1"]}`}></div>
-                    <div className={`${styles["gl"]} ${styles["gl-v2"]}`}></div>
-                    <div className={`${styles["gl"]} ${styles["gl-v3"]}`}></div>
+                    <div className={styles["gl-h"]}>
+                        <div className={`${styles["gl"]} ${styles["gl-h1"]}`}></div>
+                        <div className={`${styles["gl"]} ${styles["gl-h2"]}`}></div>
+                    </div>
+                    <div className={styles["gl-v"]}>
+                        <div className={`${styles["gl"]} ${styles["gl-v1"]}`}></div>
+                        <div className={`${styles["gl"]} ${styles["gl-v2"]}`}></div>
+                        <div className={`${styles["gl"]} ${styles["gl-v3"]}`}></div>
+                    </div>
                 </div>
                 <UserProvider>
                     <Navbar />

@@ -5,9 +5,9 @@
 
 @mixin nav {
     @include flex-row;
-    align-items: center;
-    gap: 0 2rem;
+    gap: 0;
     flex: 1;
+    height: 100%;
 }
 
 @mixin logo {
