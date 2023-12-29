@@ -1,0 +1,87 @@
+$btn-radius: 20rem;
+
+.hp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+}
+
+.headline {
+    margin: 0;
+    font-size: 4rem;
+}
+
+// basically match tg font to regular font size
+.tg-font {
+    font-size: 1.25em;
+}
+
+// emphasize tg font
+.tg-font-emph {
+    font-size: 1.5em;
+}
+
+.features {
+    list-style: none;
+    text-transform: uppercase;
+    font-size: 1em;
+}
+
+.features-item {
+    width: fit-content;
+    margin: 0.25rem 0;
+    padding: 0 0.25rem;
+    color: white;
+    border-left: 4px solid #CA0000;
+    background: linear-gradient(to left, transparent 50%, white 50%) right;
+    background-size: 200%;
+    transition: all 3s ease;
+
+    &:hover {
+        background-position: left;
+        color: black;
+        transition: all 0.75s ease;
+    }
+}
+
+// @keyframes from-left {
+//     from {
+
+//     } to {
+
+//     }
+// }
+
+.btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $btn-radius;
+    height: $btn-radius;
+    border-radius: $btn-radius;
+    padding: 5rem;
+    color: white;
+    background: radial-gradient(50% 50% at 50% 50%, #202020 77.6%, #5CF 100%);
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    text-align: center;
+    animation: 4s ease-in-out infinite alternate up-n-down;
+
+    &:hover {
+        animation-play-state: paused;
+    }
+}
+
+@keyframes up-n-down {
+    from {
+        transform: translateY(-1rem);
+        // background-position: 0 0;
+    }
+
+    to {
+        transform: translateY(1rem);
+        // background-position: 100rem 100rem;
+    }
+}

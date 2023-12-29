@@ -1,3 +1,7 @@
+import Link from 'next/link';
+import styles from "../styles/Homepage.module.scss";
+import { terminalGrotesque } from './fonts';
+
 export const metadata = {
     title: 'Discover the newest ideas in music | 4nderground',
 };
@@ -5,36 +9,18 @@ export const metadata = {
 export default function HomePage() {
 
     return (
-        <>
-            <div>
-                <h2>Skip the popularity contests.</h2>
-                <h2>Listen to the latest music the world has to offer before it’s gone.</h2>
-                <button>Go 4nderground</button>
-            </div>
-            <div>
-                <h2>Want to listen?</h2>
-                <p>Our Player plays all songs uploaded by our users from newest to oldest.</p>
-                <p>After 24 hours, songs are removed from our website. This is part of our promise to guarantee only the newest music.</p>
-                <p>Find what you want by changing genres.</p>
-                <p>Let artists know how you feel with your comments.</p>
-            </div>
-            <div>
-                <h2>Want to create?</h2>
-                <p>Showing off your music is effortless.</p>
-                <p>Upload via file</p>
-                <p>OR</p>
-                <p>Record directly from your computer.</p>
-                <p>You can upload 1 track every 24 hours.</p>
-                <p>We know you’ll be eager to upload again, so we provide you with a timer that counts down these 24 hours.</p>
-                <p>Get feedback from users.</p>
-                <p>Want to redirect curious listeners to your work? Link your profiles.</p>
-            </div>
-            <footer>
-                <p>Contact us: help@4nderground.com</p>
-                <p>© 4nderground.com 2023</p>
-                <p>Terms & Conditions</p>
-                <p>Privacy Policy</p>
-            </footer>
-        </>
+        <div className={styles["hp"]}>
+            <p className={styles["headline"]}>Be a part of the newest music the <span className={`${styles["tg-font-emph"]} ${terminalGrotesque.className}`}>Internet</span> has to offer.</p>
+            <ul className={styles["features"]}>
+                <li className={styles["features-item"]}>A big ol player that plays newest to oldest</li>
+                <li className={styles["features-item"]}>One (1) track daily allowance</li>
+                <li className={styles["features-item"]}>Tracks deleted after 24 hours</li>
+                <li className={styles["features-item"]}>Comment sections</li>
+                <li className={styles["features-item"]}>Random usernames and profile pictures</li>
+                <li className={styles["features-item"]}>Share socials on your profile</li>
+
+            </ul>
+            <Link href="/register" className={styles["btn"]}><span className={`${styles["tg-font"]} ${terminalGrotesque.className}`}>Please sign me up!!</span></Link>
+        </div>
     );
 }

@@ -1,55 +1,61 @@
 'use client';
 
-import { navList, navListElem, floatRight, navListLink, btn } from '../styles/navbar.module.css';
+import styles from '../styles/Navbar.module.scss';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import Avatar from './avatar';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { UserContext } from '../user-provider';
-
+import Image from 'next/image';
 
 export default function Navbar() {
-    const { user, setUser } = useContext(UserContext);
-    //const supabase = createClientComponentClient();
+    const { user } = useContext(UserContext);
+    let logo = (
+        <Link href="/">
+            <div className={styles["header-logo"]}>
+                <Image
+                    src="logo1.svg"
+                    fill={true}
+                    alt="4nderground logo"
+                />
+            </div>
 
-    // useEffect(() => {
-    //     const getUser = async () => {
-    //         const { data: { user } } = await supabase.auth.getUser();
-    //         setCurUser(user);
-    //     }
-    //     getUser();
-    // }, [supabase.auth])
+        </Link>
+    )
+    let content;
+
+    if (!user) {
+        content = (
+            <>
+                <header className={styles["header"]}>
+                    {logo}
+                    <nav className={styles["guestnav"]}>
+                        <Link className={styles["nav-link"]} href="/player">PLAYER</Link>
+                        <Link className={styles["nav-link"]} href="/login">SIGN IN</Link>
+                    </nav>
+                </header>
+            </>
+        )
+    } else {
+        content = (
+            <>
+                <header className={styles["header"]}>
+                    {logo}
+                    <nav className={styles["nav"]}>
+                        <Link className={styles["nav-link"]} href="/player">PLAYER</Link>
+                        <Link className={styles["nav-link"]} href="/upload">UPLOAD</Link>
+                    </nav>
+                    <div className={styles["avatar-container"]}>
+                        <Avatar userId={user.id} />
+                    </div>
+                </header>
+            </>
+        )
+
+    }
 
     return (
         <>
-            <nav>
-                <ul className={navList}>
-                    <li className={navListElem}>
-                        <Link className={navListLink} href="/">Logo</Link>
-                    </li>
-                    <li className={navListElem}>
-                        <Link className={navListLink} href="/">Home</Link>
-                    </li>
-                    <li className={navListElem}>
-                        <Link className={navListLink} href="/player">Player</Link>
-                    </li>
-                    <li className={`${navListElem} ${floatRight}`}>
-                        <Link className={navListLink} href="/upload">Upload</Link>
-                    </li>
-                    <li className={`${navListElem} ${floatRight}`}>
-                        {user ?
-                            (
-                                <>
-                                    <p>debug: {user.email}</p>
-                                    <Avatar userId={user.id} />
-                                </>
-                            ) :
-                            <Link className={navListLink} href="/login">GET IN!</Link>
-                        }
-                    </li>
-                </ul>
-            </nav>
+            {content}
         </>
     );
 }

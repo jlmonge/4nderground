@@ -1,0 +1,61 @@
+$grid-color: #CA0000;
+
+.bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    margin: 0 auto;
+    display: none;
+}
+
+// container for horizontal bg elements
+.gl-h {
+    position: relative;
+}
+
+//container for vertical bg elements
+.gl-v {
+    position: relative;
+}
+
+.gl {
+    background-color: $grid-color;
+    position: absolute;
+    filter: blur(30px);
+}
+
+.gl-h1 {
+    left: calc(256px + 10vw);
+    top: 273px;
+    width: 681px;
+    height: 49px;
+}
+
+.gl-h2 {
+    left: calc(128px + 10vw);
+    top: 712px;
+    width: 1230px;
+    height: 76px;
+}
+
+.gl-v1 {
+    left: calc(400px + 10vw);
+    top: 106px;
+    width: 57px;
+    height: 517px;
+}
+
+.gl-v2 {
+    left: 787px;
+    top: 133px;
+    width: 22px;
+    height: 393px;
+}
+
+.gl-v3 {
+    left: 1200px;
+    top: 75px;
+    width: 69px;
+    height: 920px;
+}

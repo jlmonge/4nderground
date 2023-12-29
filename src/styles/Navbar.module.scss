@@ -1,0 +1,39 @@
+@import "mixins";
+
+$font-white: #FFFFFF;
+
+.header {
+    @include flex-row;
+    padding: 0 2rem;
+    align-items: center;
+    gap: 0 clamp(0.5rem, 5%, 1rem);
+}
+
+.header-logo {
+    @include logo;
+}
+
+.nav {
+    @include nav;
+}
+
+.guestnav {
+    @include nav;
+    justify-content: space-between;
+}
+
+.nav-link {
+    display: flex;
+    padding: 0 1em;
+    border: 3px solid transparent;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 1em;
+    height: 50%;
+    font-size: 1em;
+    color: $font-white;
+
+    &:hover {
+        border: 3px solid white;
+    }
+}

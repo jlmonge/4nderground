@@ -1,12 +1,18 @@
 /* If different CSS is desired for another component, name that file 
 "[ComponentName].module.css" */
-html,
+html {
+  height: 100%;
+}
+
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
   margin: 0;
   padding: 0;
-  position: relative;
   height: 100%;
-  background-color: black;
+  background-color: #202020;
   color: white;
   /*animation: 5s infinite alternate bg;*/
 }
@@ -19,6 +25,10 @@ body {
   to {
     background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(43, 6, 14, 1) 72%, rgba(61, 10, 10, 1) 100%);
   }
+}
+
+main {
+  padding: 32px clamp(1.5rem, 10%, 10rem);
 }
 
 a {
