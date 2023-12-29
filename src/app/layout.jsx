@@ -1,7 +1,7 @@
 import './global.css';
 import styles from '../styles/Background.module.scss';
 // run 'npx @next/codemod@latest built-in-next-font .'
-import { Public_Sans } from 'next/font/google';
+import { publicSans } from './fonts.jsx';
 import Navbar from '../components/navbar.jsx';
 import UserProvider from '../user-provider.jsx';
 import Footer from '../components/footer.jsx';
@@ -13,9 +13,7 @@ export const metadata = {
     }
 };
 
-const publicSans = Public_Sans({
-    subsets: ['latin'],
-});
+
 
 export default async function RootLayout({ children }) {
     return (
