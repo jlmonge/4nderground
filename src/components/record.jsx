@@ -168,7 +168,7 @@ export default function Record() {
     return (
         <>
             <p>Press the button to start recording.</p>
-            {isRecording && <p>Elapsed time: {`${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`}</p>}
+            {isRecording && <p>Elapsed time: {`${Math.trunc(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`}</p>}
             <button
                 type="button"
                 style={{
