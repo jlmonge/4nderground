@@ -3,6 +3,7 @@
 import { Fragment, useState, useRef, useContext } from 'react';
 import Image from 'next/image';
 import { UserContext } from '../user-provider';
+import styles from '../styles/Report.module.scss';
 
 const BTN_SIZE = 16;
 const DIALOG_WIDTH_VW = 90;
@@ -183,13 +184,8 @@ export default function Report({ areTracks, contentType, contentId }) {
                     <p>{isReported && 'Your report has been received. Thank you.'}</p>
                 </form>
             </dialog>
-            <button style={{ backgroundColor: 'black' }} onClick={handleOpen} type="button" disabled={(contentType === 'tracks' && !areTracks)}>
-                <Image
-                    src="/flag.svg"
-                    width={BTN_SIZE}
-                    height={BTN_SIZE}
-                    alt="Report icon"
-                />
+            <button className={styles["open-btn"]} onClick={handleOpen} type="button" disabled={(contentType === 'tracks' && !areTracks)}>
+                Report
             </button>
         </>
     );

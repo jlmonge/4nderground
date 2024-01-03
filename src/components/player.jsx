@@ -10,6 +10,7 @@ import { getDayAgo } from '../utils/helpers';
 import CommentSection from '../components/comment-section';
 import { UserContext } from '../user-provider';
 import styles from '../styles/Player.module.scss'
+import Avatar from './avatar';
 
 const BTN_SIZE = 24;
 const DEBUG = false; // redundant; replace soon
@@ -189,28 +190,35 @@ export default function Player() {
 
     return (
         <>
-            <p>{playing ? 'Now playing' : 'Now paused'}</p>
+            <div className={styles["player"]}>
+                <PlayerControls handleForward={handleForward} handleBack={handleBack} handlePlayPause={handlePlayPause}
+                    isPausedMisnomer={playing} isEmpty={!tracks.length}
+                />
+                <div className={styles["p-display"]}>
+                    {tracks.length ? (
+                        <>
+                            <div className={styles["p-left"]}>
+                                <p className={styles["p-txt"]}>Now playing: <span className={styles["p-curgenre"]}>all</span></p>
+                                <p className={styles["p-txt"]}>{trackIndex + 1}/{tracks.length}</p>
+                                <p className={styles["p-minitxt"]}>{`${Math.trunc(pos / 60)}:${Math.trunc(pos).toString().padStart(2, '0')}`}/{`${Math.trunc(tracks[trackIndex].duration / 60)}:${(tracks[trackIndex].duration % 60).toString().padStart(2, '0')}`}</p>
+                            </div>
+                            <div className={styles["p-right"]}>
+                                <Avatar userId={tracks[trackIndex].uploader_id} />
+                            </div>
+                        </>
+                    ) : (
+                        <div className={styles["p-empty"]}>
+                            <p>(Empty player)</p>
+                        </div>
+                    )
+                    }
 
-            <p>TRACK BY {tracks[trackIndex]?.uploader_id}</p>
-            <PlayerControls handleForward={handleForward} handleBack={handleBack} handlePlayPause={handlePlayPause}
-                isPausedMisnomer={playing} isEmpty={!tracks.length}
-            />
-            <div className={styles["p-display"]}>
-                {tracks.length ? (
-                    <div className={styles["p-notempty"]}>
-                        <p>Now playing: <span className={styles["p-curgenre"]}>all</span></p>
-                        <p>{trackIndex + 1}/{tracks.length}</p>
-                        <p>{`${Math.trunc(pos / 60)}:${Math.trunc(pos).toString().padStart(2, '0')}`}/{`${Math.trunc(tracks[trackIndex].duration / 60)}:${(tracks[trackIndex].duration % 60).toString().padStart(2, '0')}`}</p>
-                    </div>
-                ) : (
-                    <div className={styles["p-empty"]}>
-                        <p>(Empty player)</p>
-                    </div>
-                )
-                }
-
+                </div>
             </div>
-            <Report areTracks={!!tracks.length} contentType='track' contentId={tracks[trackIndex]?.id} />
+            <div className={styles["p-report"]}>
+                <Report areTracks={!!tracks.length} contentType='track' contentId={tracks[trackIndex]?.id} />
+            </div>
+
 
             <CommentSection trackId={tracks[trackIndex]?.id} />
 

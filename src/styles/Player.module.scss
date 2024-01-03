@@ -1,54 +1,42 @@
-.playerctrls {
-    position: relative;
-    border: 1px solid pink;
-    padding: 0;
-    margin: 1em auto;
-    width: 20em;
-    height: 20em;
-    border-radius: 50%;
-    overflow: hidden;
+.player {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1rem;
 }
 
-.ctrl-icon {
-    position: absolute;
-    left: -100%;
-    width: 200%;
-    height: 200%;
-    text-align: center;
-    transform: skewY(-30deg) rotate(60deg);
-    padding-top: 20px;
+.p-display {
+    border-image: radial-gradient(#F3F3F3, rgba(241, 216, 216, 0.09)) 30;
+    border-style: solid;
+    border-width: 8px;
+    background: #202020;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+
 }
 
-.ctrl {
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50%;
-    height: 50%;
-    transform-origin: 0% 100%;
+.p-txt {
+    font-size: 2em;
+}
 
-    &:first-child {
-        transform: rotate(0deg) skewY(30deg);
+.p-minitxt {
+    font-size: 1em
+}
 
-        .ctrl-icon {
-            background: green;
-        }
-    }
+.p-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
 
-    &:nth-child(2) {
-        transform: rotate(120deg) skewY(30deg);
+.p-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 
-        .ctrl-icon {
-            background: red;
-        }
-    }
-
-    &:nth-child(3) {
-        transform: rotate(240deg) skewY(30deg);
-
-        .ctrl-icon {
-            background: blue;
-        }
-    }
+.p-report {
+    float: right;
 }

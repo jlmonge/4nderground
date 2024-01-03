@@ -33,7 +33,10 @@ main {
 
 a {
   color: grey;
-  text-decoration: none;
+}
+
+p {
+  margin: 0;
 }
 
 * {
