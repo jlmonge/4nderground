@@ -3,7 +3,7 @@
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Image from 'next/image';
-import { Fragment, Suspense, useEffect, useState, useRef, useContext } from 'react';
+import { Fragment, Suspense, useEffect, useState, useRef, useContext, useCallback } from 'react';
 import { useGlobalAudioPlayer } from 'react-use-audio-player';
 import Report from './report';
 import { getDayAgo } from '../utils/helpers';
@@ -21,6 +21,66 @@ function Loading() {
             <p>Loading content...</p>
         </>
     );
+}
+
+function Duration({ curDuration }) {
+    const frameRef = useRef();
+    const [pos, setPos] = useState(0);
+    const { getPosition } = useGlobalAudioPlayer();
+
+    useEffect(() => {
+        const animate = () => {
+            setPos(getPosition())
+            frameRef.current = requestAnimationFrame(animate)
+        }
+
+        frameRef.current = window.requestAnimationFrame(animate)
+
+        return () => {
+            if (frameRef.current) {
+                cancelAnimationFrame(frameRef.current)
+            }
+        }
+    }, [])
+
+    return (
+        <p className={styles["p-minitxt"]}>{`${Math.trunc(pos / 60)}:${Math.trunc(pos % 60).toString().padStart(2, '0')}`}/{`${Math.trunc(curDuration / 60)}:${(curDuration % 60).toString().padStart(2, '0')}`}</p>
+    )
+}
+
+function VolumeControls() {
+    const { volume, setVolume } = useGlobalAudioPlayer();
+
+    const handleVolume = useCallback((slider) => {
+        return setVolume(slider.target.value);
+    }, [setVolume]);
+
+    let volumeIcon;
+    if (volume === 0.0) {
+        volumeIcon = (<Image src="sound-off.svg" alt="No volume" width={BTN_SIZE} height={BTN_SIZE} />);
+    } else if (volume <= 0.33) {
+        volumeIcon = (<Image src="sound-min.svg" alt="Low volume" width={BTN_SIZE} height={BTN_SIZE} />);
+    } else if (volume <= 0.66) {
+        volumeIcon = (<Image src="sound-low.svg" alt="Medium volume" width={BTN_SIZE} height={BTN_SIZE} />);
+    } else {
+        volumeIcon = (<Image src="sound-high.svg" alt="High volume" width={BTN_SIZE} height={BTN_SIZE} />);
+    }
+
+    return (
+        <div className={styles["v-container"]}>
+            <input
+                className={styles["v-slider"]}
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                onChange={handleVolume}
+                value={volume}
+            />
+            {volumeIcon}
+        </div>
+    )
+
 }
 
 function PlayerControls({ handleForward, handleBack, handlePlayPause, isPausedMisnomer, isEmpty }) {
@@ -112,14 +172,11 @@ function PlayerControls({ handleForward, handleBack, handlePlayPause, isPausedMi
             </defs>
         </svg>
     )
-
 }
 
 export default function Player() {
-    const frameRef = useRef();
     const [tracks, setTracks] = useState([]);
     const [trackIndex, setTrackIndex] = useState(0);
-    const [pos, setPos] = useState(0);
     const { user, setUser } = useContext(UserContext);
     const supabase = createClientComponentClient();
     // src is url of file being played.
@@ -139,20 +196,7 @@ export default function Player() {
         setTrackIndex((trackIndex + 1) % tracks.length);
     };
 
-    useEffect(() => {
-        const animate = () => {
-            setPos(getPosition())
-            frameRef.current = requestAnimationFrame(animate)
-        }
 
-        frameRef.current = window.requestAnimationFrame(animate)
-
-        return () => {
-            if (frameRef.current) {
-                cancelAnimationFrame(frameRef.current)
-            }
-        }
-    }, [])
 
     useEffect(() => {
         const fetchTracks = async () => {
@@ -186,11 +230,10 @@ export default function Player() {
         }
     }, [load, tracks, trackIndex]);
 
-
-
     return (
         <>
             <div className={styles["player"]}>
+                <VolumeControls />
                 <PlayerControls handleForward={handleForward} handleBack={handleBack} handlePlayPause={handlePlayPause}
                     isPausedMisnomer={playing} isEmpty={!tracks.length}
                 />
@@ -200,7 +243,7 @@ export default function Player() {
                             <div className={styles["p-left"]}>
                                 <p className={styles["p-txt"]}>Now playing: <span className={styles["p-curgenre"]}>all</span></p>
                                 <p className={styles["p-txt"]}>{trackIndex + 1}/{tracks.length}</p>
-                                <p className={styles["p-minitxt"]}>{`${Math.trunc(pos / 60)}:${Math.trunc(pos).toString().padStart(2, '0')}`}/{`${Math.trunc(tracks[trackIndex].duration / 60)}:${(tracks[trackIndex].duration % 60).toString().padStart(2, '0')}`}</p>
+                                <Duration curDuration={tracks[trackIndex].duration} />
                             </div>
                             <div className={styles["p-right"]}>
                                 <Avatar userId={tracks[trackIndex].uploader_id} />
@@ -218,7 +261,6 @@ export default function Player() {
             <div className={styles["p-report"]}>
                 <Report areTracks={!!tracks.length} contentType='track' contentId={tracks[trackIndex]?.id} />
             </div>
-
 
             <CommentSection trackId={tracks[trackIndex]?.id} />
 

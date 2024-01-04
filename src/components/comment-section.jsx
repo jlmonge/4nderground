@@ -1,12 +1,12 @@
 // thx https://react.dev/reference/react/useState#list-array
 'use client'
 
-import Report from './report'
-import Avatar from './avatar'
+import Report from './report';
+import Avatar from './avatar';
 import { useContext, useEffect, useState } from 'react';
-import Image from 'next/image';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserContext } from '../user-provider';
+import styles from '../styles/Comments.module.scss';
 
 /*
 DISPLAY WISE: A comment consists of:
@@ -43,42 +43,43 @@ function Comment({ comment, onDelete, isMyComment }) {
 
     }
 
+    let whenPostedText;
+    const whenPostedS = new Date(comment.posted_at) / 1000;
+    const nowS = Date.now() / 1000;
+    const diffS = nowS - whenPostedS;
+    // console.log(`whenPostedS: ${whenPostedS}`)
+    // console.log(`nowS: ${nowS}`)
+    // console.log(`diffS: ${diffS}`)
+    if (diffS < 60) {
+        whenPostedText = `Less than a minute ago`
+    } else if (diffS < 60 * 60) {
+        const diffM = Math.trunc(diffS / 60);
+        whenPostedText = `${diffM} minute${diffM === 1 ? '' : 's'} ago`
+    } else {
+        const diffH = Math.trunc(diffS / 60 / 60);
+        whenPostedText = `${diffH} hour${diffH === 1 ? '' : 's'} ago`
+    }
+
     return (
-        <div style={{
-            display: "grid",
-            gridTemplateColumns: "48px 1fr 50px", // sync left col w/ avi size
-            gridTemplateAreas: "avi comment option", // TODO: add report
-            columnGap: "8px",
-            justifyItems: "start", // can combine with alignItems in placeItems
-            alignItems: "start",
-            margin: "10px 0",
-            width: "100%",
-        }}>
+        <div className={styles["comment-container"]}>
             <Avatar userId={comment.user_id} />
-            <p style={{ margin: '0' }}>{comment.comment}</p>
-            {isMyComment ?
-                (<button
-                    onClick={handleDelete}
-                    type="button"
-                    title="Delete comment"
-                    //aria-label="Delete comment" // TODO: accessibility update
-                    //role="button"
-                    style={{
-                        width: `${BTN_SIZE}px`,
-                        height: `${BTN_SIZE}px`,
-                        position: 'relative',
-                    }}
-                >
-                    <Image
-                        src="/trash-2.svg"
-                        alt="Delete comment icon"
-                        sizes={BTN_SIZE}
-                        fill
-                        style={{ objectFit: 'contain' }} // optional
-                    />
-                </button>) :
-                <Report contentType='comment' contentId={comment.id} />
-            }
+            <div className={styles["comment"]}>
+                <p className={styles["c-comment"]}>{comment.comment}</p>
+                <p className={styles["c-timesincecomment"]}>{whenPostedText}</p>
+                {isMyComment ?
+                    (<button
+                        onClick={handleDelete}
+                        type="button"
+                        title="Delete comment"
+                        //aria-label="Delete comment" // TODO: accessibility update
+                        //role="button"
+                        className={styles["c-delete"]}
+                    >
+                        Delete
+                    </button>) :
+                    <Report contentType='comment' contentId={comment.id} />
+                }
+            </div>
         </div>
     );
 }
@@ -114,11 +115,11 @@ function AddComment({ onAddComment, trackId }) {
                 method="POST"
                 onSubmit={handleSubmit}
             >
-                <label htmlFor="make-comment">Make a comment:</label>
+                <label className={styles["visually-hidden"]} htmlFor="write-comment">Write a comment:</label>
                 <input
-                    placeholder="Thoughts..."
+                    placeholder="Write a comment..."
                     type="text"
-                    id="make-comment"
+                    id="write-comment"
                     required
                     value={comment}
                     onChange={e => setComment(e.target.value)}
@@ -134,9 +135,9 @@ function CommentList({ comments, onDeleteComment, curUserId }) {
     if (comments?.length) {
         commentContent = (
             <>
-                <ul style={{ width: "100%", padding: 0 }}>
+                <ul className={styles["clist-ul"]}>
                     {comments.map(c =>
-                        <li key={c.id} style={{ listStyleType: "none", width: "100%" }}>
+                        <li key={c.id} className={styles["clist-li"]}>
                             <Comment
                                 comment={c}
                                 onDelete={onDeleteComment}
@@ -215,15 +216,17 @@ export default function CommentSection({ trackId }) {
         content = (
             <>
                 <h3>Comments</h3>
-                <AddComment
-                    onAddComment={handleAddComment}
-                    trackId={trackId}
-                />
-                <CommentList
-                    comments={comments}
-                    onDeleteComment={handleDeleteComment}
-                    curUserId={user?.id}
-                />
+                <div className={styles["comments-container"]}>
+                    <AddComment
+                        onAddComment={handleAddComment}
+                        trackId={trackId}
+                    />
+                    <CommentList
+                        comments={comments}
+                        onDeleteComment={handleDeleteComment}
+                        curUserId={user?.id}
+                    />
+                </div>
             </>
         );
     } else {

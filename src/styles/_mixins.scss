@@ -16,3 +16,12 @@
     width: clamp(3em, 10vw, 4em);
     height: clamp(3em, 10vh, 4em);
 }
+
+@mixin clean-btn {
+    background: none;
+    color: grey;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: inherit;
+}

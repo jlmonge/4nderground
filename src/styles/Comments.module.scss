@@ -1,0 +1,64 @@
+@import "mixins";
+
+.comments-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.mycomment-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.clist-ul {
+    width: 100%;
+    padding: 0
+}
+
+.clist-li {
+    list-style-type: none;
+    width: 100%;
+}
+
+// consists of: avatar, comment
+.comment-container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.5rem;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.c-comment {
+    font-size: 1.4em;
+}
+
+.c-timesincecomment {
+    font-size: 0.75em;
+    color: #C2C2C2;
+}
+
+.c-options {
+    display: flex;
+    flex-direction: row;
+}
+
+.c-delete {
+    @include clean-btn;
+    font-size: 0.75em;
+    color: #888888;
+}
+
+.visually-hidden:not(:focus):not(:active) {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
