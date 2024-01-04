@@ -7,6 +7,7 @@ import { useContext, useEffect, useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserContext } from '../user-provider';
 import styles from '../styles/Comments.module.scss';
+import Image from 'next/image';
 
 /*
 DISPLAY WISE: A comment consists of:
@@ -65,7 +66,7 @@ function Comment({ comment, onDelete, isMyComment }) {
             <Avatar userId={comment.user_id} />
             <div className={styles["comment"]}>
                 <p className={styles["c-comment"]}>{comment.comment}</p>
-                <p className={styles["c-timesincecomment"]}>{whenPostedText}</p>
+                <p className={styles["c-timesincecomment"]} title={comment.posted_at}>{whenPostedText}</p>
                 {isMyComment ?
                     (<button
                         onClick={handleDelete}
@@ -114,6 +115,7 @@ function AddComment({ onAddComment, trackId }) {
             <form
                 method="POST"
                 onSubmit={handleSubmit}
+                className={styles["mycomment-form"]}
             >
                 <label className={styles["visually-hidden"]} htmlFor="write-comment">Write a comment:</label>
                 <input
@@ -123,8 +125,11 @@ function AddComment({ onAddComment, trackId }) {
                     required
                     value={comment}
                     onChange={e => setComment(e.target.value)}
+                    className={styles["mycomment-comment"]}
                 />
-                <button type="submit">Post comment</button>
+                <button type="submit" className={styles["mycomment-submit"]}>
+                    <span className={styles["mcs-text"]}>&gt;&gt;</span>
+                </button>
             </form>
         </>
     );
@@ -161,8 +166,8 @@ function CommentList({ comments, onDeleteComment, curUserId }) {
     return (
         <>
             {commentContent}
-            <p>debug - comments according to CList:</p>
-            <button onClick={debug}>ALL</button>
+            {/* <p>debug - comments according to CList:</p>
+            <button onClick={debug}>ALL</button> */}
         </>
     );
 }

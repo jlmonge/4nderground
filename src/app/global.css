@@ -51,12 +51,9 @@ img {
 button:not([type]),
 button[type="submit"] {
   background-color: transparent;
-  width: 256px;
-  height: 32px;
   color: white;
   border: 1px solid white;
-  border-radius: 4%;
-  border-radius: 20px;
+
 }
 
 button:hover {

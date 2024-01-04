@@ -262,13 +262,14 @@ export default function Player() {
                 <Report areTracks={!!tracks.length} contentType='track' contentId={tracks[trackIndex]?.id} />
             </div>
 
+            <div className={styles["spacer"]}></div>
             <CommentSection trackId={tracks[trackIndex]?.id} />
 
-            <Suspense fallback={<Loading />}>
+            {/* <Suspense fallback={<Loading />}>
                 <div style={{ display: DEBUG ? 'block' : 'none' }}>
                     <div>full load: <pre>{JSON.stringify(tracks, null, 2)}</pre></div>
                 </div>
-            </Suspense>
+            </Suspense> */}
         </>
     );
 }
