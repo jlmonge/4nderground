@@ -11,6 +11,7 @@ import CommentSection from '../components/comment-section';
 import { UserContext } from '../user-provider';
 import styles from '../styles/Player.module.scss'
 import Avatar from './avatar';
+import { terminalGrotesque } from '../app/fonts';
 
 const BTN_SIZE = 24;
 const DEBUG = false; // redundant; replace soon
@@ -237,7 +238,7 @@ export default function Player() {
                 <PlayerControls handleForward={handleForward} handleBack={handleBack} handlePlayPause={handlePlayPause}
                     isPausedMisnomer={playing} isEmpty={!tracks.length}
                 />
-                <div className={styles["p-display"]}>
+                <div className={`${styles["p-display"]}`}>
                     {tracks.length ? (
                         <>
                             <div className={styles["p-left"]}>
