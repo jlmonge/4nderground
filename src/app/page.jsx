@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import styles from "../styles/Homepage.module.scss";
 import { terminalGrotesque, almarai } from './fonts';
+import colors from "../styles/Colors.module.scss"
 
 export const metadata = {
     title: 'Discover the newest ideas in music | 4nderground',
