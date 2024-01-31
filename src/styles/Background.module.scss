@@ -1,3 +1,5 @@
+// NOTE: z-index only being used for bg elements
+
 .bgtop {
     position: fixed;
     top: 0;
@@ -20,4 +22,44 @@
     height: calc(487.06px * 0.55);
     z-index: -1;
     filter: drop-shadow(0 -12px 8px rgba(0, 0, 0, 0.25));
+}
+
+.bgl {
+    position: fixed;
+    width: 23px;
+    height: 100vh;
+    background: linear-gradient(180deg, #61FF2A 0%, rgba(97, 255, 42, 0.00) 100%);
+    filter: blur(2.549999952316284px);
+    animation: 16s linear infinite alternate ltr;
+    z-index: -2;
+}
+
+.bgm {
+    position: fixed;
+    width: 90px;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(97, 255, 42, 0.50) 0%, rgba(97, 255, 42, 0.00) 100%);
+    filter: blur(2.549999952316284px);
+    animation: 24s linear infinite alternate ltr;
+    z-index: -2;
+}
+
+.bgr {
+    position: fixed;
+    width: 197px;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(97, 255, 42, 0.25) 0%, rgba(97, 255, 42, 0.00) 100%);
+    filter: blur(2.549999952316284px);
+    animation: 32s linear infinite alternate ltr;
+    z-index: -2;
+}
+
+@keyframes ltr {
+    from {
+        transform: translateX(0)
+    }
+
+    to {
+        transform: translateX(100vw)
+    }
 }
