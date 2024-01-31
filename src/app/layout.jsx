@@ -1,4 +1,4 @@
-import './global.css';
+import './global.scss';
 import styles from '../styles/Background.module.scss';
 // run 'npx @next/codemod@latest built-in-next-font .'
 import { publicSans } from './fonts.jsx';

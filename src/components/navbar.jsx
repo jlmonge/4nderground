@@ -1,61 +1,51 @@
 'use client';
 
 import styles from '../styles/Navbar.module.scss';
+import colors from '../styles/Colors.module.scss';
 import Link from 'next/link';
 import Avatar from './avatar';
 import { useContext } from 'react';
 import { UserContext } from '../user-provider';
-import Image from 'next/image';
+import { Logo1 } from './svgs';
+import { nunito } from '../app/fonts';
 
 export default function Navbar() {
     const { user } = useContext(UserContext);
     let logo = (
         <Link href="/">
-            <div className={styles["header-logo"]}>
-                <Image
-                    src="logo1.svg"
-                    fill={true}
-                    alt="4nderground logo"
-                />
+            <div className={styles["logo"]}>
+                <Logo1 />
             </div>
-
         </Link>
     )
-    let content;
 
-    if (!user) {
-        content = (
-            <>
-                <header className={styles["header"]}>
-                    {logo}
-                    <nav className={styles["guestnav"]}>
-                        <Link className={styles["nav-link"]} href="/player">PLAYER</Link>
-                        <Link className={styles["nav-link"]} href="/login">SIGN IN</Link>
-                    </nav>
-                </header>
-            </>
-        )
-    } else {
-        content = (
-            <>
-                <header className={styles["header"]}>
-                    {logo}
-                    <nav className={styles["nav"]}>
-                        <Link className={styles["nav-link"]} href="/player">PLAYER</Link>
-                        <Link className={styles["nav-link"]} href="/upload">UPLOAD</Link>
-                    </nav>
-                    <div className={styles["avatar-container"]}>
-                        <Avatar userId={user.id} />
-                    </div>
-                </header>
-            </>
-        )
-
-    }
+    // const textColor = !!user ? colors["ub-text"] : colors["gg-text"];
 
     return (
         <>
-            {content}
+            <nav className={`${styles["nav"]} ${colors["gg-text"]} ${nunito.className}`}>
+                <div className={styles["all-flow"]}>
+                    {logo}
+                    <Link className={styles["nav-link"]} href="/player">
+                        <span className={styles["nav-text"]}>Player</span>
+                    </Link>
+                </div>
+                <div className={styles["user-flow"]}>
+                    {!user
+                        ? <Link className={styles["nav-link"]} href="/login">
+                            <span className={styles["nav-text"]}>Sign In</span>
+                        </Link>
+                        : <>
+                            <div className={styles["avatar-container"]}>
+                                <Avatar userId={user.id} />
+                            </div>
+                            <Link className={styles["nav-link"]} href="/upload">
+                                <span className={styles["nav-text"]}>Upload</span>
+                            </Link>
+                        </>
+                    }
+                </div>
+            </nav>
         </>
     );
 }

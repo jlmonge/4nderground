@@ -10,6 +10,7 @@ $btn-radius: 20rem;
 .headline {
     margin: 0;
     font-size: 4rem;
+    overflow-wrap: break-word;
 }
 
 // basically match tg font to regular font size
@@ -20,6 +21,7 @@ $btn-radius: 20rem;
 // emphasize tg font
 .tg-font-emph {
     font-size: 1.5em;
+    overflow-wrap: break-word;
 }
 
 .features {
