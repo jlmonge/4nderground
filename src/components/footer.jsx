@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../styles/Footer.module.scss';
 import colors from '../styles/Colors.module.scss';
-import { Logo1 } from './svgs';
+import { Logo1, BGBtm } from './svgs';
 
 export default function Footer() {
     // TODO: in future, may need other contact usernames like "support" and "sales"
@@ -22,7 +22,6 @@ export default function Footer() {
                 <Link href="/legal" className={styles["footer-link"]}>Legal</Link>
                 <Link href="/privacy" className={styles["footer-link"]}>Privacy</Link>
             </div>
-
         </footer>
     );
 }

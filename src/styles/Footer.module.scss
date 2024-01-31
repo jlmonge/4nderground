@@ -9,8 +9,15 @@
     align-items: flex-start;
     justify-content: center;
     margin-top: auto;
-    font-size: .75em;
+    font-size: 1em;
     color: variables.$gg-text;
+    text-shadow: .5px .5px 2px black;
+    // background-image: url("/mirrored-bgbtm.svg");
+    // background-repeat: repeat-x;
+    // background-size: cover;
+    // background-position: bottom left;
+    // transform: scale(1.1);
+    min-width: 320px;
 }
 
 .extlogo {
@@ -24,16 +31,16 @@
 
 .extlogo-r {
     @include logo;
-    margin-left: -24px;
-    transform: rotate(180deg)
+    margin-left: -16px;
+    transform: rotate(180deg);
 }
 
 .links {
     display: flex;
     align-items: center;
     align-content: center;
-    gap: 4rem;
-    flex-shrink: 0;
+    gap: min(10vw, 1rem);
+    flex: 1;
     flex-wrap: wrap;
     height: 100%;
     color: inherit;

@@ -5,9 +5,12 @@ $white: #FFFFFF;
 
 .nav {
     display: flex;
-    padding: 0 2rem;
+    padding: 0 clamp(0.5rem, 3vw, 2rem);
     justify-content: space-between;
     align-items: center;
+    // background-image: url("/mirrored-bgtop.svg");
+    // background-repeat: repeat-x;
+    // background-size: cover;
 }
 
 .all-flow {
@@ -21,10 +24,6 @@ $white: #FFFFFF;
 
 .logo {
     @include logo;
-    color: variables.$gg-text;
-    // &--guest {
-
-    // }
 }
 
 .nav-link {
@@ -33,12 +32,15 @@ $white: #FFFFFF;
     border: 3px solid transparent;
     flex-direction: row;
     align-items: center;
-    font-size: 2.5em;
+    font-size: 2em;
     text-transform: uppercase;
     color: inherit;
+    text-shadow: 1px 1px 2px black;
 }
 
 .nav-text {
+    border: 3px solid transparent;
+
     &:hover {
         border-bottom: 3px solid $white;
     }

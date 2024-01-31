@@ -8,6 +8,7 @@ import { useContext } from 'react';
 import { UserContext } from '../user-provider';
 import { Logo1 } from './svgs';
 import { nunito } from '../app/fonts';
+import { BGTop } from '../components/svgs';
 
 export default function Navbar() {
     const { user } = useContext(UserContext);

@@ -2,12 +2,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2em;
+    gap: 0.5em;
     align-self: stretch;
 }
 
 @mixin logo {
     position: relative;
-    width: 8em;
-    height: 8em;
+    width: 6em;
+    height: 6em;
+    color: variables.$gg-text;
+    filter: drop-shadow(1px 1px 1px black)
 }
