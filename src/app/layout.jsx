@@ -1,7 +1,7 @@
 import './global.scss';
 import styles from '../styles/Background.module.scss';
 // run 'npx @next/codemod@latest built-in-next-font .'
-import { publicSans } from './fonts.jsx';
+import { publicSans, nunito } from './fonts.jsx';
 import Navbar from '../components/navbar.jsx';
 import UserProvider from '../user-provider.jsx';
 import Footer from '../components/footer.jsx';
@@ -25,11 +25,11 @@ export default async function RootLayout({ children }) {
                 <div className={styles["bgr"]}></div>
                 <div className={styles["bgtop"]}></div>
                 <UserProvider>
-                    <Navbar />
+                    <Navbar className={nunito.className} />
                     <main>
                         {children}
                     </main>
-                    <Footer />
+                    <Footer className={nunito.className} />
                 </UserProvider>
                 <div className={styles["bgbtm"]}></div>
             </body>

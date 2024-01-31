@@ -8,6 +8,9 @@ $max-btn-radius: 20rem;
     flex-direction: column;
     align-items: center;
     gap: 3rem;
+    text-shadow:
+        white -10px 0px 10px,
+        white 10px 0px 10px,
 }
 
 .headline {
@@ -31,6 +34,9 @@ $max-btn-radius: 20rem;
     list-style: none;
     text-transform: uppercase;
     font-size: 1em;
+    text-shadow:
+        white -2px 0px 2px,
+        white 2px 0px 2px;
 }
 
 .features-item {
@@ -45,6 +51,9 @@ $max-btn-radius: 20rem;
     transition: all 3s ease;
 
     &:hover {
+        text-shadow:
+            white -1px 0px 1px,
+            white 1px 0px 1px;
         background-position: left;
         color: white;
         transition: all 0.75s ease;
@@ -66,6 +75,7 @@ $max-btn-radius: 20rem;
     text-transform: uppercase;
     text-align: center;
     animation: 4s ease-in-out infinite alternate up-n-down;
+    margin-bottom: 2rem;
 
     &:hover {
         animation-play-state: paused;

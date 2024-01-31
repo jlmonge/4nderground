@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import styles from "../styles/Homepage.module.scss";
-import { terminalGrotesque, almarai } from './fonts';
+import { almarai, nunito } from './fonts';
 import colors from "../styles/Colors.module.scss"
 
 export const metadata = {
@@ -10,8 +10,8 @@ export const metadata = {
 export default function HomePage() {
 
     return (
-        <div className={styles["hp"]}>
-            <p className={`${styles["headline"]} ${almarai.className}`}>
+        <div className={`${styles["hp"]} ${almarai.className}`}>
+            <p className={`${styles["headline"]}`}>
                 the Internet&apos;s newest music
             </p>
             <ul className={styles["features"]}>
@@ -23,7 +23,7 @@ export default function HomePage() {
                 <li className={styles["features-item"]}>Share socials on your profile</li>
 
             </ul>
-            <Link href="/register" className={styles["btn"]}><span className={`${styles["tg-font"]}`}>Please sign me up!!</span></Link>
+            <Link href="/register" className={styles["btn"]}><span className={`${nunito.className}`}>Please sign me up!!</span></Link>
         </div>
     );
 }
