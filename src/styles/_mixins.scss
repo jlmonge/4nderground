@@ -1,27 +1,15 @@
-@mixin flex-row {
+@mixin subnav {
     display: flex;
-    flex-direction: row;
-}
-
-@mixin nav {
-    @include flex-row;
+    flex-direction: column;
     align-items: center;
-    gap: 0;
-    flex: 1;
-    height: 100%;
+    gap: 0.5em;
+    align-self: stretch;
 }
 
 @mixin logo {
     position: relative;
-    width: clamp(3em, 10vw, 4em);
-    height: clamp(3em, 10vh, 4em);
-}
-
-@mixin clean-btn {
-    background: none;
-    color: grey;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    outline: inherit;
+    width: 6em;
+    height: 6em;
+    color: variables.$gg-text;
+    filter: drop-shadow(1px 1px 1px black)
 }

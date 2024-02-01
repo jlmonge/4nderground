@@ -1,0 +1,25 @@
+@use "variables";
+
+.ub-fill {
+    background-color: variables.$ub-fill;
+}
+
+.ub-text {
+    color: variables.$ub-text;
+}
+
+.gg-fill {
+    background-color: variables.$gg-fill;
+}
+
+.gg-text {
+    color: variables.$gg-text;
+}
+
+.sr-fill {
+    background-color: variables.$sr-fill;
+}
+
+.sr-text {
+    color: variables.$sr-text;
+}

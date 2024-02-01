@@ -20,13 +20,15 @@ export async function middleware(req) {
             return NextResponse.redirect(new URL('/login', req.url));
         }
     }
-    // Unregistered users only only
+    // Unregistered users only
     else {
-        //Registered users cannot login, register, or reset password
+        // Registered users cannot login, register, or reset password
+        // The landing is only for guests
         if (
             req.nextUrl.pathname.startsWith('/login') ||
             req.nextUrl.pathname.startsWith('/register') ||
-            req.nextUrl.pathname.startsWith('/forgot-password')
+            req.nextUrl.pathname.startsWith('/forgot-password') ||
+            req.nextUrl.pathname === '/'
         ) {
             return NextResponse.redirect(new URL('/player', req.url));
         }

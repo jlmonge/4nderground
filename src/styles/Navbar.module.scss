@@ -1,39 +1,47 @@
+@use "variables";
 @import "mixins";
 
-$font-white: #FFFFFF;
-
-.header {
-    @include flex-row;
-    padding: 0 2rem;
-    align-items: center;
-    gap: 0 clamp(0.5rem, 5%, 1rem);
-}
-
-.header-logo {
-    @include logo;
-}
+$white: #FFFFFF;
 
 .nav {
-    @include nav;
+    display: flex;
+    padding: 0 clamp(0.5rem, 3vw, 2rem);
+    justify-content: space-between;
+    align-items: center;
+    // background-image: url("/mirrored-bgtop.svg");
+    // background-repeat: repeat-x;
+    // background-size: cover;
 }
 
-.guestnav {
-    @include nav;
-    justify-content: space-between;
+.all-flow {
+    @include subnav;
+}
+
+.user-flow {
+    @include subnav;
+    padding-top: 1rem;
+}
+
+.logo {
+    @include logo;
 }
 
 .nav-link {
     display: flex;
-    padding: 0 1em;
+    padding: 0;
     border: 3px solid transparent;
     flex-direction: row;
     align-items: center;
-    border-radius: 1em;
-    height: 50%;
-    font-size: 1em;
-    color: $font-white;
+    font-size: 2em;
+    text-transform: uppercase;
+    color: inherit;
+    text-shadow: 1px 1px 2px black;
+}
+
+.nav-text {
+    border: 3px solid transparent;
 
     &:hover {
-        border: 3px solid white;
+        border-bottom: 3px solid $white;
     }
 }

@@ -1,61 +1,65 @@
-$grid-color: #CA0000;
+// NOTE: z-index only being used for bg elements
 
-.bg {
-    position: absolute;
+.bgtop {
+    position: fixed;
+    top: 0;
+    background: url("/mirrored-bgtop.svg");
+    background-repeat: repeat-x;
+    background-size: cover;
     width: 100%;
-    height: 100%;
+    height: calc(350.98px * 0.75);
     z-index: -1;
-    margin: 0 auto;
-    // display: none;
+    filter: drop-shadow(0 12px 8px rgba(0, 0, 0, 0.25));
 }
 
-// container for horizontal bg elements
-.gl-h {
-    position: relative;
+.bgbtm {
+    position: fixed;
+    bottom: 0;
+    background: url("/mirrored-bgbtm.svg");
+    background-repeat: repeat-x;
+    background-size: cover;
+    width: 100%;
+    height: calc(487.06px * 0.55);
+    z-index: -1;
+    filter: drop-shadow(0 -12px 8px rgba(0, 0, 0, 0.25));
 }
 
-//container for vertical bg elements
-.gl-v {
-    position: relative;
+.bgl {
+    position: fixed;
+    width: 23px;
+    height: 100vh;
+    background: linear-gradient(180deg, #61FF2A 0%, rgba(97, 255, 42, 0.00) 100%);
+    filter: blur(2.549999952316284px);
+    animation: 16s linear infinite alternate ltr;
+    z-index: -2;
 }
 
-.gl {
-    background-color: $grid-color;
-    position: absolute;
-    filter: blur(30px);
+.bgm {
+    position: fixed;
+    width: 90px;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(97, 255, 42, 0.50) 0%, rgba(97, 255, 42, 0.00) 100%);
+    filter: blur(2.549999952316284px);
+    animation: 24s linear infinite alternate ltr;
+    z-index: -2;
 }
 
-.gl-h1 {
-    left: calc(256px + 10vw);
-    top: 273px;
-    width: 681px;
-    height: 49px;
+.bgr {
+    position: fixed;
+    width: 197px;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(97, 255, 42, 0.25) 0%, rgba(97, 255, 42, 0.00) 100%);
+    filter: blur(2.549999952316284px);
+    animation: 32s linear infinite alternate ltr;
+    z-index: -2;
 }
 
-.gl-h2 {
-    left: calc(128px + 10vw);
-    top: 712px;
-    width: 1230px;
-    height: 76px;
-}
+@keyframes ltr {
+    from {
+        transform: translateX(0)
+    }
 
-.gl-v1 {
-    left: calc(400px + 10vw);
-    top: 106px;
-    width: 57px;
-    height: 517px;
-}
-
-.gl-v2 {
-    left: 787px;
-    top: 133px;
-    width: 22px;
-    height: 393px;
-}
-
-.gl-v3 {
-    left: 1200px;
-    top: 75px;
-    width: 69px;
-    height: 920px;
+    to {
+        transform: translateX(100vw)
+    }
 }
