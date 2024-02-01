@@ -1,15 +1,22 @@
-$btn-radius: 20rem;
+@use "variables";
+
+$min-btn-radius: 15rem;
+$max-btn-radius: 20rem;
 
 .hp {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 3rem;
+    text-shadow:
+        white -10px 0px 10px,
+        white 10px 0px 10px,
 }
 
 .headline {
     margin: 0;
     font-size: 4rem;
+    overflow-wrap: break-word;
 }
 
 // basically match tg font to regular font size
@@ -20,54 +27,55 @@ $btn-radius: 20rem;
 // emphasize tg font
 .tg-font-emph {
     font-size: 1.5em;
+    overflow-wrap: break-word;
 }
 
 .features {
     list-style: none;
     text-transform: uppercase;
     font-size: 1em;
+    text-shadow:
+        white -2px 0px 2px,
+        white 2px 0px 2px;
 }
 
 .features-item {
     width: fit-content;
     margin: 0.25rem 0;
     padding: 0 0.25rem;
-    color: white;
-    border-left: 4px solid #CA0000;
-    background: linear-gradient(to left, transparent 50%, white 50%) right;
+    border-image-source: linear-gradient(to bottom, black 0%, white 100%);
+    border-image-slice: 1;
+    border-left: 2px solid;
+    background: linear-gradient(to left, transparent 50%, grey 50%) right;
     background-size: 200%;
     transition: all 3s ease;
 
     &:hover {
+        text-shadow:
+            white -1px 0px 1px,
+            white 1px 0px 1px;
         background-position: left;
-        color: black;
+        color: white;
         transition: all 0.75s ease;
     }
 }
-
-// @keyframes from-left {
-//     from {
-
-//     } to {
-
-//     }
-// }
 
 .btn {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: $btn-radius;
-    height: $btn-radius;
-    border-radius: $btn-radius;
+    width: clamp($min-btn-radius, 80vw, $max-btn-radius);
+    height: clamp($min-btn-radius, 80vw, $max-btn-radius);
+    border-radius: clamp($min-btn-radius, 80vw, $max-btn-radius);
     padding: 5rem;
-    color: white;
-    background: radial-gradient(50% 50% at 50% 50%, #202020 77.6%, #5CF 100%);
+    color: black;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.66) 77.6%, #55C2FF 100%);
     font-size: 1.5rem;
     text-transform: uppercase;
     text-align: center;
     animation: 4s ease-in-out infinite alternate up-n-down;
+    margin-bottom: 2rem;
 
     &:hover {
         animation-play-state: paused;
