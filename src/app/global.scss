@@ -29,9 +29,9 @@ a {
   color: #00FF66; // gg-text
 }
 
-// p {
-//   margin: 0;
-// }
+p {
+  margin: 0;
+}
 
 * {
   box-sizing: border-box;
@@ -47,7 +47,6 @@ button[type="submit"] {
   background-color: transparent;
   color: white;
   border: 1px solid white;
-
 }
 
 button:hover {

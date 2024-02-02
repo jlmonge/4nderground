@@ -13,3 +13,18 @@
     color: variables.$gg-text;
     filter: drop-shadow(1px 1px 1px black)
 }
+
+@mixin playerctrl-btn($src) {
+    all: unset;
+    background-image: $src;
+    background-size: cover;
+    height: 24px;
+    width: 24px;
+    border-radius: 24px;
+}
+
+@mixin abs-pos($x, $y) {
+    position: absolute;
+    left: $x;
+    top: $y;
+}

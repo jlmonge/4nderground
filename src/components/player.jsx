@@ -69,7 +69,7 @@ function ElapsedTime() {
     }, [])
 
     return (
-        <p className={styles["tracktime"]}>{`${Math.trunc(pos / 60)}:${Math.trunc(pos % 60).toString().padStart(2, '0')}`}</p>
+        <p className={`${styles["tracktime"]} ${styles["elapsedtime"]}`}>{`${Math.trunc(pos / 60)}:${Math.trunc(pos % 60).toString().padStart(2, '0')}`}</p>
     )
 }
 
@@ -81,10 +81,10 @@ function VolumeControls() {
     }, [setVolume]);
 
     return (
-        <div className={styles["v-container"]}>
-            Vol
+        <div className={styles["vol-container"]}>
+            <span className={styles["vol-label"]}>Vol</span>
             <input
-                className={styles["v-slider"]}
+                className={styles["vol-slider"]}
                 type="range"
                 min={0}
                 max={1}
@@ -100,12 +100,18 @@ function VolumeControls() {
 function PlayerControls({ handleBack, handlePlayPause, handleForward, isPausedMisnomer, isEmpty }) {
     // <svg> created via figma
     return (
-        <>
-            <button onClick={handleBack} className={styles["skipback-btn"]}>back</button>
-            <button onClick={handlePlayPause}
-                className={isPausedMisnomer ? styles["pause-btn"] : styles["play-btn"]}>playpause</button>
-            <button onClick={handleForward} className={styles["skipnext-btn"]}>fwd</button>
-        </>
+        <div className={styles["ctrls-container"]}>
+            <button type="button" onClick={handleBack} className={styles["skipback-btn"]}>
+                {/* back */}
+            </button>
+            <button type="button" onClick={handlePlayPause}
+                className={isPausedMisnomer ? styles["pause-btn"] : styles["play-btn"]}>
+                {/* playpause */}
+            </button>
+            <button type="button" onClick={handleForward} className={styles["skipnext-btn"]}>
+                {/* fwd */}
+            </button>
+        </div>
     )
 }
 
@@ -166,7 +172,7 @@ export default function Player() {
     }, [load, tracks, trackIndex]);
 
     return (
-        <>
+        <div className={styles["player-page"]}>
             <div className={styles["player"]}>
                 {tracks.length ? (
                     <>
@@ -178,19 +184,26 @@ export default function Player() {
                             <div className={styles["bar-white"]}></div>
                             <div className={styles["bar-grey"]}></div>
                         </div>
-                        <Avatar userId={tracks[trackIndex].uploader_id} />
-                        <Report areTracks={!!tracks.length} contentType='track' contentId={tracks[trackIndex]?.id} />
+                        <div className={styles["avi-container"]}>
+                            <Avatar userId={tracks[trackIndex].uploader_id} />
+                        </div>
+                        <div className={styles["report-container"]}>
+                            <Report areTracks={!!tracks.length} contentType='track' contentId={tracks[trackIndex]?.id} />
+                        </div>
                         <Genre />
-                        <p className={styles["queue-info"]}>
-                            <p className={styles["qi-label"]}>Now</p>
-                            <p className={styles["qi-val"]}>{trackIndex + 1}</p>
-                        </p>
-                        <p className={styles["queue-info"]}>
-                            <p className={styles["qi-label"]}>Total</p>
-                            <p className={styles["qi-val"]}>{tracks.length}</p>
-                        </p>
+                        <div className={styles["queue-container"]}>
+                            <p className={styles["queue-info"]}>
+                                <p className={styles["qi-label"]}>Now</p>
+                                <p className={styles["qi-val"]}>{trackIndex + 1}</p>
+                            </p>
+                            <p className={styles["queue-info"]}>
+                                <p className={styles["qi-label"]}>Total</p>
+                                <p className={styles["qi-val"]}>{tracks.length}</p>
+                            </p>
+                        </div>
+
                         <ElapsedTime />
-                        <p className={styles["tracktime"]}>{`${Math.trunc(tracks[trackIndex]?.duration / 60)}:${(tracks[trackIndex]?.duration % 60).toString().padStart(2, '0')}`}</p>
+                        <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>{`${Math.trunc(tracks[trackIndex]?.duration / 60)}:${(tracks[trackIndex]?.duration % 60).toString().padStart(2, '0')}`}</p>
                         <PlayerControls handleBack={handleBack} handlePlayPause={handlePlayPause} handleForward={handleForward}
                             isPausedMisnomer={playing} isEmpty={!tracks.length}
                         />
@@ -204,8 +217,6 @@ export default function Player() {
                 )
                 }
             </div>
-
-            <div className={styles["spacer"]}></div>
             <CommentSection trackId={tracks[trackIndex]?.id} />
 
             {/* <Suspense fallback={<Loading />}>
@@ -213,6 +224,6 @@ export default function Player() {
                     <div>full load: <pre>{JSON.stringify(tracks, null, 2)}</pre></div>
                 </div>
             </Suspense> */}
-        </>
+        </div>
     );
 }

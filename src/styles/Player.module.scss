@@ -1,3 +1,120 @@
-.spacer {
-    height: 10rem;
+@import "mixins";
+
+.player-page {
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+}
+
+.player {
+    background-image: url("/player-bg.svg");
+    background-size: 100% 100%;
+    width: 304px;
+    height: 237px;
+    position: relative;
+}
+
+.decor-bars {
+    @include abs-pos(118px, 134px);
+}
+
+.bar-white {
+    background-color: white;
+    width: 73px;
+    height: 1px;
+}
+
+.bar-grey {
+    position: relative;
+    left: 2px;
+    background-color: #707070;
+    width: 73px;
+    height: 1px;
+}
+
+.avi-container {
+    @include abs-pos(23px, 23px);
+}
+
+.report-container {
+    @include abs-pos(19px, 60px);
+}
+
+.genre-container {
+    @include abs-pos(19px, 90px);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.elapsedtime {
+    @include abs-pos(81px, 130px);
+}
+
+.totaltime {
+    @include abs-pos(201px, 130px);
+}
+
+.queue-container {
+    @include abs-pos(196px, 37px);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.queue-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.qi-label {
+    color: #494949;
+    font-size: 8px;
+}
+
+.qi-val {
+    color: black;
+    font-size: 12px;
+    -webkit-text-stroke: 0.25px white;
+}
+
+.tracktime {
+    color: black;
+    font-size: 14px;
+    -webkit-text-stroke: 0.25px white;
+}
+
+.skipback-btn {
+    @include playerctrl-btn(url("/4nd-skipback-btn.svg"));
+}
+
+.pause-btn {
+    @include playerctrl-btn(url("/4nd-pause-btn.svg"));
+}
+
+.play-btn {
+    @include playerctrl-btn(url("/4nd-play-btn.svg"));
+}
+
+.skipnext-btn {
+    @include playerctrl-btn(url("/4nd-skipnext-btn.svg"));
+}
+
+.ctrls-container {
+    @include abs-pos(161px, 162px);
+}
+
+.vol-container {
+    @include abs-pos(163px, 205px);
+}
+
+.vol-label {
+    text-transform: uppercase;
+    color: #494949;
+    font-size: 12px;
+}
+
+.vol-slider {
+    width: 43px;
 }
