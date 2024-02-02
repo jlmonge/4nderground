@@ -69,7 +69,7 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                     >
                         <Image
                             src="/trash-2.svg"
-                            alt="Delete comment icon"
+                            alt="Delete link"
                             sizes={BTN_SIZE}
                             fill
                             style={{ objectFit: 'contain' }} // optional

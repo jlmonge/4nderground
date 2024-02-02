@@ -88,11 +88,11 @@
     flex-direction: row;
 }
 
-.c-delete {
-    @include clean-btn;
-    font-size: 0.75em;
-    color: #888888;
-}
+// .c-delete {
+//     @include clean-btn;
+//     font-size: 0.75em;
+//     color: #888888;
+// }
 
 .visually-hidden:not(:focus):not(:active) {
     clip: rect(0 0 0 0);
