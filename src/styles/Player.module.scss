@@ -1,4 +1,6 @@
+@use "variables";
 @import "mixins";
+
 
 .player-page {
     display: flex;
@@ -104,18 +106,17 @@
 .qi-label {
     color: #494949;
     font-size: 8px;
+    text-transform: uppercase;
 }
 
 .qi-val {
     color: black;
     font-size: 12px;
-    -webkit-text-stroke: 0.25px white;
 }
 
 .tracktime {
     color: black;
     font-size: 14px;
-    -webkit-text-stroke: 0.25px white;
 }
 
 .skipback-btn {
@@ -140,9 +141,10 @@
 }
 
 .vol-container {
-    @include abs-pos(161px, 206px);
+    @include abs-pos(161px, 191px);
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
+    align-items: center;
     gap: 0;
 }
 
@@ -159,34 +161,39 @@
     cursor: pointer;
     outline: none;
     overflow: hidden;
+    border: 0.5px solid black;
+    border-radius: 3px;
+    margin: 0;
 }
 
 // SLIDER TRACK
 .vol-slider::-webkit-slider-runnable-track {
-    height: 9px;
-    background: #ccc;
+    height: 7px;
+    background: #494949;
+    // border: 1px solid white;
 }
 
 .vol-slider::-moz-range-track {
-    height: 9px;
-    background: #ccc;
+    height: 7px;
+    background: #494949;
+    // border: 1px solid white;
 }
 
 // SLIDER THUMB
 .vol-slider::-webkit-slider-thumb {
     appearance: none;
-    height: 9px;
-    width: 16px;
+    height: 7px;
+    width: 13px;
     background-color: #494949;
-    border: 2px solid white;
-    box-shadow: -100px 0 0 100px rgb(0, 255, 26);
+    border: 2px solid grey;
+    box-shadow: -100px 0 0 100px variables.$gg-text;
 }
 
 // don't need to clear appearance in firefox
 .vol-slider::-moz-range-thumb {
-    height: 9px;
-    width: 16px;
+    height: 7px;
+    width: 13px;
     background-color: #494949;
-    border: 2px solid white;
-    box-shadow: -100px 0 0 100px rgb(0, 255, 26);
+    border: 2px solid grey;
+    box-shadow: -100px 0 0 100px variables.$gg-text;
 }
