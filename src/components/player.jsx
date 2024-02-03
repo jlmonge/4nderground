@@ -11,6 +11,7 @@ import { UserContext } from '../user-provider';
 import styles from '../styles/Player.module.scss'
 import Avatar from './avatar';
 import { GENRES } from '../utils/constants';
+import { PauseBtn, PlayBtn, SkipBackBtn, SkipNextBtn } from './svgs';
 
 const BTN_SIZE = 24;
 const DEBUG = false; // redundant; replace soon
@@ -104,14 +105,17 @@ function PlayerControls({ handleBack, handlePlayPause, handleForward, isPausedMi
     return (
         <div className={styles["ctrls-container"]}>
             <button type="button" onClick={handleBack} className={styles["skipback-btn"]}>
-                {/* back */}
+                {/* <SkipBackBtn className={styles["ctrls-svg"]} /> */}
             </button>
             <button type="button" onClick={handlePlayPause}
                 className={isPausedMisnomer ? styles["pause-btn"] : styles["play-btn"]}>
-                {/* playpause */}
+                {/* {isPausedMisnomer
+                    ? <PauseBtn className={styles["ctrls-svg"]} />
+                    : <PlayBtn className={styles["ctrls-svg"]} />
+                } */}
             </button>
             <button type="button" onClick={handleForward} className={styles["skipnext-btn"]}>
-                {/* fwd */}
+                {/* <SkipNextBtn className={styles["ctrls-svg"]} /> */}
             </button>
         </div>
     )
@@ -187,7 +191,7 @@ export default function Player() {
                             <div className={styles["bar-grey"]}></div>
                         </div>
                         <div className={styles["avi-container"]}>
-                            <Avatar userId={tracks[trackIndex].uploader_id} />
+                            <Avatar userId={tracks[trackIndex].uploader_id} size="small" />
                         </div>
                         <div className={styles["report-container"]}>
                             <Report areTracks={!!tracks.length} contentType='track' contentId={tracks[trackIndex]?.id} />

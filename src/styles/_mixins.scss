@@ -17,7 +17,8 @@
 @mixin playerctrl-btn($src) {
     all: unset;
     background-image: $src;
-    background-size: cover;
+    background-size: 100%;
+    opacity: 0.99;
     height: 24px;
     width: 24px;
     border-radius: 24px;

@@ -135,9 +135,13 @@
     @include playerctrl-btn(url("/4nd-skipnext-btn.svg"));
 }
 
+.ctrls-svg {
+    transform: scale(0.5);
+}
+
 .ctrls-container {
     @include abs-pos(161px, 162px);
-    shape-rendering: crispEdges;
+    height: 24px;
 }
 
 .vol-container {
