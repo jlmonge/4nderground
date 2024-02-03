@@ -12,6 +12,7 @@
     width: 304px;
     height: 237px;
     position: relative;
+    margin: 0 auto;
 }
 
 .decor-bars {
@@ -44,7 +45,39 @@
     @include abs-pos(19px, 90px);
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 2px;
+}
+
+.genreselect-container {
+    @include fanciful-btn(44px, 18px, url("/4nd-genre-btn.svg"));
+    position: relative;
+
+    .genreselect {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 44px;
+        height: 18px;
+        appearance: none;
+        background: url("/chevrons-right.svg") 91% / 22% no-repeat;
+        // stroke: white;
+        stroke-width: 2px;
+        font-size: 10px;
+        padding: 3px 6px;
+        border-radius: 10px;
+        border: none;
+        color: white;
+
+        .genreselect-option {
+            background-color: grey;
+        }
+    }
+}
+
+.genre-label {
+    text-transform: uppercase;
+    font-size: 8px;
 }
 
 .elapsedtime {
@@ -103,10 +136,14 @@
 
 .ctrls-container {
     @include abs-pos(161px, 162px);
+    shape-rendering: crispEdges;
 }
 
 .vol-container {
-    @include abs-pos(163px, 205px);
+    @include abs-pos(161px, 206px);
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0;
 }
 
 .vol-label {
@@ -116,5 +153,40 @@
 }
 
 .vol-slider {
-    width: 43px;
+    width: 69px;
+    // height: 9px;
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+    overflow: hidden;
+}
+
+// SLIDER TRACK
+.vol-slider::-webkit-slider-runnable-track {
+    height: 9px;
+    background: #ccc;
+}
+
+.vol-slider::-moz-range-track {
+    height: 9px;
+    background: #ccc;
+}
+
+// SLIDER THUMB
+.vol-slider::-webkit-slider-thumb {
+    appearance: none;
+    height: 9px;
+    width: 16px;
+    background-color: #494949;
+    border: 2px solid white;
+    box-shadow: -100px 0 0 100px rgb(0, 255, 26);
+}
+
+// don't need to clear appearance in firefox
+.vol-slider::-moz-range-thumb {
+    height: 9px;
+    width: 16px;
+    background-color: #494949;
+    border: 2px solid white;
+    box-shadow: -100px 0 0 100px rgb(0, 255, 26);
 }

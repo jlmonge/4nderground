@@ -1,5 +1,5 @@
 @import "mixins";
 
-// .open-btn {
-//     @include clean-btn;
-// }
+.opendialog-btn {
+    @include fanciful-btn(44px, 18px, url("/4nd-report-btn.svg"));
+}

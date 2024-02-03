@@ -36,14 +36,16 @@ function Genre() {
 
     return (
         <div className={styles["genre-container"]}>
-            <label htmlFor="genre">Genre</label>
-            <select id="genre" name="genre" onChange={handleSelectChange}>
-                {
-                    Object.entries(GENRES).map(([key, str]) =>
-                        <option key={key} value={key}>{str}</option>
-                    )
-                }
-            </select>
+            <label htmlFor="genre" className={styles["genre-label"]}>Genre</label>
+            <div className={styles["genreselect-container"]}>
+                <select id="genre" className={styles["genreselect"]} name="genre" onChange={handleSelectChange}>
+                    {
+                        Object.entries(GENRES).map(([key, str]) =>
+                            <option className={styles["genreselect-option"]} key={key} value={key}>{str}</option>
+                        )
+                    }
+                </select>
+            </div>
         </div>
     )
 }
@@ -192,14 +194,14 @@ export default function Player() {
                         </div>
                         <Genre />
                         <div className={styles["queue-container"]}>
-                            <p className={styles["queue-info"]}>
+                            <div className={styles["queue-info"]}>
                                 <p className={styles["qi-label"]}>Now</p>
                                 <p className={styles["qi-val"]}>{trackIndex + 1}</p>
-                            </p>
-                            <p className={styles["queue-info"]}>
+                            </div>
+                            <div className={styles["queue-info"]}>
                                 <p className={styles["qi-label"]}>Total</p>
                                 <p className={styles["qi-val"]}>{tracks.length}</p>
-                            </p>
+                            </div>
                         </div>
 
                         <ElapsedTime />

@@ -184,7 +184,7 @@ export default function Report({ areTracks, contentType, contentId }) {
                     <p>{isReported && 'Your report has been received. Thank you.'}</p>
                 </form>
             </dialog>
-            <button className={styles["open-btn"]} onClick={handleOpen} type="button" disabled={(contentType === 'tracks' && !areTracks)}>
+            <button className={styles["opendialog-btn"]} data="Report" onClick={handleOpen} type="button" disabled={(contentType === 'tracks' && !areTracks)}>
                 Report
             </button>
         </>

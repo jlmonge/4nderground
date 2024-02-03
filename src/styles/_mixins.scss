@@ -28,3 +28,26 @@
     left: $x;
     top: $y;
 }
+
+//button border
+//default values: 44px, 18px
+@mixin fanciful-btn($width, $height, $background) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: $width;
+    min-height: $height;
+    background-size: over;
+    padding: 3px 6px;
+    border: none;
+    outline: none;
+    // position: relative;
+    border-radius: 10px;
+    background: $background;
+    box-shadow: 0px -2px 2px 0px rgba(255, 255, 255, 0.50) inset, 0px 2px 2px 0px rgba(255, 255, 255, 0.50) inset;
+    font-size: 10px;
+    color: white;
+    text-shadow: 0px 0.5px 0px rgba(255, 255, 255, 0.50);
+}
+
+//todo: create variables for btn border radius & btn border width
