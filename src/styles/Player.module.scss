@@ -52,15 +52,15 @@
 }
 
 .genreselect-container {
-    @include fanciful-btn(44px, 18px, url("/4nd-genre-btn.svg"));
+    @include fanciful-btn(44px, 57px, linear-gradient(180deg, #0075FF 0%, #86BDFF 100%));
     position: relative;
 
     .genreselect {
         position: absolute;
         top: 0;
         left: 0;
-        width: 44px;
-        height: 18px;
+        width: 100%;
+
         appearance: none;
         background: url("/chevrons-right.svg") 91% / 22% no-repeat;
         // stroke: white;
@@ -147,10 +147,6 @@
     @include playerctrl-btn(url("/4nd-skipnext-btn.svg"));
 }
 
-.ctrls-svg {
-    transform: scale(0.5);
-}
-
 .ctrls-container {
     @include abs-pos(161px, 162px);
     height: 24px;
@@ -212,4 +208,109 @@
     background-color: #494949;
     border: 2px solid grey;
     box-shadow: -100px 0 0 100px variables.$gg-text;
+}
+
+// https://stackoverflow.com/questions/42025632/how-to-detect-only-with-css-mobile-screens
+@media only screen and (hover: none) and (pointer: coarse) {
+    .vol-container {
+        display: none;
+    }
+}
+
+@media (min-width: 744px) {
+    .player {
+        background-image: url("/player-bg624.svg");
+        background-size: 100% 100%;
+        width: 624px;
+        height: 242px;
+    }
+
+    .decor-bars {
+        @include abs-pos(193px, 131px);
+    }
+
+    .bar-white,
+    .bar-grey {
+        width: 205px;
+    }
+
+    .avi-container {
+        @include abs-pos(54px, 12px);
+    }
+
+    .report-container {
+        @include abs-pos(51px, 68px);
+    }
+
+    .genre-container {
+        @include abs-pos(51px, 98px);
+        font-size: 14px;
+    }
+
+    .elapsedtime {
+        @include abs-pos(147px, 124px);
+    }
+
+    .totaltime {
+        @include abs-pos(408px, 124px);
+    }
+
+    .queue-container {
+        // incr. x from design
+        @include abs-pos(402px, 42px);
+        width: 170px;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .queue-info {
+        align-items: center;
+    }
+
+    .qi-label {
+        font-size: 14px;
+    }
+
+    .qi-val {
+        font-size: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .qi-nowspecialcase {
+        font-size: 14px;
+    }
+
+    .tracktime {
+        font-size: 18px;
+    }
+
+    .ctrls-container {
+        // incr. x from design
+        @include abs-pos(350px, 152px);
+        height: 40px;
+    }
+
+    .vol-container {
+        // incr. x from design, decr. y
+        @include abs-pos(351px, 200px);
+    }
+
+    .vol-label {
+        font-size: 14px;
+    }
+
+    .vol-slider {
+        width: 123px;
+    }
+
+    .genreselect-container .genreselect {
+        font-size: 14px;
+    }
+
+    .genre-label {
+        font-size: 14px;
+    }
 }

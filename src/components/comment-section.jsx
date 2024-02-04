@@ -220,7 +220,7 @@ export default function CommentSection({ trackId }) {
     if (trackId) {
         content = (
             <>
-                <h3>Comments</h3>
+                <h2>Comments</h2>
                 <div className={styles["comments-container"]}>
                     <AddComment
                         onAddComment={handleAddComment}

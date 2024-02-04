@@ -1,5 +1,5 @@
 @import "mixins";
 
 .opendialog-btn {
-    @include fanciful-btn(44px, 18px, url("/4nd-report-btn.svg"));
+    @include fanciful-btn(44px, 57px, linear-gradient(180deg, #FF3D3D 0%, #F44 100%));
 }
