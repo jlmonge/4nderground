@@ -18,7 +18,7 @@ export default function Avatar({ userId, size = "large" }) {
         dialogRef.current.close();
     }
 
-    return (
+    return userId ? (
         <>
             <dialog ref={dialogRef} style={{
                 backgroundColor: 'black',
@@ -51,9 +51,14 @@ export default function Avatar({ userId, size = "large" }) {
                 style={{
                     backgroundColor: `#${userId.slice(0, 6)}`,
                 }}
-                title={userId ?? 'disappointing.'} // show userid on hover
+                title={userId} // show userid on hover
                 onClick={handleOpen}
             />
         </>
-    );
+    ) : (
+        <div
+            className={`${styles["aviicon-null"]} ${styles["aviicon"]} ${size === "small" ? styles["aviicon-small"] : styles["aviicon-big"]}`}
+        />
+    )
+
 }

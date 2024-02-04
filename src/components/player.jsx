@@ -32,7 +32,7 @@ function Genre() {
     const [genre, setGenre] = useState('');
 
     const handleSelectChange = (e) => {
-        setGenre(e.target.value)
+        setGenre(e.target.value);
     }
 
     return (
@@ -104,17 +104,17 @@ function PlayerControls({ handleBack, handlePlayPause, handleForward, isPausedMi
     // <svg> created via figma
     return (
         <div className={styles["ctrls-container"]}>
-            <button type="button" onClick={handleBack} className={styles["skipback-btn"]}>
+            <button type="button" onClick={handleBack} className={styles["skipback-btn"]} disabled={isEmpty}>
                 {/* <SkipBackBtn className={styles["ctrls-svg"]} /> */}
             </button>
             <button type="button" onClick={handlePlayPause}
-                className={isPausedMisnomer ? styles["pause-btn"] : styles["play-btn"]}>
+                className={isPausedMisnomer ? styles["pause-btn"] : styles["play-btn"]} disabled={isEmpty}>
                 {/* {isPausedMisnomer
                     ? <PauseBtn className={styles["ctrls-svg"]} />
                     : <PlayBtn className={styles["ctrls-svg"]} />
                 } */}
             </button>
-            <button type="button" onClick={handleForward} className={styles["skipnext-btn"]}>
+            <button type="button" onClick={handleForward} className={styles["skipnext-btn"]} disabled={isEmpty}>
                 {/* <SkipNextBtn className={styles["ctrls-svg"]} /> */}
             </button>
         </div>
@@ -143,7 +143,23 @@ export default function Player() {
         setTrackIndex((trackIndex + 1) % tracks.length);
     };
 
+    let queueNowPosOutput = '0'; // text or jsx
+    let queueNowSpecialJSX;
+    if (tracks.length) {
+        queueNowPosOutput = (trackIndex + 1).toString();
+        if (trackIndex === 0) {
+            queueNowSpecialJSX = (
+                <span className={styles["qi-nowspecialcase"]}>
+                    (newest)
+                </span>
+            )
+        }
+    }
 
+    let totalTimeText = '0:00';
+    if (tracks.length) {
+        totalTimeText = `${Math.trunc(tracks[trackIndex].duration / 60)}:${(tracks[trackIndex].duration % 60).toString().padStart(2, '0')}`;
+    }
 
     useEffect(() => {
         const fetchTracks = async () => {
@@ -180,50 +196,43 @@ export default function Player() {
     return (
         <div className={styles["player-page"]}>
             <div className={styles["player"]}>
-                {tracks.length ? (
-                    <>
-                        <div className={styles["decor-bars"]}>
-                            <div className={styles["bar-white"]}></div>
-                            <div className={styles["bar-grey"]}></div>
-                            <div className={styles["bar-white"]}></div>
-                            <div className={styles["bar-grey"]}></div>
-                            <div className={styles["bar-white"]}></div>
-                            <div className={styles["bar-grey"]}></div>
-                        </div>
-                        <div className={styles["avi-container"]}>
-                            <Avatar userId={tracks[trackIndex].uploader_id} size="small" />
-                        </div>
-                        <div className={styles["report-container"]}>
-                            <Report areTracks={!!tracks.length} contentType='track' contentId={tracks[trackIndex]?.id} />
-                        </div>
-                        <Genre />
-                        <div className={styles["queue-container"]}>
-                            <div className={styles["queue-info"]}>
-                                <p className={styles["qi-label"]}>Now</p>
-                                <p className={styles["qi-val"]}>{trackIndex + 1}</p>
-                            </div>
-                            <div className={styles["queue-info"]}>
-                                <p className={styles["qi-label"]}>Total</p>
-                                <p className={styles["qi-val"]}>{tracks.length}</p>
-                            </div>
-                        </div>
-
-                        <ElapsedTime />
-                        <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>{`${Math.trunc(tracks[trackIndex]?.duration / 60)}:${(tracks[trackIndex]?.duration % 60).toString().padStart(2, '0')}`}</p>
-                        <PlayerControls handleBack={handleBack} handlePlayPause={handlePlayPause} handleForward={handleForward}
-                            isPausedMisnomer={playing} isEmpty={!tracks.length}
-                        />
-                        <VolumeControls />
-                    </>
-
-                ) : (
-                    <div className={styles["p-empty"]}>
-                        <p>(Empty player)</p>
+                <div className={styles["decor-bars"]}>
+                    <div className={styles["bar-white"]}></div>
+                    <div className={styles["bar-grey"]}></div>
+                    <div className={styles["bar-white"]}></div>
+                    <div className={styles["bar-grey"]}></div>
+                    <div className={styles["bar-white"]}></div>
+                    <div className={styles["bar-grey"]}></div>
+                </div>
+                <div className={styles["avi-container"]}>
+                    <Avatar userId={!!tracks.length ? tracks[trackIndex].uploader_id : null} size="small" />
+                </div>
+                <div className={styles["report-container"]}>
+                    <Report contentType='track' contentId={tracks.length ? tracks[trackIndex].id : null} />
+                </div>
+                <Genre />
+                <div className={styles["queue-container"]}>
+                    <div className={styles["queue-info"]}>
+                        <p className={styles["qi-label"]}>Now</p>
+                        <p className={styles["qi-val"]}>
+                            {queueNowPosOutput} {queueNowSpecialJSX}
+                        </p>
                     </div>
-                )
-                }
+                    <div className={styles["queue-info"]}>
+                        <p className={styles["qi-label"]}>Total</p>
+                        <p className={styles["qi-val"]}>{tracks.length}</p>
+                    </div>
+                </div>
+                <ElapsedTime />
+                <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
+                    {totalTimeText}
+                </p>
+                <PlayerControls handleBack={handleBack} handlePlayPause={handlePlayPause} handleForward={handleForward}
+                    isPausedMisnomer={playing} isEmpty={!tracks.length}
+                />
+                <VolumeControls />
             </div>
-            <CommentSection trackId={tracks[trackIndex]?.id} />
+            <CommentSection trackId={tracks.length ? tracks[trackIndex].id : null} />
 
             {/* <Suspense fallback={<Loading />}>
                 <div style={{ display: DEBUG ? 'block' : 'none' }}>

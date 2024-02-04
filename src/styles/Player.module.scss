@@ -70,6 +70,7 @@
         border-radius: 10px;
         border: none;
         color: white;
+        cursor: pointer;
 
         .genreselect-option {
             background-color: grey;
@@ -79,15 +80,15 @@
 
 .genre-label {
     text-transform: uppercase;
-    font-size: 8px;
+    font-size: 10px;
 }
 
 .elapsedtime {
-    @include abs-pos(81px, 130px);
+    @include abs-pos(81px, 127px);
 }
 
 .totaltime {
-    @include abs-pos(201px, 130px);
+    @include abs-pos(201px, 127px);
 }
 
 .queue-container {
@@ -105,18 +106,29 @@
 
 .qi-label {
     color: #494949;
-    font-size: 8px;
+    font-size: 10px;
     text-transform: uppercase;
 }
 
 .qi-val {
     color: black;
-    font-size: 12px;
+    font-size: 14px;
+}
+
+.qi-nowspecialcase {
+    font-size: 10px;
+    color: #494949;
+    text-transform: uppercase;
 }
 
 .tracktime {
     color: black;
     font-size: 14px;
+    text-shadow:
+        -2px 0 8px white,
+        2px 0 8px white,
+    ;
+
 }
 
 .skipback-btn {
