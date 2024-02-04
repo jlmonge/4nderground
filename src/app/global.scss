@@ -18,15 +18,32 @@ body {
   color: black;
 }
 
-
-
 main {
-  padding: 4rem clamp(1.5rem, 10%, 10rem);
+  padding: 4rem clamp(3rem, 5%, 10rem);
+  animation: fadeInAnimation ease 3s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 a {
   text-decoration: none;
   color: #00FF66; // gg-text
+}
+
+p,
+h1,
+h2 {
+  margin: 0;
 }
 
 * {
@@ -41,12 +58,8 @@ img {
 button:not([type]),
 button[type="submit"] {
   background-color: transparent;
-  width: 256px;
-  height: 32px;
-  color: white;
-  border: 1px solid white;
-  border-radius: 4%;
-  border-radius: 20px;
+  color: black;
+  min-height: 100%;
 }
 
 button:hover {
@@ -57,7 +70,7 @@ button:disabled,
 button[disabled] {
   border: 1px solid #999999;
   background-color: #cccccc;
-  color: #666666;
+  // color: #666666;
   cursor: not-allowed;
 }
 
@@ -71,10 +84,10 @@ input[type=password] {
   padding: 0 8px;
 }
 
-input[type=text] {
-  padding: 2px;
-  width: 80vw;
-}
+// input[type=text] {
+//   padding: 2px;
+//   width: 80vw;
+// }
 
 .auth {
   display: flex;

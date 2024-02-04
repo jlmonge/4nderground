@@ -1,19 +1,19 @@
 export const DEBUG = false;
 export const GENRES = Object.freeze({
-    '': '-',
+    'all': 'All',
     'hip-hop': 'Hip-Hop',
     'rnb': 'R&B',
     'electronic': 'Electronic',
     'pop': 'Pop',
     'rock': 'Rock',
-    'punk': 'Punk',
-    'metal': 'Metal',
+    // 'punk': 'Punk',
+    // 'metal': 'Metal',
     'jazz': 'Jazz',
     'classical': 'Classical',
     'reggae': 'Reggae',
-    'world': 'World',
+    'folk': 'Folk',
     'ambient': 'Ambient',
-    'noise': 'Noise',
+    // 'noise': 'Noise',
     'experimental': 'Experimental'
 });
 

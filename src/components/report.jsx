@@ -3,6 +3,7 @@
 import { Fragment, useState, useRef, useContext } from 'react';
 import Image from 'next/image';
 import { UserContext } from '../user-provider';
+import styles from '../styles/Report.module.scss';
 
 const BTN_SIZE = 16;
 const DIALOG_WIDTH_VW = 90;
@@ -90,7 +91,7 @@ function ReportTooltip({ info }) {
 
 // TODO: notice how aretracks is unnecesary; just check if contentid is valid
 // TODO: when checking if report btn is clickable.
-export default function Report({ areTracks, contentType, contentId }) {
+export default function Report({ contentType, contentId = null }) {
     const dialogRef = useRef(null);
     const [reason, setReason] = useState('');
     const [isReported, setIsReported] = useState(false);
@@ -142,54 +143,51 @@ export default function Report({ areTracks, contentType, contentId }) {
 
     return (
         <>
-            <dialog ref={dialogRef} style={{
-                backgroundColor: 'black',
-                color: 'white',
-                width: `${DIALOG_WIDTH_VW}vw`,
-            }}>
-                <button
-                    id="close"
-                    onClick={handleClose}
-                    type="button"
-                    style={{
-                        position: 'absolute',
-                        top: '0',
-                        right: '0',
-                        backgroundColor: 'transparent',
-                        borderStyle: 'none',
-                        padding: '0',
-                        margin: '2px',
-                        fontSize: '16px',
-                        color: 'white',
-                    }}
-                >
-                    X
-                </button>
-                <h1>Report</h1>
-                <form method="POST" onSubmit={handleSubmit} style={{ gap: '10px' }}>
-                    {REPORT_REASONS.map((r) => (
-                        <div key={r.id} style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                        }}>
-                            <label style={{ minWidth: '11em' }}>
-                                <input type="radio" name="report_reason" value={r.value} onChange={handleChange} checked={reason === r.value} required />
-                                {r.str}
-                            </label>
-                            <ReportTooltip info={r.desc} />
-                        </div>
-                    ))}
-                    <button type="submit" disabled={!reason || isReported}>Submit</button>
-                    <p>{isReported && 'Your report has been received. Thank you.'}</p>
-                </form>
-            </dialog>
-            <button style={{ backgroundColor: 'black' }} onClick={handleOpen} type="button" disabled={(contentType === 'tracks' && !areTracks)}>
-                <Image
-                    src="/flag.svg"
-                    width={BTN_SIZE}
-                    height={BTN_SIZE}
-                    alt="Report icon"
-                />
+            {contentId && (
+                <dialog ref={dialogRef} style={{
+                    backgroundColor: 'black',
+                    color: 'white',
+                    width: `${DIALOG_WIDTH_VW}vw`,
+                }}>
+                    <button
+                        id="close"
+                        onClick={handleClose}
+                        type="button"
+                        style={{
+                            position: 'absolute',
+                            top: '0',
+                            right: '0',
+                            backgroundColor: 'transparent',
+                            borderStyle: 'none',
+                            padding: '0',
+                            margin: '2px',
+                            fontSize: '16px',
+                            color: 'white',
+                        }}
+                    >
+                        X
+                    </button>
+                    <h1>Report</h1>
+                    <form method="POST" onSubmit={handleSubmit} style={{ gap: '10px' }}>
+                        {REPORT_REASONS.map((r) => (
+                            <div key={r.id} style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                            }}>
+                                <label style={{ minWidth: '11em' }}>
+                                    <input type="radio" name="report_reason" value={r.value} onChange={handleChange} checked={reason === r.value} required />
+                                    {r.str}
+                                </label>
+                                <ReportTooltip info={r.desc} />
+                            </div>
+                        ))}
+                        <button type="submit" disabled={!reason || isReported}>Submit</button>
+                        <p>{isReported && 'Your report has been received. Thank you.'}</p>
+                    </form>
+                </dialog>
+            )}
+            <button className={styles["opendialog-btn"]} data="Report" onClick={contentId ? handleOpen : undefined} type="button" disabled={!contentId}>
+                Report
             </button>
         </>
     );

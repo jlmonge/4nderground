@@ -1,0 +1,116 @@
+@import "mixins";
+
+.commentsection-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem;
+    border-radius: 32px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.50) 22.67%, #B3F7BA 100%);
+}
+
+.comments-heading {
+    font-weight: normal;
+}
+
+.comments-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+}
+
+.mycomment-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.mycomment-form {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid gray;
+    align-items: stretch;
+
+    &:focus-within {
+        outline: 1px solid gray;
+    }
+}
+
+.mycomment-comment {
+    flex-grow: 2;
+    border: none;
+    padding: 0.75rem 0.25rem;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.mycomment-submit {
+    width: auto;
+    border: none;
+
+    &:hover {
+        .mcs-text {
+            display: inline-block;
+            transform: translateX(0.2em);
+        }
+    }
+}
+
+.mcs-text {
+    transition: all 0.1s ease-in-out;
+}
+
+.clist-ul {
+    width: 100%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+}
+
+.clist-li {
+    list-style-type: none;
+    width: 100%;
+}
+
+// consists of: avatar, comment
+.comment-container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.5rem;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1 1 0;
+}
+
+.c-comment {
+    font-size: 1em;
+}
+
+.c-timesincecomment {
+    font-size: 0.75em;
+    color: #7B7B7B;
+}
+
+.c-options {
+    display: flex;
+    flex-direction: row;
+}
+
+.c-delete {
+    @include fanciful-btn(44px, 57px, linear-gradient(180deg, #FF3D3D 0%, #F44 100%));
+}
+
+.visually-hidden:not(:focus):not(:active) {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}

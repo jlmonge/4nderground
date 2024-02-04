@@ -5,8 +5,9 @@
 
 import { useRef, useEffect } from 'react';
 import Profile from './profile';
+import styles from '../styles/Avatar.module.scss';
 
-export default function Avatar({ userId }) {
+export default function Avatar({ userId, size = "large" }) {
     const dialogRef = useRef(null);
 
     function handleOpen() {
@@ -17,7 +18,7 @@ export default function Avatar({ userId }) {
         dialogRef.current.close();
     }
 
-    return (
+    return userId ? (
         <>
             <dialog ref={dialogRef} style={{
                 backgroundColor: 'black',
@@ -46,14 +47,18 @@ export default function Avatar({ userId }) {
                 <Profile userId={userId} handleClose={handleClose} />
             </dialog>
             <div
+                className={`${styles["aviicon"]} ${size === "small" ? styles["aviicon-small"] : styles["aviicon-big"]}`}
                 style={{
-                    backgroundColor: "white",
-                    width: "48px",
-                    height: "48px",
+                    backgroundColor: `#${userId.slice(0, 6)}`,
                 }}
-                title={userId ?? 'disappointing.'} // show userid on hover
+                title={userId} // show userid on hover
                 onClick={handleOpen}
             />
         </>
-    );
+    ) : (
+        <div
+            className={`${styles["aviicon-null"]} ${styles["aviicon"]} ${size === "small" ? styles["aviicon-small"] : styles["aviicon-big"]}`}
+        />
+    )
+
 }

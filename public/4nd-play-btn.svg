@@ -1,0 +1,19 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="24" cy="24" r="23.5" fill="black" fill-opacity="0.07" stroke="url(#paint0_linear_678_2249)"/>
+<ellipse cx="28" cy="27" rx="16" ry="17" fill="url(#paint1_radial_678_2249)"/>
+<path d="M18.2777 31.3617L18.2777 31.3617L31.8849 24.4588L31.8849 24.4588C32.2674 24.2647 32.5 23.9012 32.5 23.5C32.5 23.0988 32.2674 22.7353 31.8849 22.5412L31.8849 22.5412L18.2777 15.6383C18.2777 15.6383 18.2777 15.6383 18.2777 15.6383C17.8955 15.4444 17.4674 15.4663 17.1324 15.6297C16.7978 15.793 16.5 16.1323 16.5 16.5971V30.4029C16.5 30.8677 16.7978 31.207 17.1324 31.3703C17.4674 31.5337 17.8955 31.5556 18.2777 31.3617Z" fill="white" stroke="url(#paint2_linear_678_2249)" stroke-linecap="round" stroke-linejoin="round"/>
+<defs>
+<linearGradient id="paint0_linear_678_2249" x1="24" y1="0" x2="24" y2="48" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#3E3E3E"/>
+</linearGradient>
+<radialGradient id="paint1_radial_678_2249" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(28 27) rotate(90) scale(17 16)">
+<stop stop-color="#D9D9D9"/>
+<stop offset="1" stop-color="#D9D9D9" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="paint2_linear_678_2249" x1="24.5" y1="16" x2="24.5" y2="31" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#3E3E3E"/>
+</linearGradient>
+</defs>
+</svg>

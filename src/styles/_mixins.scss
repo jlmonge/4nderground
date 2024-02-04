@@ -13,3 +13,54 @@
     color: variables.$gg-text;
     filter: drop-shadow(1px 1px 1px black)
 }
+
+@mixin playerctrl-btn($src) {
+    all: unset;
+    background-image: $src;
+    background-size: 100%;
+    // opacity: 0.99;
+    height: 24px;
+    width: 24px;
+    border-radius: 24px;
+    filter: drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25));
+
+    @media (min-width: 744px) {
+        height: 40px;
+        width: 40px;
+        border-radius: 24px;
+    }
+}
+
+@mixin abs-pos($x, $y) {
+    position: absolute;
+    left: $x;
+    top: $y;
+}
+
+//button border
+//default values: 44px, 18px
+@mixin fanciful-btn($m-width, $td-width, $background) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: $m-width;
+    min-height: 18px;
+    padding: 3px 6px;
+    border: none;
+    outline: none;
+    // position: relative;
+    border-radius: 10px;
+    background: $background;
+    box-shadow: 0px -2px 2px 0px rgba(255, 255, 255, 0.50) inset, 0px 2px 2px 0px rgba(255, 255, 255, 0.50) inset;
+    font-size: 10px;
+    color: white;
+    text-shadow: 0px 0.5px 0px rgba(255, 255, 255, 0.50);
+
+    @media (min-width: 744px) {
+        font-size: 14px;
+        min-width: $td-width;
+        min-height: 22px;
+    }
+}
+
+//todo: create variables for btn border radius & btn border width
