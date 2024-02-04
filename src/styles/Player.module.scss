@@ -121,6 +121,14 @@
     text-transform: uppercase;
 }
 
+.trackposted {
+    @include abs-pos(99px, 92px);
+    text-transform: uppercase;
+    color: #494949;
+    font-size: 10px;
+    font-style: italic;
+}
+
 .tracktime {
     color: black;
     font-size: 14px;
@@ -168,7 +176,7 @@
 
 .vol-slider {
     width: 69px;
-    // height: 9px;
+    height: 9px;
     appearance: none;
     cursor: pointer;
     outline: none;
@@ -280,6 +288,11 @@
     }
 
     .qi-nowspecialcase {
+        font-size: 14px;
+    }
+
+    .trackposted {
+        @include abs-pos(219px, 92px);
         font-size: 14px;
     }
 

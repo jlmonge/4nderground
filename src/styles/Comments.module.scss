@@ -1,8 +1,21 @@
 @import "mixins";
 
+.commentsection-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem;
+    border-radius: 32px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.50) 22.67%, #B3F7BA 100%);
+}
+
+.comments-heading {
+    font-weight: normal;
+}
+
 .comments-container {
     display: flex;
     flex-direction: column;
+    padding: 0.5rem;
 }
 
 .mycomment-container {
@@ -14,7 +27,7 @@
     display: flex;
     flex-direction: row;
     border: 1px solid gray;
-    padding: 1px;
+    align-items: stretch;
 
     &:focus-within {
         outline: 1px solid gray;
@@ -24,6 +37,7 @@
 .mycomment-comment {
     flex-grow: 2;
     border: none;
+    padding: 0.75rem 0.25rem;
 
     &:focus {
         outline: none;
@@ -31,7 +45,6 @@
 }
 
 .mycomment-submit {
-    min-height: 100%;
     width: auto;
     border: none;
 
@@ -80,7 +93,7 @@
 
 .c-timesincecomment {
     font-size: 0.75em;
-    color: #C2C2C2;
+    color: #7B7B7B;
 }
 
 .c-options {
@@ -88,11 +101,9 @@
     flex-direction: row;
 }
 
-// .c-delete {
-//     @include clean-btn;
-//     font-size: 0.75em;
-//     color: #888888;
-// }
+.c-delete {
+    @include fanciful-btn(44px, 57px, linear-gradient(180deg, #FF3D3D 0%, #F44 100%));
+}
 
 .visually-hidden:not(:focus):not(:active) {
     clip: rect(0 0 0 0);

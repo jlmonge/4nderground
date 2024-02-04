@@ -161,6 +161,15 @@ export default function Player() {
         totalTimeText = `${Math.trunc(tracks[trackIndex].duration / 60)}:${(tracks[trackIndex].duration % 60).toString().padStart(2, '0')}`;
     }
 
+    let whenPostedText;
+    if (tracks.length) {
+        const diffS = (Date.now() - new Date(tracks[trackIndex].created_at)) / 1000;
+        const diffM = Math.trunc(diffS / 60);
+        const diffH = Math.trunc(diffM / 60);
+        whenPostedText = `${diffH}h${diffM % 60}m ago`
+    }
+
+
     useEffect(() => {
         const fetchTracks = async () => {
             const dayAgo = getDayAgo();
@@ -223,6 +232,7 @@ export default function Player() {
                         <p className={styles["qi-val"]}>{tracks.length}</p>
                     </div>
                 </div>
+                <p className={styles["trackposted"]}>{whenPostedText}</p>
                 <ElapsedTime />
                 <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
                     {totalTimeText}

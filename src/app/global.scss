@@ -40,7 +40,9 @@ a {
   color: #00FF66; // gg-text
 }
 
-p {
+p,
+h1,
+h2 {
   margin: 0;
 }
 
@@ -56,8 +58,8 @@ img {
 button:not([type]),
 button[type="submit"] {
   background-color: transparent;
-  color: white;
-  border: 1px solid white;
+  color: black;
+  min-height: 100%;
 }
 
 button:hover {
@@ -82,10 +84,10 @@ input[type=password] {
   padding: 0 8px;
 }
 
-input[type=text] {
-  padding: 2px;
-  width: 80vw;
-}
+// input[type=text] {
+//   padding: 2px;
+//   width: 80vw;
+// }
 
 .auth {
   display: flex;

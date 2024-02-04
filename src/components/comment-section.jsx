@@ -45,9 +45,9 @@ function Comment({ comment, onDelete, isMyComment }) {
     }
 
     let whenPostedText;
-    const whenPostedS = new Date(comment.posted_at) / 1000;
-    const nowS = Date.now() / 1000;
-    const diffS = nowS - whenPostedS;
+    // const whenPostedS = new Date(comment.posted_at) / 1000;
+    // const nowS = Date.now() / 1000;
+    const diffS = (Date.now() - new Date(comment.posted_at)) / 1000;
     // console.log(`whenPostedS: ${whenPostedS}`)
     // console.log(`nowS: ${nowS}`)
     // console.log(`diffS: ${diffS}`)
@@ -219,8 +219,8 @@ export default function CommentSection({ trackId }) {
 
     if (trackId) {
         content = (
-            <>
-                <h2>Comments</h2>
+            <div className={styles["commentsection-container"]}>
+                <h2 className={styles["comments-heading"]}>Comments</h2>
                 <div className={styles["comments-container"]}>
                     <AddComment
                         onAddComment={handleAddComment}
@@ -232,7 +232,7 @@ export default function CommentSection({ trackId }) {
                         curUserId={user?.id}
                     />
                 </div>
-            </>
+            </div>
         );
     } else {
         content = (
