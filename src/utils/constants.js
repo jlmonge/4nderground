@@ -1,6 +1,6 @@
 export const DEBUG = false;
 export const GENRES = Object.freeze({
-    '': 'All',
+    'all': 'All',
     'hip-hop': 'Hip-Hop',
     'rnb': 'R&B',
     'electronic': 'Electronic',

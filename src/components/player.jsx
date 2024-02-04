@@ -28,28 +28,6 @@ function Loading() {
 //todo: when genre changes, pass it to player and filter tracks.
 //todo: if no tracks in genre, show empty player
 //todo: now i realize that we must show player when empty...
-function Genre() {
-    const [genre, setGenre] = useState('');
-
-    const handleSelectChange = (e) => {
-        setGenre(e.target.value);
-    }
-
-    return (
-        <div className={styles["genre-container"]}>
-            <label htmlFor="genre" className={styles["genre-label"]}>Genre</label>
-            <div className={styles["genreselect-container"]}>
-                <select id="genre" className={styles["genreselect"]} name="genre" onChange={handleSelectChange}>
-                    {
-                        Object.entries(GENRES).map(([key, str]) =>
-                            <option className={styles["genreselect-option"]} key={key} value={key}>{str}</option>
-                        )
-                    }
-                </select>
-            </div>
-        </div>
-    )
-}
 
 function ElapsedTime() {
     const frameRef = useRef();
@@ -122,12 +100,32 @@ function PlayerControls({ handleBack, handlePlayPause, handleForward, isPausedMi
 }
 
 export default function Player() {
+    // contains the current collection of tracks
     const [tracks, setTracks] = useState([]);
     const [trackIndex, setTrackIndex] = useState(0);
+    // contains all tracks
+    const [allTracks, setAllTracks] = useState([]);
+    const [genre, setGenre] = useState(GENRES['all']);
     const { user, setUser } = useContext(UserContext);
     const supabase = createClientComponentClient();
     // src is url of file being played.
     const { load, playing, togglePlayPause, src, getPosition } = useGlobalAudioPlayer();
+
+    const handleSelectChange = (e) => {
+        const newGenre = e.target.value;
+
+        let newTracks;
+        if (newGenre === 'all') {
+            newTracks = [...allTracks];
+        } else {
+            newTracks = allTracks.filter(t => t.genre === newGenre);
+        }
+        setGenre(newGenre);
+        setTracks(newTracks);
+        setTrackIndex(0);
+        console.log(`new tracks: ${JSON.stringify(newTracks)}`);
+        console.log(`changing genre to ${newGenre}`);
+    }
 
     const handleBack = () => {
         console.log('Skip Back');
@@ -185,6 +183,7 @@ export default function Player() {
                 console.log(`trax for ${user.id}: ${JSON.stringify(data, null, 2)}`);
             }
             console.log(`ERROR: ${JSON.stringify(error)}`);
+            setAllTracks(data ?? []);
             setTracks(data ?? []);
         }
         fetchTracks();
@@ -198,7 +197,9 @@ export default function Player() {
                 html5: true,
                 onend: () => setTrackIndex((trackIndex + 1) % tracks.length),
             });
-            //console.log(`track index changed, loading filepath: ${file_path}`);
+        } else {
+            load('empty');
+            console.log("no tracks found")
         }
     }, [load, tracks, trackIndex]);
 
@@ -219,7 +220,18 @@ export default function Player() {
                 <div className={styles["report-container"]}>
                     <Report contentType='track' contentId={tracks.length ? tracks[trackIndex].id : null} />
                 </div>
-                <Genre />
+                <div className={styles["genre-container"]}>
+                    <label htmlFor="genre" className={styles["genre-label"]}>Genre</label>
+                    <div className={styles["genreselect-container"]}>
+                        <select id="genre" className={styles["genreselect"]} name="genre" onChange={handleSelectChange}>
+                            {
+                                Object.entries(GENRES).map(([key, str]) =>
+                                    <option className={styles["genreselect-option"]} key={key} value={key}>{str}</option>
+                                )
+                            }
+                        </select>
+                    </div>
+                </div>
                 <div className={styles["queue-container"]}>
                     <div className={styles["queue-info"]}>
                         <p className={styles["qi-label"]}>Now</p>
