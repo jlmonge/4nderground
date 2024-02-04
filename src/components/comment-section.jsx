@@ -25,7 +25,7 @@ DB WISE: A comment consists of:
 
 const BTN_SIZE = 20;
 
-function Comment({ comment, onDelete, isMyComment }) {
+function Comment({ comment, onDelete, isMyComment, curUserId }) {
     const handleDelete = async () => {
         const data = new FormData();
         data.append('commentUserId', comment.user_id);
@@ -61,25 +61,33 @@ function Comment({ comment, onDelete, isMyComment }) {
         whenPostedText = `${diffH} hour${diffH === 1 ? '' : 's'} ago`
     }
 
+    let optionsJSX;
+    if (isMyComment) {
+        optionsJSX = (
+            <button
+                onClick={handleDelete}
+                type="button"
+                title="Delete comment"
+                //aria-label="Delete comment" // TODO: accessibility update
+                //role="button"
+                className={styles["c-delete"]}
+            >
+                Delete
+            </button>
+        );
+
+    } else if (curUserId) {
+        optionsJSX = (<Report contentType='comment' contentId={comment.id} />);
+    }
+
+
     return (
         <div className={styles["comment-container"]}>
             <Avatar userId={comment.user_id} />
             <div className={styles["comment"]}>
                 <p className={styles["c-comment"]}>{comment.comment}</p>
                 <p className={styles["c-timesincecomment"]} title={comment.posted_at}>{whenPostedText}</p>
-                {isMyComment ?
-                    (<button
-                        onClick={handleDelete}
-                        type="button"
-                        title="Delete comment"
-                        //aria-label="Delete comment" // TODO: accessibility update
-                        //role="button"
-                        className={styles["c-delete"]}
-                    >
-                        Delete
-                    </button>) :
-                    <Report contentType='comment' contentId={comment.id} />
-                }
+                {optionsJSX}
             </div>
         </div>
     );
@@ -117,7 +125,7 @@ function AddComment({ onAddComment, trackId }) {
                 onSubmit={handleSubmit}
                 className={styles["mycomment-form"]}
             >
-                <label className={styles["visually-hidden"]} htmlFor="write-comment">Write a comment:</label>
+                <label className={styles["visually-hidden"]} htmlFor="write-comment">Write a comment</label>
                 <input
                     placeholder="Write a comment..."
                     type="text"
@@ -147,6 +155,7 @@ function CommentList({ comments, onDeleteComment, curUserId }) {
                                 comment={c}
                                 onDelete={onDeleteComment}
                                 isMyComment={curUserId === c.user_id}
+                                curUserId={curUserId}
                             />
                         </li>
                     )}
@@ -222,10 +231,12 @@ export default function CommentSection({ trackId }) {
             <div className={styles["commentsection-container"]}>
                 <h2 className={styles["comments-heading"]}>Comments</h2>
                 <div className={styles["comments-container"]}>
-                    <AddComment
-                        onAddComment={handleAddComment}
-                        trackId={trackId}
-                    />
+                    {user &&
+                        <AddComment
+                            onAddComment={handleAddComment}
+                            trackId={trackId}
+                        />
+                    }
                     <CommentList
                         comments={comments}
                         onDeleteComment={handleDeleteComment}
