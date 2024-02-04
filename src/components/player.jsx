@@ -1,17 +1,15 @@
 'use client';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import Image from 'next/image';
 import { Fragment, Suspense, useEffect, useState, useRef, useContext, useCallback } from 'react';
 import { useGlobalAudioPlayer } from 'react-use-audio-player';
-import Report from './report';
-import { getDayAgo } from '../utils/helpers';
-import CommentSection from '../components/comment-section';
 import { UserContext } from '../user-provider';
-import styles from '../styles/Player.module.scss'
+import Report from './report';
+import CommentSection from '../components/comment-section';
 import Avatar from './avatar';
 import { GENRES } from '../utils/constants';
-import { PauseBtn, PlayBtn, SkipBackBtn, SkipNextBtn } from './svgs';
+import { getDayAgo } from '../utils/helpers';
+import styles from '../styles/Player.module.scss'
 
 const BTN_SIZE = 24;
 const DEBUG = false; // redundant; replace soon
@@ -193,7 +191,7 @@ export default function Player() {
         if (tracks.length) {
             let file_path = tracks[trackIndex].file_path;
             load(`${file_path}`, {
-                autoplay: false,
+                autoplay: trackIndex === 0 ? false : true,
                 html5: true,
                 onend: () => setTrackIndex((trackIndex + 1) % tracks.length),
             });
@@ -255,12 +253,6 @@ export default function Player() {
                 <VolumeControls />
             </div>
             <CommentSection trackId={tracks.length ? tracks[trackIndex].id : null} />
-
-            {/* <Suspense fallback={<Loading />}>
-                <div style={{ display: DEBUG ? 'block' : 'none' }}>
-                    <div>full load: <pre>{JSON.stringify(tracks, null, 2)}</pre></div>
-                </div>
-            </Suspense> */}
         </div>
     );
 }

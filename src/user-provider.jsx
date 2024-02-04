@@ -1,7 +1,7 @@
 'use client';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, Suspense } from 'react';
 
 export const UserContext = createContext({
     user: null,
