@@ -12,6 +12,13 @@ export async function POST(request) {
     const formData = await request.formData();
     const email = formData.get('email');
     const password = formData.get('password');
+    const agreement = formData.get('agreement');
+    // 'agreement' returns "on" or null; null is falsy!
+    if (!agreement) {
+        return NextResponse.json({
+            message: 'Account creation failed'
+        }, { status: 400 });
+    }
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
@@ -24,19 +31,13 @@ export async function POST(request) {
     });
 
     if (error) {
-        console.log(error);
-        return NextResponse.redirect(
-            `${requestUrl.origin}/register?error=Could not authenticate user`,
-            {
-                status: 301,
-            }
-        );
+        console.log(`error: ${error}`)
+        return NextResponse.json({
+            message: 'Registration failed'
+        }, { status: 400 });
     }
 
-    return NextResponse.redirect(
-        `${requestUrl.origin}/login?message=Check email to continue sign in process`,
-        {
-            status: 301,
-        }
-    );
+    return NextResponse.json({
+        message: 'Successfully registered'
+    }, { status: 200 });
 }

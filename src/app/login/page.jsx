@@ -1,5 +1,6 @@
-import Link from 'next/link';
-import Login from '../../components/login';
+import AccessForm from '../../components/Shared/accessform';
+import FancyLink from '../../components/Shared/fancylink';
+import styles from '../../styles/Accessflow.module.scss';
 
 export const metadata = {
     title: 'Login',
@@ -7,10 +8,21 @@ export const metadata = {
 
 export default function LoginPage() {
     return (
-        <div className="auth">
-            <Login />
-            <Link href="/recovery">Forgot password?</Link>
-            <Link href="/register">Sign up</Link>
+        <div className={styles["accessflow-page"]}>
+            <h2>Welcome Back</h2>
+            <AccessForm hasEmail hasPassword
+                action="/auth/login"
+            />
+            <div className={styles["accessflow-links"]}>
+                <FancyLink
+                    href="/register"
+                    text="Register instead"
+                />
+                <FancyLink
+                    href="/recovery"
+                    text="Forgot my password"
+                />
+            </div>
         </div>
     );
 }

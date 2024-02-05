@@ -1,0 +1,20 @@
+@import "mixins";
+
+.fl-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.fl-text {
+    color: #6E6E6E;
+
+    &::before {
+        background-color: #82FC8F;
+        border-radius: 50%;
+        filter: blur(2px);
+    }
+}
+
+.fl-btn {
+    @include circle-btn;
+}
