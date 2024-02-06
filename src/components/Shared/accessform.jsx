@@ -5,7 +5,7 @@ import { useState } from 'react';
 import styles from '../../styles/Accessflow.module.scss';
 import { useRouter } from 'next/navigation';
 
-function Email({ hasTooltip = false }) {
+function Email() {
     return (
         <div className={styles["email-container"]}>
             <label className={styles["visually-hidden"]} htmlFor="email">Email</label>
@@ -82,7 +82,7 @@ export default function AccessForm({
         <div className={styles["accessform-container"]}>
             <form onSubmit={handleSubmit} className={styles["accessform-form"]}>
                 <div className={styles["afinputs-container"]}>
-                    {hasEmail && <Email hasTooltip={hasTooltip} />}
+                    {hasEmail && <Email />}
                     {hasPassword && <Password hasTooltip={hasTooltip} />}
                     {hasAgreement && <Agreement />}
                 </div>

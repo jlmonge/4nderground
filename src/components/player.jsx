@@ -107,7 +107,7 @@ export default function Player() {
     const { user, setUser } = useContext(UserContext);
     const supabase = createClientComponentClient();
     // src is url of file being played.
-    const { load, playing, togglePlayPause, src, getPosition } = useGlobalAudioPlayer();
+    const { load, playing, togglePlayPause, src } = useGlobalAudioPlayer();
 
     const handleSelectChange = (e) => {
         const newGenre = e.target.value;
