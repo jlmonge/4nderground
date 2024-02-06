@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 
+//investigate
 export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
@@ -19,16 +20,14 @@ export async function POST(request) {
     });
 
     if (error) {
-        return NextResponse.redirect(
-            `${requestUrl.origin}/login?error=Could not authenticate user`,
-            {
-                status: 301,
-            }
-        );
+        console.log(`error: ${error}`)
+        return NextResponse.json({
+            message: 'Login failed'
+        }, { status: 400 });
     }
     //console.log(`signInWithPassword data: ${JSON.stringify(data)}`)
 
-    return NextResponse.redirect(`${requestUrl.origin}/player`, {
-        status: 301,
-    });
+    return NextResponse.json({
+        message: 'Successfully logged in'
+    }, { status: 200 });
 }

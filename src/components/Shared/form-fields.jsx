@@ -51,7 +51,7 @@ export function TCPPField() {
     return (
         <CheckboxField
             name="tcpp-agree"
-            text="I agree to the Terms & Conditions and Privacy Policy."
+            text=""
         />
     );
 }

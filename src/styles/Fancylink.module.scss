@@ -1,0 +1,30 @@
+@import "mixins";
+
+.fl-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    gap: 0.5rem;
+}
+
+.fl-text {
+    color: #6E6E6E;
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 10%;
+        left: 0;
+        height: 7px;
+        width: 100%;
+        background-color: #82FC8F;
+        border-radius: 50%;
+        filter: blur(4px);
+        z-index: -1;
+    }
+}
+
+.fl-btn {
+    @include circle-btn;
+}
