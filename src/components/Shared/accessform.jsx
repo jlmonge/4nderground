@@ -11,7 +11,7 @@ function Email({ hasTooltip = false }) {
             <label className={styles["visually-hidden"]} htmlFor="email">Email</label>
             <input type="email" id="email" name="email"
                 placeholder="Email" className={styles["af-inputtext"]}
-                required
+                autoComplete="email" required
             />
         </div>
     )
@@ -23,7 +23,7 @@ function Password({ hasTooltip = false }) {
             <label className={styles["visually-hidden"]} htmlFor="password">Password</label>
             <input type="password" name="password" id="password"
                 placeholder="Password" className={styles["af-inputtext"]}
-                required
+                autoComplete="current-password" required
             />
         </div>
     )
@@ -57,6 +57,7 @@ export default function AccessForm({
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setStatusText('')
         setStatusOk(false);
         const data = new FormData(e.target);
         console.log(`email: ${data.get('email')}`);
