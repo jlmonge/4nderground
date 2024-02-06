@@ -55,12 +55,12 @@ img {
   height: auto;
 }
 
-button:not([type]),
-button[type="submit"] {
-  background-color: transparent;
-  color: black;
-  min-height: 100%;
-}
+// button:not([type]),
+// button[type="submit"] {
+//   background-color: transparent;
+//   color: black;
+//   min-height: 100%;
+// }
 
 button:hover {
   cursor: pointer
@@ -74,15 +74,15 @@ button[disabled] {
   cursor: not-allowed;
 }
 
-input:not([type]),
-input[type=email],
-input[type=password] {
-  background-color: white;
-  width: 256px;
-  height: 48px;
-  color: gray;
-  padding: 0 8px;
-}
+// input:not([type]),
+// input[type=email],
+// input[type=password] {
+//   background-color: white;
+//   width: 256px;
+//   height: 48px;
+//   color: gray;
+//   padding: 0 8px;
+// }
 
 // input[type=text] {
 //   padding: 2px;

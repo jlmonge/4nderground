@@ -3,6 +3,8 @@
 .fl-container {
     display: flex;
     flex-direction: row;
+    justify-content: right;
+    gap: 0.5rem;
 }
 
 .fl-text {
