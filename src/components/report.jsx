@@ -4,6 +4,7 @@ import { Fragment, useState, useRef, useContext } from 'react';
 import Image from 'next/image';
 import { UserContext } from '../user-provider';
 import styles from '../styles/Report.module.scss';
+import Tooltip from './Shared/tooltip';
 
 const BTN_SIZE = 16;
 const DIALOG_WIDTH_VW = 90;
@@ -49,45 +50,6 @@ const REPORT_REASONS = [{
     str: 'Impersonating staff',
     desc: 'Someone is impersonating admins and/or moderators.'
 }];
-
-function ReportTooltip({ info }) {
-    const [hover, setHover] = useState(false);
-
-    const handleMouseEnter = () => {
-        setHover(true);
-    }
-
-    const handleMouseLeave = () => {
-        setHover(false);
-    }
-
-    return (
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-
-            <Image
-                src="/info.svg"
-                alt="Information icon"
-                width={BTN_SIZE}
-                height={BTN_SIZE}
-                //style={{ objectFit: 'contain' }} // optional
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-            />
-            <div style={{ position: 'relative' }}>
-                <p style={{
-                    display: hover ? 'block' : 'none',
-                    position: 'absolute',
-                    top: '-1em',
-                    left: '0.5em',
-                    width: `${Math.trunc(DIALOG_WIDTH_VW / 2)}vw`,
-                }}>
-                    {info}
-                </p>
-            </div>
-        </div>
-    );
-}
-
 
 // TODO: notice how aretracks is unnecesary; just check if contentid is valid
 // TODO: when checking if report btn is clickable.
@@ -178,7 +140,7 @@ export default function Report({ contentType, contentId = null }) {
                                     <input type="radio" name="report_reason" value={r.value} onChange={handleChange} checked={reason === r.value} required />
                                     {r.str}
                                 </label>
-                                <ReportTooltip info={r.desc} />
+                                <Tooltip info={r.desc} />
                             </div>
                         ))}
                         <button type="submit" disabled={!reason || isReported}>Submit</button>

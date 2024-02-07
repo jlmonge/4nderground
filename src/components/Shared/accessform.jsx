@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import styles from '../../styles/Accessflow.module.scss';
 import { useRouter } from 'next/navigation';
+import styles from '../../styles/Accessflow.module.scss';
 
-function Email({ hasTooltip = false }) {
+function Email() {
     return (
-        <div className={styles["email-container"]}>
+        <div className={styles["af-inputtext-container"]}>
             <label className={styles["visually-hidden"]} htmlFor="email">Email</label>
             <input type="email" id="email" name="email"
                 placeholder="Email" className={styles["af-inputtext"]}
@@ -17,15 +17,35 @@ function Email({ hasTooltip = false }) {
     )
 }
 
-function Password({ hasTooltip = false }) {
+function Password({ hasRequirements }) {
+    const [isObscured, setIsObscured] = useState(true);
+    const handleSeePassword = () => {
+        setIsObscured(!isObscured);
+    }
+
     return (
-        <div className={styles["password-container"]}>
-            <label className={styles["visually-hidden"]} htmlFor="password">Password</label>
-            <input type="password" name="password" id="password"
-                placeholder="Password" className={styles["af-inputtext"]}
-                autoComplete="current-password" required
-            />
+        <div className={styles["af-inputwreqs"]}>
+            <div className={styles["af-inputtext-container"]}>
+                <label className={styles["visually-hidden"]} htmlFor="password">Password</label>
+                <input type={isObscured ? "password" : "text"} name="password" id="password"
+                    placeholder="Password" className={styles["af-inputtext"]}
+                    autoComplete="current-password" minLength={8} required
+                />
+                <button title="Show password" type="button" className={styles["showpassword-btn"]}>
+                    <span
+                        className={`${styles["showpassword-icon"]} ${isObscured ? styles["obscured"] : styles["notobscured"]}`}
+                        onClick={handleSeePassword}
+                    />
+                </button>
+            </div>
+            {
+                hasRequirements &&
+                <p className={styles["requirements"]}>
+                    Password must be at least 8 characters.
+                </p>
+            }
         </div>
+
     )
 }
 
@@ -36,8 +56,8 @@ function Agreement() {
                 id="agreement" className={styles["af-inputcheckbox"]}
                 required
             />
-            <label className={styles["agreement-label"]} htmlFor="agreement-input">
-                I have read and agree with the <Link href="/legal">Terms of Service</Link> and <Link href="privacy">Privacy Policy</Link>.
+            <label className={styles["agreement-label"]} htmlFor="agreement">
+                I have read and agree with the <Link href="/legal" className={styles["underline"]}>Terms of Service</Link> and <Link href="privacy" className={styles["underline"]}>Privacy Policy</Link>.
             </label>
         </div>
     )
@@ -47,7 +67,7 @@ export default function AccessForm({
     hasEmail = false,
     hasPassword = false,
     hasAgreement = false,
-    hasTooltip = false,
+    hasRequirements = false,
     action = "",
 }) {
     const router = useRouter();
@@ -69,21 +89,24 @@ export default function AccessForm({
             body: data,
         })
 
-        if (res.ok) {
-            console.log("RESPONSE GOOD");
-            setStatusOk(true);
-            router.push('/player');
-        }
         const resJson = await res.json();
         setStatusText(resJson.message);
+
+        if (res.ok) {
+            console.log("GOOD RESPONSE");
+            setStatusOk(true);
+            router.push('/player');
+            router.refresh();
+        }
+
     }
 
     return (
         <div className={styles["accessform-container"]}>
             <form onSubmit={handleSubmit} className={styles["accessform-form"]}>
                 <div className={styles["afinputs-container"]}>
-                    {hasEmail && <Email hasTooltip={hasTooltip} />}
-                    {hasPassword && <Password hasTooltip={hasTooltip} />}
+                    {hasEmail && <Email />}
+                    {hasPassword && <Password hasRequirements={hasRequirements} />}
                     {hasAgreement && <Agreement />}
                 </div>
                 <button className={styles["af-btn"]} type="submit">

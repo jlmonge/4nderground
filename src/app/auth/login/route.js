@@ -22,12 +22,14 @@ export async function POST(request) {
     if (error) {
         console.log(`error: ${error}`)
         return NextResponse.json({
-            message: 'Login failed'
+            message: 'Login failed.',
+            action: 'login'
         }, { status: 400 });
     }
     //console.log(`signInWithPassword data: ${JSON.stringify(data)}`)
 
     return NextResponse.json({
-        message: 'Successfully logged in'
+        message: 'Successfully logged in, sending you to the player...',
+        action: 'login',
     }, { status: 200 });
 }

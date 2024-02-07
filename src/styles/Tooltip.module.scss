@@ -1,0 +1,31 @@
+.tt-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.tt-icon {
+    background-color: black;
+    mask-image: url('/info.svg');
+    width: 1em;
+    height: 1em;
+}
+
+.tt-textcontainer {
+    position: relative;
+}
+
+.tt-text {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0.5em;
+    width: 45vw;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: inline-block;
+}

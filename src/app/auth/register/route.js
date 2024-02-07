@@ -33,11 +33,13 @@ export async function POST(request) {
     if (error) {
         console.log(`error: ${error}`)
         return NextResponse.json({
-            message: 'Registration failed'
+            message: 'Registration failed.',
+            action: 'register',
         }, { status: 400 });
     }
 
     return NextResponse.json({
-        message: 'Successfully registered'
+        message: 'Successfully registered, sending you to the player...',
+        action: 'register',
     }, { status: 200 });
 }
