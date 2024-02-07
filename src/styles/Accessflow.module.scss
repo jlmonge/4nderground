@@ -36,10 +36,47 @@
 
 .af-inputtext {
     width: 100%;
-    padding: 2px;
+    border-radius: 4px;
+    border: 1px solid #82FC8F;
+    font-size: 1em;
+}
+
+.showpassword-btn {}
+
+.showpassword-icon {
+    background-color: black;
+    width: 1em;
+    height: 1em;
+    margin: auto;
+    mask-repeat: no-repeat;
+}
+
+.obscured {
+    mask-image: url('/eye-off.svg');
+}
+
+.notobscured {
+    mask-image: url('/eye.svg');
+}
+
+.af-inputtext-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
     border-radius: 4px;
     border: 1px solid #82FC8F;
     background: rgba(255, 255, 255, 0.75);
+}
+
+.af-inputwreqs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.requirements {
+    font-size: 0.875em;
+    color: #6E6E6E;
 }
 
 .af-btn {
@@ -88,6 +125,10 @@
 
 .accessflow-links {
     margin-left: auto;
+}
+
+.underline {
+    text-decoration: underline;
 }
 
 .visually-hidden:not(:focus):not(:active) {
