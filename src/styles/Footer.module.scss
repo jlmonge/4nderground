@@ -10,7 +10,7 @@
     justify-content: center;
     margin-top: auto;
     font-size: 1em;
-    text-shadow: .5px .5px 2px black;
+    text-shadow: 1px 1px 1px black;
     // background-image: url("/mirrored-bgbtm.svg");
     // background-repeat: repeat-x;
     // background-size: cover;
@@ -41,5 +41,8 @@
     gap: min(10vw, 1rem);
     flex-wrap: wrap;
     height: 100%;
-    color: inherit;
+}
+
+.footer-link {
+    color: variables.$gg-text;
 }

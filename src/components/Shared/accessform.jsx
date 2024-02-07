@@ -29,14 +29,14 @@ function Password({ hasRequirements }) {
                 <label className={styles["visually-hidden"]} htmlFor="password">Password</label>
                 <input type={isObscured ? "password" : "text"} name="password" id="password"
                     placeholder="Password" className={styles["af-inputtext"]}
-                    autoComplete="current-password" required
+                    autoComplete="current-password" minLength={8} required
                 />
-                {/* <button title="Show password" type="button" className={styles["showpassword-btn"]}>
+                <button title="Show password" type="button" className={styles["showpassword-btn"]}>
                     <span
                         className={`${styles["showpassword-icon"]} ${isObscured ? styles["obscured"] : styles["notobscured"]}`}
                         onClick={handleSeePassword}
                     />
-                </button> */}
+                </button>
             </div>
             {
                 hasRequirements &&
@@ -89,13 +89,16 @@ export default function AccessForm({
             body: data,
         })
 
-        if (res.ok) {
-            console.log("RESPONSE GOOD");
-            setStatusOk(true);
-            router.push('/player');
-        }
         const resJson = await res.json();
         setStatusText(resJson.message);
+
+        if (res.ok) {
+            console.log("GOOD RESPONSE");
+            setStatusOk(true);
+            router.push('/player');
+            router.refresh();
+        }
+
     }
 
     return (

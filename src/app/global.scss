@@ -122,3 +122,7 @@ kbd {
 input.link-input {
   width: 36vw;
 }
+
+input::-ms-reveal {
+  display: none;
+}
