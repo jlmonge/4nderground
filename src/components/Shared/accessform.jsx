@@ -95,8 +95,15 @@ export default function AccessForm({
         if (res.ok) {
             console.log("GOOD RESPONSE");
             setStatusOk(true);
-            router.push('/player');
-            router.refresh();
+            if (
+                resJson.action === 'login' ||
+                resJson.action === 'register'
+            ) {
+                console.log('redirecting');
+                router.push('/player');
+                router.refresh();
+            }
+
         }
 
     }

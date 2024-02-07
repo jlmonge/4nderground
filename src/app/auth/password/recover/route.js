@@ -12,18 +12,15 @@ export async function POST(req) {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email);
     console.log(`sent link, see data: ${JSON.stringify(data)}`);
     if (error) {
-        return NextResponse.redirect(
-            `${reqUrl.origin}/recovery?error=Database error`,
-            {
-                status: 301,
-            }
-        );
+        console.log(`error: ${error}`)
+        return NextResponse.json({
+            message: 'Recovery request failed.',
+            action: 'recover'
+        }, { status: 400 });
     }
 
-    return NextResponse.redirect(
-        `${reqUrl.origin}/recovery?message=Check your email to reset password`,
-        {
-            status: 301,
-        }
-    );
+    return NextResponse.json({
+        message: 'Password recovery link sent, check your email.',
+        action: 'recover',
+    }, { status: 200 });
 }
