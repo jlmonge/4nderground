@@ -8,7 +8,6 @@ export const metadata = {
 };
 
 export default function RecoveryPage() {
-
     return (
         <div className={`${styles["accessflow-page"]} ${almarai.className}`}>
             <h2 className={styles["af-h2"]}>Recover Password</h2>

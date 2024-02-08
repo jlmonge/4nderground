@@ -7,6 +7,21 @@ import styles from '../styles/Accessflow.module.scss'
 import { almarai } from '../app/fonts';
 
 export default function UpdatePassword({ route }) {
+    // TODO: test useEffect once custom SMTP server set up
+    // useEffect(() => {
+    //     const preventUnload = (e) => {
+    //         const message = "Are you sure you want to exit this page?";
+    //         e.preventDefault();
+    //         e.returnValue = message;
+    //     }
+
+    //     window.addEventListener('beforeunload', preventUnload);
+
+    //     return () => {
+    //         window.removeEventListener('beforeunload', preventUnload);
+    //     }
+
+    // })
     const searchParams = useSearchParams();
     const error = searchParams.get('error')
     let content;
