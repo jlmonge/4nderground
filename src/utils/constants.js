@@ -19,7 +19,7 @@ export const GENRES = Object.freeze({
 
 // Numerical constants
 const MB = 1_000_000;
-const NUM_MB = 5 // TODO: must be 128MB on deploy
+const NUM_MB = 5 // TODO: must be 100MB (cloudflare limit) on deploy
 export const MAX_SIZE = NUM_MB * MB;
 export const MIN_DURATION = 1; // TODO: must be 30s on deploy
 export const MAX_DURATION = 600; // TODO: must be 600s on deploy (10m)

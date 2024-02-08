@@ -28,7 +28,7 @@ function Password({ hasRequirements }) {
             <div className={styles["af-inputtext-container"]}>
                 <label className={styles["visually-hidden"]} htmlFor="password">Password</label>
                 <input type={isObscured ? "password" : "text"} name="password" id="password"
-                    placeholder="Password" className={styles["af-inputtext"]}
+                    placeholder="Password" className={`${styles["af-inputtext"]} ${styles["af-password"]}`}
                     autoComplete="current-password" minLength={8} required
                 />
                 <button title="Show password" type="button" className={styles["showpassword-btn"]}>
@@ -95,8 +95,15 @@ export default function AccessForm({
         if (res.ok) {
             console.log("GOOD RESPONSE");
             setStatusOk(true);
-            router.push('/player');
-            router.refresh();
+            if (
+                resJson.action === 'login' ||
+                resJson.action === 'register'
+            ) {
+                console.log('redirecting');
+                router.push('/player');
+                router.refresh();
+            }
+
         }
 
     }
