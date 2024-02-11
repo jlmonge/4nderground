@@ -120,8 +120,7 @@ export default function UploadFile() {
     }
 
     return (
-        <div className={styles["uploadpage"]}>
-            <h2 className={styles["upl-h2"]}>Upload file</h2>
+        <>
             <form onSubmit={handleSubmit} className={styles["form"]}>
                 <div className={styles["file-input"]}>
                     <label htmlFor="file-input" className={styles["file-input__btn"]}>
@@ -170,7 +169,6 @@ export default function UploadFile() {
             </form>
             {DEBUG && <Debug error={error} uploadSuccess={isUploaded} path={filePath} />}
             <Status error={error} uploadSuccess={isUploaded} path={filePath} />
-            <h1><Link href="/upload/record">...or record now</Link></h1>
-        </div>
+        </>
     )
 }
