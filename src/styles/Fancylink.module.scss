@@ -27,5 +27,5 @@
 }
 
 .fl-btn {
-    @include circle-btn;
+    @include circle-btn(2rem);
 }

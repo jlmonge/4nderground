@@ -63,14 +63,19 @@
     }
 }
 
-@mixin circle-btn {
+
+@mixin circle-btn($diameter, $bg-color: rgba(54, 255, 75, 0.50)) {
     border-radius: 50%;
-    background: radial-gradient(50% 50% at 50% 50%, #FFF 0%, rgba(54, 255, 75, 0.50) 100%);
+    background: radial-gradient(50% 50% at 50% 50%, #FFF 0%, $bg-color 100%);
     box-shadow: 0px -1px 4px 0px #FFF inset;
-    padding: 0.25rem 0.5rem;
+    height: $diameter;
+    width: $diameter;
     border: none;
     color: #6E6E6E;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &::before {
         content: '';

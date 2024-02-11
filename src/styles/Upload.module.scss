@@ -1,10 +1,12 @@
 @use "variables";
+@import "mixins";
 
 .uploadpage {
     display: flex;
     flex-direction: column;
     align-items: center;
     color: #6E6E6E;
+    gap: 1rem;
 }
 
 // TODO: same as in Accessflow; globalize?
@@ -14,6 +16,34 @@
     text-shadow: 1px 1px 2px black;
 }
 
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    &__btn-submit {
+        @include circle-btn(8rem);
+        margin: 0 auto;
+        font-size: 1rem;
+    }
+}
+
+.file-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    &__btn {
+        @include circle-btn(8rem, rgba(255, 255, 255, 0.5));
+        cursor: pointer;
+    }
+
+    &__name {
+        min-height: 1.2em;
+    }
+}
+
 .reqs {
     &__ul {
         margin: 0;
@@ -21,4 +51,32 @@
 
         // }
     }
+}
+
+.genre {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+
+    &__select {
+        @include fanciful-btn(44px, 57px, linear-gradient(180deg, #0075FF 0%, #86BDFF 100%));
+        position: relative;
+        font-size: 1rem;
+    }
+
+    &__option {
+        background-color: grey;
+    }
+}
+
+.visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
 }
