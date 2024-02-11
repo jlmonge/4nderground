@@ -19,7 +19,7 @@ body {
 }
 
 main {
-  padding: 4rem clamp(0.5rem, 5%, 10rem);
+  padding: 2rem clamp(0.5rem, 5%, 10rem);
   animation: fadeInAnimation ease 3s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;

@@ -1,4 +1,5 @@
 export const DEBUG = false;
+
 export const GENRES = Object.freeze({
     'all': 'All',
     'hip-hop': 'Hip-Hop',
@@ -16,6 +17,22 @@ export const GENRES = Object.freeze({
     // 'noise': 'Noise',
     'experimental': 'Experimental'
 });
+
+export const FILE_REQS = [{
+    type: 'type',
+    desc: 'Audio',
+}, {
+    type: 'size',
+    desc: 'Under 100MB',
+}, {
+    type: 'duration',
+    desc: 'Between 15 seconds and 7 minutes'
+}];
+
+export const REC_REQS = [{
+    type: 'duration',
+    desc: 'Between 15 seconds and 7 minutes',
+}];
 
 // Numerical constants
 const MB = 1_000_000;

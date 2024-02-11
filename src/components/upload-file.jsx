@@ -4,10 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { uploadFileHelper } from '../app/service/uploadFileHelper';
 import {
-    GENRES, MAX_SIZE,
+    GENRES, FILE_REQS, MAX_SIZE,
     ERR_NO_FILE, ERR_TOO_BIG, ERR_NO_EXT, ERR_TOO_SHORT, ERR_TOO_LONG,
     ERR_NOT_AUDIO, ERR_ARRAY, ERR_NOT_LOGGED_IN
 } from '../utils/constants';
+import styles from '../styles/Upload.module.scss';
 
 function Debug({ error, uploadSuccess, path }) {
     return (
@@ -119,8 +120,8 @@ export default function UploadFile() {
     }
 
     return (
-        <>
-            <h1>Upload a file</h1>
+        <div className={styles["uploadpage"]}>
+            <h2 className={styles["upl-h2"]}>Upload file</h2>
             <form onSubmit={handleSubmit}>
                 <input
                     type="file"
@@ -128,6 +129,16 @@ export default function UploadFile() {
                     onChange={handleChange}
                     required
                 />
+                <div className={styles["reqs"]}>
+                    <p>File must be...</p>
+                    <ul className={styles["reqs__ul"]}>
+                        {
+                            FILE_REQS.map(req =>
+                                <li key={req.type}>{req.desc}</li>
+                            )
+                        }
+                    </ul>
+                </div>
                 <label htmlFor="genre">Genre:</label>
                 <select id="genre" name="genre" onChange={handleSelectChange}>
                     {
@@ -141,6 +152,6 @@ export default function UploadFile() {
             <Debug error={error} uploadSuccess={isUploaded} path={filePath} />
             <Status error={error} uploadSuccess={isUploaded} path={filePath} />
             <h1><Link href="/upload/record">...or record now</Link></h1>
-        </>
+        </div>
     )
 }
