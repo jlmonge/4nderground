@@ -4,12 +4,13 @@
     display: flex;
     flex-direction: row;
     justify-content: right;
-    gap: 0.5rem;
+    gap: 0.25rem;
     align-items: center;
 }
 
 .fl-text {
     color: #6E6E6E;
+    font-size: 0.875em;
     position: relative;
 
     &::before {
@@ -27,5 +28,5 @@
 }
 
 .fl-btn {
-    @include circle-btn(2rem);
+    @include circle-btn(1.5rem);
 }

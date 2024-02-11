@@ -22,6 +22,9 @@ export const FILE_REQS = [{
     type: 'type',
     desc: 'Audio',
 }, {
+    type: 'copyright',
+    desc: 'Free of copyrighted material',
+}, {
     type: 'size',
     desc: 'Under 100MB',
 }, {
@@ -30,6 +33,9 @@ export const FILE_REQS = [{
 }];
 
 export const REC_REQS = [{
+    type: 'copyright',
+    desc: 'Free of copyrighted material',
+}, {
     type: 'duration',
     desc: 'Between 15 seconds and 7 minutes',
 }];
