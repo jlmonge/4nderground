@@ -5,7 +5,7 @@ export default function PrivacyPage() {
                 privacy and don&apos;t plan on misusing the data you guys
                 give the site, which are emails, passwords, links and uploads.
                 Any concerns you might have please&nbsp;
-                <a href="mailto:legal@4nderground.com">contact us</a>.</p>
+                <a href="mailto:info@4nderground.com">contact us</a>.</p>
         </>
     );
 }

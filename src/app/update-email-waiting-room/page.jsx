@@ -1,3 +1,5 @@
+// TODO: remove 'use client' to update title
+
 'use client';
 
 import { useSearchParams } from 'next/navigation';

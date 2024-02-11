@@ -6,15 +6,12 @@ import Navbar from '../components/navbar.jsx';
 import UserProvider from '../user-provider.jsx';
 import Footer from '../components/footer.jsx';
 
-
 export const metadata = {
     title: {
         template: '%s | 4nderground.com',
         default: '4nderground.com',
     }
 };
-
-
 
 export default async function RootLayout({ children }) {
     return (
