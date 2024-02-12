@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Link from 'next/link';
 import { uploadFileHelper } from '../app/service/uploadFileHelper';
 import {
@@ -9,6 +9,7 @@ import {
     ERR_NOT_AUDIO, ERR_ARRAY, ERR_NOT_LOGGED_IN
 } from '../utils/constants';
 import styles from '../styles/Upload.module.scss';
+import { UserContext } from '../user-provider';
 
 function Debug({ error, uploadSuccess, path }) {
     return (
@@ -18,31 +19,24 @@ function Debug({ error, uploadSuccess, path }) {
     )
 }
 
-function Status({ error, uploadSuccess, path }) {
+function Status({ error, loading }) {
     if (error.reason || error.message) {
         return <p style={{ color: 'red' }}>{error.message}</p>
-    }
-
-    if (uploadSuccess) {
-        return (
-            <>
-                <p style={{ color: 'green' }}>
-                    Click <Link href={`/player${path}`}>here</Link> to
-                    listen to your track.
-                </p>
-            </>
-        );
+    } else if (loading) {
+        return <p>Uploading...</p>
     }
 }
 
 export default function UploadFile() {
     const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false)
     const [genre, setGenre] = useState('');
     const [filePath, setFilePath] = useState('');
     const [error, setError] = useState({
         reason: '',
         message: '',
     });
+    const { user } = useContext(UserContext);
     // TODO: use isUploaded for upload progress bar (~30m)
     const [isUploaded, setIsUploaded] = useState(false);
 
@@ -81,11 +75,17 @@ export default function UploadFile() {
                 message: ERR_NO_FILE.message,
             })
         }
-        console.log(nextFile);
+        // console.log(nextFile);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        setError({
+            reason: '',
+            message: '',
+        })
+        setLoading(true);
         console.log('submitting')
         // Empty file
         if (!file) {
@@ -93,9 +93,9 @@ export default function UploadFile() {
                 reason: ERR_NO_FILE.reason,
                 message: ERR_NO_FILE.message,
             });
+            setLoading(false);
             return;
         }
-        //setError('');
 
         try {
             const data = new FormData();
@@ -116,59 +116,78 @@ export default function UploadFile() {
             }
         } catch (e) {
             console.log(e);
+            setError({
+                reason: 'Unknown',
+                message: 'Something bad happened.',
+            })
+        } finally {
+            setLoading(false);
         }
+    }
+
+    let content;
+    if (isUploaded) {
+        content = (
+            <p>Upload successful! Go to the <Link href="/player">player</Link> to listen to your track.</p>
+        );
+    } else {
+        content = (
+            <>
+                <form onSubmit={handleSubmit} className={styles["form"]}>
+                    <div className={styles["file-input"]}>
+                        <label htmlFor="file-input" className={styles["file-input__btn"]}>
+                            Choose file
+                        </label>
+                        <input
+                            type="file"
+                            id="file-input"
+                            name="file-input"
+                            className={styles["visually-hidden"]}
+                            onChange={handleChange}
+                            required
+                        />
+                        <span className={styles["file-input__name"]} title={file?.name}>
+                            {file?.name}
+                        </span>
+                    </div>
+                    <div className={styles["reqs"]}>
+                        <p>File must be...</p>
+                        <ul className={styles["reqs__ul"]}>
+                            {
+                                FILE_REQS.map(req =>
+                                    <li key={req.type}>{req.desc}</li>
+                                )
+                            }
+                        </ul>
+                    </div>
+                    <div className={styles["genre"]}>
+                        <label htmlFor="genre" className={styles["genre__label"]}>Genre</label>
+                        <select id="genre" name="genre" className={styles["genre__select"]}
+                            onChange={handleSelectChange}>
+                            {
+                                Object.entries(GENRES).map(([key, str]) =>
+                                    <option className={styles["genre__option"]}
+                                        key={key} value={key}>
+                                        {str}
+                                    </option>
+                                )
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" className={styles["form__btn-submit"]}
+                        disabled={!file || error.message || isUploaded}>
+                        Upload
+                    </button>
+                </form>
+                {DEBUG && <Debug error={error} uploadSuccess={isUploaded} path={filePath} />}
+                <Status error={error} loading={loading} />
+            </>
+        );
     }
 
     return (
         <>
-            <form onSubmit={handleSubmit} className={styles["form"]}>
-                <div className={styles["file-input"]}>
-                    <label htmlFor="file-input" className={styles["file-input__btn"]}>
-                        Choose file
-                    </label>
-                    <input
-                        type="file"
-                        id="file-input"
-                        name="file-input"
-                        className={styles["visually-hidden"]}
-                        onChange={handleChange}
-                        required
-                    />
-                    <span className={styles["file-input__name"]}>
-                        {file?.name}
-                    </span>
-                </div>
-                <div className={styles["reqs"]}>
-                    <p>File must be...</p>
-                    <ul className={styles["reqs__ul"]}>
-                        {
-                            FILE_REQS.map(req =>
-                                <li key={req.type}>{req.desc}</li>
-                            )
-                        }
-                    </ul>
-                </div>
-                <div className={styles["genre"]}>
-                    <label htmlFor="genre" className={styles["genre__label"]}>Genre</label>
-                    <select id="genre" name="genre" className={styles["genre__select"]}
-                        onChange={handleSelectChange}>
-                        {
-                            Object.entries(GENRES).map(([key, str]) =>
-                                <option className={styles["genre__option"]}
-                                    key={key} value={key}>
-                                    {str}
-                                </option>
-                            )
-                        }
-                    </select>
-                </div>
-                <button type="submit" className={styles["form__btn-submit"]}
-                    disabled={!file || error.message || isUploaded}>
-                    Upload
-                </button>
-            </form>
-            {DEBUG && <Debug error={error} uploadSuccess={isUploaded} path={filePath} />}
-            <Status error={error} uploadSuccess={isUploaded} path={filePath} />
+            {content}
         </>
     )
 }

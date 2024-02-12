@@ -19,11 +19,11 @@ export const GENRES = Object.freeze({
 });
 
 export const FILE_REQS = [{
-    type: 'type',
-    desc: 'Audio',
-}, {
     type: 'copyright',
     desc: 'Free of copyrighted material',
+}, {
+    type: 'type',
+    desc: 'Audio',
 }, {
     type: 'size',
     desc: 'Under 100MB',
