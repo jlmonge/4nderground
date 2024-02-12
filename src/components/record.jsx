@@ -1,9 +1,10 @@
 'use client';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { GENRES, MAX_DURATION } from '../utils/constants';
+import { REC_REQS, GENRES, MAX_DURATION } from '../utils/constants';
 import { uploadFileHelper } from '../app/service/uploadFileHelper';
+import styles from '../styles/Upload.module.scss';
 
 const BTN_SIZE = 128;
 const constraints = {
@@ -63,22 +64,34 @@ function PrepareUpload({ recordingURL, blob }) {
     }
     return (
         <>
-            <audio src={recordingURL} controls>
-                Your browser does not support the {'<audio>'} HTML element.
-            </audio>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="genre">Genre:</label>
-                <select id="genre" name="genre" onChange={handleSelectChange}>
-                    {
-                        Object.entries(GENRES).map(([key, str]) =>
-                            <option key={key} value={key}>{str}</option>
-                        )
-                    }
-                </select>
-                <button type="submit" disabled={!recordingURL || isUploaded}>Upload</button>
+            <div className={styles["preview"]}>
+                <span className={styles["preview__label"]}>Preview</span>
+                <audio src={recordingURL} controls className={styles["preview__audio"]}>
+                    Your browser does not support the {'<audio>'} HTML element.
+                </audio>
+            </div>
+            <form onSubmit={handleSubmit} className={styles["form"]}>
+                <div className={styles["genre"]}>
+                    <label htmlFor="genre" className={styles["genre__label"]}>Genre</label>
+                    <select id="genre" name="genre" className={styles["genre__select"]}
+                        onChange={handleSelectChange}>
+                        {
+                            Object.entries(GENRES).map(([key, str]) =>
+                                <option className={styles["genre__option"]}
+                                    key={key} value={key}>
+                                    {str}
+                                </option>
+                            )
+                        }
+                    </select>
+                </div>
+                <button type="submit" className={styles["form__btn-submit"]}
+                    disabled={!recordingURL || isUploaded}>
+                    Upload
+                </button>
             </form>
             {isUploaded && <p>Upload was a success. See player.</p>}
-            <p>debug: {recordingURL}</p>
+            {/* <p>debug: {recordingURL}</p> */}
         </>
     )
 }
@@ -167,25 +180,26 @@ export default function Record() {
 
     return (
         <>
-            <p>Press the button to start recording.</p>
-            {isRecording && <p>Elapsed time: {`${Math.trunc(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`}</p>}
             <button
                 type="button"
-                style={{
-                    width: `${BTN_SIZE}px`,
-                    height: `${BTN_SIZE}px`,
-                    position: 'relative',
-                }}
+                className={styles["record__btn"]}
                 onClick={handleRecording}
             >
-                <Image
-                    src={isRecording ? "/stop-circle.svg" : "/mic.svg"}
-                    alt={isRecording ? "Stop recording" : "Start recording"}
-                    sizes={BTN_SIZE}
-                    fill
-                    style={{ objectFit: 'contain' }} // optional
-                />
+                {isRecording ? 'Stop' : 'Start'}
             </button>
+            <span className={styles["record__time"]}>
+                {isRecording && `${Math.trunc(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`}
+            </span>
+            <div className={styles["reqs"]}>
+                <p>Recording must be...</p>
+                <ul className={styles["reqs__ul"]}>
+                    {
+                        REC_REQS.map(req =>
+                            <li key={req.type}>{req.desc}</li>
+                        )
+                    }
+                </ul>
+            </div>
             {(recordingURL.current && !isRecording) && <PrepareUpload recordingURL={recordingURL.current} blob={blob} />}
         </>
     );

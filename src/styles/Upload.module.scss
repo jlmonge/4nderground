@@ -77,6 +77,37 @@
     }
 }
 
+.record {
+    &__btn {
+        @include circle-btn(6rem, rgba(255, 52, 52, 1));
+        margin: 0 auto;
+        font-size: 1rem;
+    }
+
+    &__time {
+        min-height: 1.2em;
+    }
+}
+
+.preview {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+
+    // &__label {
+
+    // }
+
+    &__audio {
+        height: 2em;
+
+        &::-webkit-media-controls-enclosure {
+            border-radius: 0;
+        }
+    }
+}
+
 .visually-hidden {
     border: 0;
     clip: rect(0 0 0 0);
