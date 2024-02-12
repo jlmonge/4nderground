@@ -70,7 +70,7 @@ function PrepareUpload({ recordingURL, blob }) {
                     Your browser does not support the {'<audio>'} HTML element.
                 </audio>
             </div>
-            <form onSubmit={handleSubmit} className={styles["form"]}>
+            <form onSubmit={handleSubmit} className={styles["form__record"]}>
                 <div className={styles["genre"]}>
                     <label htmlFor="genre" className={styles["genre__label"]}>Genre</label>
                     <select id="genre" name="genre" className={styles["genre__select"]}
@@ -97,6 +97,7 @@ function PrepareUpload({ recordingURL, blob }) {
 }
 
 export default function Record() {
+    const [isMobileOS, setIsMobileOS] = useState(false);
     const [seconds, setSeconds] = useState(0);
     const [prevSeconds, setPrevSeconds] = useState(0);
     const [hasPermision, setHasPermission] = useState(false);
@@ -173,34 +174,55 @@ export default function Record() {
     }
 
     useEffect(() => {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        ;
+        if (/windows phone/i.test(userAgent) ||
+            /android/i.test(userAgent) ||
+            (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream)) {
+            setIsMobileOS(true)
+        }
+    }, [])
+
+    useEffect(() => {
         if (seconds >= MAX_DURATION) {
             handleStopRecording();
         }
     }, [seconds, handleStopRecording])
 
+    let content;
+    if (isMobileOS) {
+        content = <p>Mobile OS detected. Recording is not yet supported.</p>
+    } else {
+        content = (
+            <>
+                <button
+                    type="button"
+                    className={styles["record__btn"]}
+                    onClick={handleRecording}
+                >
+                    {isRecording ? 'Stop' : 'Start'}
+                </button>
+                <span className={styles["record__time"]}>
+                    {isRecording && `${Math.trunc(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`}
+                </span>
+                <div className={styles["reqs"]}>
+                    <p>Recording must be...</p>
+                    <ul className={styles["reqs__ul"]}>
+                        {
+                            REC_REQS.map(req =>
+                                <li key={req.type}>{req.desc}</li>
+                            )
+                        }
+                    </ul>
+                </div>
+                {(recordingURL.current && !isRecording) && <PrepareUpload recordingURL={recordingURL.current} blob={blob} />}
+            </>
+        )
+    }
+
     return (
         <>
-            <button
-                type="button"
-                className={styles["record__btn"]}
-                onClick={handleRecording}
-            >
-                {isRecording ? 'Stop' : 'Start'}
-            </button>
-            <span className={styles["record__time"]}>
-                {isRecording && `${Math.trunc(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`}
-            </span>
-            <div className={styles["reqs"]}>
-                <p>Recording must be...</p>
-                <ul className={styles["reqs__ul"]}>
-                    {
-                        REC_REQS.map(req =>
-                            <li key={req.type}>{req.desc}</li>
-                        )
-                    }
-                </ul>
-            </div>
-            {(recordingURL.current && !isRecording) && <PrepareUpload recordingURL={recordingURL.current} blob={blob} />}
+            {content}
         </>
     );
 }

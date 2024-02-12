@@ -25,9 +25,6 @@ export const FILE_REQS = [{
     type: 'type',
     desc: 'Audio',
 }, {
-    type: 'copyright',
-    desc: 'Free of copyrighted material',
-}, {
     type: 'size',
     desc: 'Under 100MB',
 }, {
