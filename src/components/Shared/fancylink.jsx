@@ -15,7 +15,7 @@ export default function FancyLink({ href, text, btnRight = true }) {
             </button>
         </>
     );
-    if (!btnRight) [left, right] = right, left;
+    if (!btnRight) [left, right] = [right, left];
 
     return (
         <div className={styles["fl-container"]}>

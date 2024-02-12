@@ -39,7 +39,7 @@ export async function POST(request) {
     }
 
     return NextResponse.json({
-        message: 'Successfully registered, sending you to the player...',
+        message: 'Check your email to complete registration.',
         action: 'register',
     }, { status: 200 });
 }

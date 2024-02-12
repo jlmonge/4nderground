@@ -96,8 +96,7 @@ export default function AccessForm({
             console.log("GOOD RESPONSE");
             setStatusOk(true);
             if (
-                resJson.action === 'login' ||
-                resJson.action === 'register'
+                resJson.action === 'login'
             ) {
                 console.log('redirecting');
                 router.push('/player');
