@@ -17,10 +17,12 @@ export default function UserProvider({ children }) {
             const supabase = createClientComponentClient();
             const { data: { user: u } } = await supabase.auth.getUser();
             if (u) {
+                // console.log('found user')
                 setUser(u);
-            } else {
-                console.log('unepic fail');
             }
+            // else {
+            //     console.log('unepic fail');
+            // }
         };
         fetchUser();
     }, []);

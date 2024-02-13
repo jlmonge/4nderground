@@ -314,7 +314,7 @@ export default function Profile({ userId, handleClose }) {
         setUser(null);
         handleClose();
         router.refresh();
-        console.log('logout lol');
+        // console.log('logout lol');
     };
 
     const handleAddRestrict = async (urID, action) => {
