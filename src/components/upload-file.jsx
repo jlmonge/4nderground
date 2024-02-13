@@ -10,6 +10,7 @@ import {
 } from '../utils/constants';
 import styles from '../styles/Upload.module.scss';
 import { UserContext } from '../user-provider';
+import UploadSuccess from './Shared/upload-success';
 
 function Debug({ error, uploadSuccess, path }) {
     return (
@@ -127,9 +128,7 @@ export default function UploadFile() {
 
     let content;
     if (isUploaded) {
-        content = (
-            <p>Upload successful! Go to the <Link href="/player">player</Link> to listen to your track.</p>
-        );
+        content = <UploadSuccess />;
     } else {
         content = (
             <>

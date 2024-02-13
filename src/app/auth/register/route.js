@@ -16,7 +16,7 @@ export async function POST(request) {
     // 'agreement' returns "on" or null; null is falsy!
     if (!agreement) {
         return NextResponse.json({
-            message: 'Account creation failed'
+            message: 'Registration failed'
         }, { status: 400 });
     }
     const cookieStore = cookies();
@@ -31,7 +31,7 @@ export async function POST(request) {
     });
 
     if (error) {
-        console.log(`error: ${error}`)
+        console.log(`error: ${error}`);
         return NextResponse.json({
             message: 'Registration failed.',
             action: 'register',

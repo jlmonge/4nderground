@@ -26,10 +26,12 @@ export async function POST(request) {
             action: 'login'
         }, { status: 400 });
     }
-    //console.log(`signInWithPassword data: ${JSON.stringify(data)}`)
+    console.log(`signInWithPassword data: ${JSON.stringify(data, null, 2)}`);
+    console.log(`attempting to get user id: ${data.user.id}`);
 
     return NextResponse.json({
         message: 'Successfully logged in, sending you to the player...',
         action: 'login',
+        user: data.user
     }, { status: 200 });
 }

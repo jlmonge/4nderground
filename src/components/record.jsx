@@ -5,6 +5,7 @@ import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { REC_REQS, GENRES, MAX_DURATION } from '../utils/constants';
 import { uploadFileHelper } from '../app/service/uploadFileHelper';
 import styles from '../styles/Upload.module.scss';
+import UploadSuccess from './Shared/upload-success';
 
 const BTN_SIZE = 128;
 const constraints = {
@@ -12,88 +13,12 @@ const constraints = {
     video: false,
 };
 
-function PrepareUpload({ recordingURL, blob }) {
-    const [genre, setGenre] = useState('');
-    const [isUploaded, setIsUploaded] = useState(false);
-
-    const handleSelectChange = (e) => {
-        setGenre(e.target.value)
+function Status({ error, loading }) {
+    if (error.reason || error.message) {
+        return <p style={{ color: 'red' }}>{error.message}</p>
+    } else if (loading) {
+        return <p>Uploading...</p>
     }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        console.log("submitting");
-
-        if (!recordingURL) {
-            console.log("Recording not found.");
-            return;
-        }
-
-        try {
-            const data = new FormData();
-            const fileName = `${recordingURL.substring(recordingURL.lastIndexOf('/') + 1)}.webm`;
-            const file = new File([blob], fileName, {
-                type: "audio/webm;codecs=opus"
-            })
-            const context = new AudioContext();
-            const buffer = await file.arrayBuffer();
-            const audio = await context.decodeAudioData(buffer);
-            const duration = Math.trunc(audio.duration);
-
-            data.append('file', file);
-            data.append('genre', genre);
-            data.append('duration', duration);
-            data.append('isrecording', true);
-            const res = await uploadFileHelper(data);
-            const resJson = await res.json();
-
-            if (!res.ok) {
-                console.log(`${resJson.reason}: ${resJson.message}`)
-                // setError({
-                //     reason: resJson.reason,
-                //     message: resJson.message,
-                // })
-            } else {
-                setIsUploaded(true);
-            }
-        } catch (e) {
-            console.log(e);
-        }
-
-    }
-    return (
-        <>
-            <div className={styles["preview"]}>
-                <span className={styles["preview__label"]}>Preview</span>
-                <audio src={recordingURL} controls className={styles["preview__audio"]}>
-                    Your browser does not support the {'<audio>'} HTML element.
-                </audio>
-            </div>
-            <form onSubmit={handleSubmit} className={styles["form__record"]}>
-                <div className={styles["genre"]}>
-                    <label htmlFor="genre" className={styles["genre__label"]}>Genre</label>
-                    <select id="genre" name="genre" className={styles["genre__select"]}
-                        onChange={handleSelectChange}>
-                        {
-                            Object.entries(GENRES).map(([key, str]) =>
-                                <option className={styles["genre__option"]}
-                                    key={key} value={key}>
-                                    {str}
-                                </option>
-                            )
-                        }
-                    </select>
-                </div>
-                <button type="submit" className={styles["form__btn-submit"]}
-                    disabled={!recordingURL || isUploaded}>
-                    Upload
-                </button>
-            </form>
-            {isUploaded && <p>Upload was a success. See player.</p>}
-            {/* <p>debug: {recordingURL}</p> */}
-        </>
-    )
 }
 
 export default function Record() {
@@ -108,6 +33,13 @@ export default function Record() {
     const mediaRecorder = useRef(null);
     const chunks = useRef([]);
     const recordingURL = useRef(null);
+    const [genre, setGenre] = useState('');
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState({
+        reason: '',
+        message: '',
+    });
+    const [isUploaded, setIsUploaded] = useState(false);
 
     const startTimer = () => {
         console.log(`seconds: ${seconds}`);
@@ -134,6 +66,10 @@ export default function Record() {
     }
 
     const handleStartRecording = async () => {
+        setError({
+            reason: '',
+            message: '',
+        });
         await initializeAudio();
         mediaRecorder.current.start();
         startTimer();
@@ -173,6 +109,64 @@ export default function Record() {
         }
     }
 
+    const handleSelectChange = (e) => {
+        setGenre(e.target.value)
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        setError({
+            reason: '',
+            message: '',
+        });
+        setLoading(true);
+        console.log("submitting");
+
+        if (!recordingURL.current) {
+            console.log("Recording not found.");
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const data = new FormData();
+            const fileName = `${(recordingURL.current).substring((recordingURL.current).lastIndexOf('/') + 1)}.webm`;
+            const file = new File([blob], fileName, {
+                type: "audio/webm;codecs=opus"
+            })
+            const context = new AudioContext();
+            const buffer = await file.arrayBuffer();
+            const audio = await context.decodeAudioData(buffer);
+            const duration = Math.trunc(audio.duration);
+
+            data.append('file', file);
+            data.append('genre', genre);
+            data.append('duration', duration);
+            data.append('isrecording', true);
+            const res = await uploadFileHelper(data);
+            const resJson = await res.json();
+
+            if (!res.ok) {
+                console.log(`${resJson.reason}: ${resJson.message}`)
+                setError({
+                    reason: resJson.reason,
+                    message: resJson.message,
+                })
+            } else {
+                setIsUploaded(true);
+            }
+        } catch (e) {
+            console.log(e);
+            setError({
+                reason: 'Unknown',
+                message: 'Something bad happened.',
+            })
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         ;
@@ -192,6 +186,8 @@ export default function Record() {
     let content;
     if (isMobileOS) {
         content = <p>Mobile OS detected. Recording is not yet supported.</p>
+    } else if (!isMobileOS && isUploaded) {
+        content = <UploadSuccess />;
     } else {
         content = (
             <>
@@ -215,7 +211,38 @@ export default function Record() {
                         }
                     </ul>
                 </div>
-                {(recordingURL.current && !isRecording) && <PrepareUpload recordingURL={recordingURL.current} blob={blob} />}
+                {(recordingURL.current && !isRecording) && (
+                    <>
+                        <form onSubmit={handleSubmit} className={`${styles["form"]} ${styles["form__record"]}`}>
+                            <div className={styles["preview"]}>
+                                <span className={styles["preview__label"]}>Preview</span>
+                                <audio src={recordingURL.current} controls className={styles["preview__audio"]}>
+                                    Your browser does not support the {'<audio>'} HTML element.
+                                </audio>
+                            </div>
+                            <div className={styles["genre"]}>
+                                <label htmlFor="genre" className={styles["genre__label"]}>Genre</label>
+                                <select id="genre" name="genre" className={styles["genre__select"]}
+                                    onChange={handleSelectChange}>
+                                    {
+                                        Object.entries(GENRES).map(([key, str]) =>
+                                            <option className={styles["genre__option"]}
+                                                key={key} value={key}>
+                                                {str}
+                                            </option>
+                                        )
+                                    }
+                                </select>
+                            </div>
+                            <button type="submit" className={styles["form__btn-submit"]}
+                                disabled={!recordingURL.current || isUploaded}>
+                                Upload
+                            </button>
+                        </form>
+                        {/* <p>debug: {recordingURL.current}</p> */}
+                        <Status error={error} loading={loading} />
+                    </>
+                )}
             </>
         )
     }

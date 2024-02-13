@@ -121,12 +121,12 @@ export default function Player() {
         setGenre(newGenre);
         setTracks(newTracks);
         setTrackIndex(0);
-        console.log(`new tracks: ${JSON.stringify(newTracks)}`);
+        // console.log(`new tracks: ${JSON.stringify(newTracks)}`);
         console.log(`changing genre to ${newGenre}`);
     }
 
     const handleBack = () => {
-        console.log('Skip Back');
+        // console.log('Skip Back');
         setTrackIndex(trackIndex > 0 ? trackIndex - 1 : tracks.length - 1);
     };
 
@@ -135,7 +135,7 @@ export default function Player() {
     };
 
     const handleForward = () => {
-        console.log('Skip Forward');
+        // console.log('Skip Forward');
         setTrackIndex((trackIndex + 1) % tracks.length);
     };
 
@@ -170,17 +170,20 @@ export default function Player() {
         const fetchTracks = async () => {
             const dayAgo = getDayAgo();
             let data, error;
-            console.log(`USER: ${JSON.stringify(user)}`);
+            // console.log(`USER: ${JSON.stringify(user)}`);
             if (!user) {
-                console.log('logged out');
+                // console.log('logged out');
                 ({ data, error } = await supabase.from('tracks').select('*').gt('created_at', dayAgo).order('created_at', { ascending: false }));
 
             } else {
-                console.log('logged in');
+                // console.log('logged in');
                 ({ data, error } = await supabase.rpc('select_tracks', { cur_user_id: user.id }));
-                console.log(`trax for ${user.id}: ${JSON.stringify(data, null, 2)}`);
+                // console.log(`trax for ${user.id}: ${JSON.stringify(data, null, 2)}`);
             }
-            console.log(`ERROR: ${JSON.stringify(error)}`);
+            if (error) {
+                console.log(`ERROR: ${JSON.stringify(error)}`);
+            }
+
             setAllTracks(data ?? []);
             setTracks(data ?? []);
         }
@@ -196,7 +199,7 @@ export default function Player() {
                 onend: () => setTrackIndex((trackIndex + 1) % tracks.length),
             });
         } else {
-            load('empty');
+            load('test.mp3');
             console.log("no tracks found")
         }
     }, [load, tracks, trackIndex]);

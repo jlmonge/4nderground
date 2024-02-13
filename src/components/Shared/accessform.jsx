@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../../styles/Accessflow.module.scss';
+import { UserContext } from '../../user-provider';
 
 function Email() {
     return (
@@ -71,6 +72,7 @@ export default function AccessForm({
     action = "",
 }) {
     const router = useRouter();
+    const { user, setUser } = useContext(UserContext);
     const [statusText, setStatusText] = useState('');
     const [statusOk, setStatusOk] = useState(false);
 
@@ -80,9 +82,9 @@ export default function AccessForm({
         setStatusText('')
         setStatusOk(false);
         const data = new FormData(e.target);
-        console.log(`email: ${data.get('email')}`);
-        console.log(`password: ${data.get('password')}`);
-        console.log(`agreement: ${data.get('agreement')}`);
+        // console.log(`email: ${data.get('email')}`);
+        // console.log(`password: ${data.get('password')}`);
+        // console.log(`agreement: ${data.get('agreement')}`);
 
         const res = await fetch(action, {
             method: 'POST',
@@ -98,9 +100,9 @@ export default function AccessForm({
             if (
                 resJson.action === 'login'
             ) {
-                console.log('redirecting');
+                setUser(resJson.user);
+                console.log(`received user: ${resJson.user}`)
                 router.push('/player');
-                router.refresh();
             }
 
         }
