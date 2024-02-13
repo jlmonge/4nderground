@@ -4,9 +4,7 @@ import styles from '../../styles/Fancylink.module.scss';
 export default function FancyLink({ href, text, btnRight = true }) {
     let btnText = btnRight ? '>' : '<';
     let left = (
-        <Link href={href}>
-            <span className={styles["fl-text"]}>{text}</span>
-        </Link>
+        <span className={styles["fl-text"]}>{text}</span>
     );
     let right = (
         <>
@@ -18,9 +16,11 @@ export default function FancyLink({ href, text, btnRight = true }) {
     if (!btnRight) [left, right] = [right, left];
 
     return (
-        <div className={styles["fl-container"]}>
-            {left}
-            {right}
-        </div>
+        <>
+            <Link href={href} className={styles["fl-container"]}>
+                {left}
+                {right}
+            </Link>
+        </>
     );
 }
