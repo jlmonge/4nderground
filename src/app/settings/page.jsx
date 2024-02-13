@@ -1,6 +1,9 @@
-import Link from 'next/link';
 import FancyLink from '../../components/Shared/fancylink';
 import styles from '../../styles/Settings.module.scss';
+
+export const metadata = {
+    title: 'Settings',
+};
 
 export default function SettingsPage() {
     return (
