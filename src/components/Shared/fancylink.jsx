@@ -16,11 +16,11 @@ export default function FancyLink({ href, text, btnRight = true }) {
     if (!btnRight) [left, right] = [right, left];
 
     return (
-        <div className={styles["fl-container"]}>
-            <Link href={href}>
+        <>
+            <Link href={href} className={styles["fl-container"]}>
                 {left}
                 {right}
             </Link>
-        </div>
+        </>
     );
 }
