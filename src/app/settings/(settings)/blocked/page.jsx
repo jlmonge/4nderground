@@ -1,5 +1,5 @@
-import RestrictedLayout from '../../../components/Shared/restricted-layout';
-import styles from '../../../styles/Restrict.module.scss';
+import RestrictedLayout from '../../../../components/Shared/restricted-layout';
+import styles from '../../../../styles/Restrict.module.scss';
 
 export const metadata = {
     title: `Blocked Users`,

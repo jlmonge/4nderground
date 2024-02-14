@@ -17,7 +17,7 @@ export default function FancyLink({ href, text, btnRight = true }) {
 
     return (
         <>
-            <Link href={href} className={styles["fl-container"]}>
+            <Link href={href} className={btnRight ? styles["fl-container"] : `${styles["fl-container"]} ${styles["fl-container__left"]}`}>
                 {left}
                 {right}
             </Link>

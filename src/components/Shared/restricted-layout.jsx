@@ -8,7 +8,7 @@ import styles from '../../styles/Restrict.module.scss';
 import Avatar from '../avatar';
 
 export default function RestrictedLayout({ action }) {
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [restrictedUsers, setRestrictedUsers] = useState([]);
     const supabase = createClientComponentClient();
     const { user, setUser } = useContext(UserContext);
@@ -44,7 +44,7 @@ export default function RestrictedLayout({ action }) {
             console.log('You must be logged in to perform this action.')
             return;
         }
-        setLoading(true);
+        // setLoading(true);
 
         try {
             const data = new FormData();
@@ -71,14 +71,14 @@ export default function RestrictedLayout({ action }) {
         } catch (e) {
             console.log(e)
         } finally {
-            setLoading(false);
+            // setLoading(false);
         }
 
     }
 
-    useEffect(() => {
-        console.log(`loading changed: ${loading}`);
-    }, [loading]);
+    // useEffect(() => {
+    //     console.log(`loading changed: ${loading}`);
+    // }, [loading]);
 
     let content;
     if (restrictedUsers.length) {
@@ -99,9 +99,9 @@ export default function RestrictedLayout({ action }) {
                                     >
                                         Un{action}
                                     </button>
-                                    <span className={styles["reqbtn__loading"]}>
+                                    {/* <span className={styles["reqbtn__loading"]}>
                                         {loading ?? `Un${action === 'ignore' ? 'ignoring' : 'blocking'}...`}
-                                    </span>
+                                    </span> */}
                                 </div>
                             </li>
                         )

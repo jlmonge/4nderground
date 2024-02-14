@@ -1,7 +1,7 @@
 'use client';
 
 import { useContext } from 'react';
-import { UserContext } from '../../../user-provider';
+import { UserContext } from '../../../../user-provider';
 import { useRouter } from 'next/navigation';
 
 export default function DeleteAccountPage() {

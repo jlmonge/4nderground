@@ -6,6 +6,10 @@
     justify-content: right;
     gap: 0.25rem;
     align-items: center;
+
+    &__left {
+        justify-content: left;
+    }
 }
 
 .fl-text {
