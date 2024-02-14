@@ -15,3 +15,12 @@ export const varLog = (vObj) => {
     let value = vObj[name];
     console.log(`${name} (type ${typeof vObj}): ${JSON.stringify(value, null, 2)}`);
 }
+
+export const capitalizeFirstLetter = (s) => {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+export const getDate = (d) => {
+    let date = new Date(d);
+    return date.toISOString().split('T')[0];
+}
