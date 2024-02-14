@@ -1,4 +1,4 @@
-import UpdateEmail from '../../../../components/update-email';
+import UpdateEmail from '../../../../../components/update-email';
 
 export const metadata = {
     title: 'Update Email',

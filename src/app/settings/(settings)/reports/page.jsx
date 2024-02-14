@@ -2,7 +2,7 @@
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { UserContext } from '../../../user-provider';
+import { UserContext } from '../../../../user-provider';
 
 export default function ReportsPage() {
     const [reports, setReports] = useState([]);
