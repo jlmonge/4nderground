@@ -1,4 +1,5 @@
 @use "variables";
+@import "mixins";
 
 .accessflow-page {
     margin: 0 auto;
@@ -87,6 +88,11 @@
 .requirements {
     font-size: 0.875em;
     color: #6E6E6E;
+
+    &__medium {
+        font-size: 1em;
+        color: #6E6E6E;
+    }
 }
 
 .af-btn {
@@ -161,4 +167,10 @@
     margin: auto;
     width: 50%;
     color: #6E6E6E;
+}
+
+.submit--circlebtn {
+    @include circle-btn(6rem, rgba(255, 0, 0, 0.5));
+    margin: 0 auto;
+    font-size: 1rem;
 }

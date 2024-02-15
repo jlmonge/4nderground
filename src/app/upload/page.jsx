@@ -3,7 +3,7 @@ import FancyLink from '../../components/Shared/fancylink';
 import styles from '../../styles/Upload.module.scss';
 
 export const metadata = {
-    title: 'Upload file',
+    title: 'Upload File',
 };
 
 export default function UploadPage() {
