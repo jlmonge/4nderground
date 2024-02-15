@@ -1,11 +1,10 @@
+import styles from '../../styles/Textpage.module.scss';
+
 export default function PrivacyPage() {
     return (
-        <>
-            <p>We don&apos;t have a lawyer to write this out. We do care about
-                privacy and don&apos;t plan on misusing the data you guys
-                give the site, which are emails, passwords, links and uploads.
-                Any concerns you might have please&nbsp;
-                <a href="mailto:info@4nderground.com">contact us</a>.</p>
-        </>
+        <div className={styles["textpage"]}>
+            <h2 className={styles["h2"]}>Privacy</h2>
+            <p>We use cookies for authentication. <a href="mailto:info@4nderground.com">Contact us</a> for further inquiries.</p>
+        </div>
     );
 }

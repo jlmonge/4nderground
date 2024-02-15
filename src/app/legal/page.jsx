@@ -1,10 +1,10 @@
+import styles from '../../styles/Textpage.module.scss';
+
 export default function LegalPage() {
     return (
-        <>
-            <p>We don&apos;t have a lawyer to write this out. Contact us immediately if any
-                copyrighted material is posted here. Otherwise, we try not to do
-                things we shouldn&apos;t, but should we severely misstep, do not hesitate to&nbsp;
-                <a href="mailto:info@4nderground.com">contact us</a>.</p>
-        </>
+        <div className={styles["textpage"]}>
+            <h2 className={styles["h2"]}>Legal</h2>
+            <p>We do not condone the posting of copyrighted material on the site. You must own what you post. <a href="mailto:info@4nderground.com">Contact us</a> for further inquiries.</p>
+        </div>
     );
 }

@@ -1,16 +1,13 @@
-// TODO: remove 'use client' to update title
+import UpdateEmailWaitingRoom from '../../components/update-email-waiting-room';
 
-'use client';
-
-import { useSearchParams } from 'next/navigation';
+export const metadata = {
+    title: 'Update Email Waiting Room',
+};
 
 export default function UpdateEmailWaitingRoomPage() {
-    const searchParams = useSearchParams();
-    const message = searchParams.get('message');
-
     return (
         <>
-            <p>{message ?? '?'}</p>
+            <UpdateEmailWaitingRoom />
         </>
     );
 }

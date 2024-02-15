@@ -7,7 +7,6 @@ export const metadata = {
 export default function UpdatePasswordLIPage() {
     return (
         <>
-            <p>You accessed this page via settings.</p>
             <UpdatePassword route="/auth/password/update-li" />
         </>
     );
