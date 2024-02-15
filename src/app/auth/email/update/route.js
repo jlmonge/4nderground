@@ -23,11 +23,8 @@ export async function POST(req) {
     }
 
     console.log(`from change email route, here's the new data: ${data}`);
-    return NextResponse.redirect(
-        //`${requestUrl.origin}/settings?message=Email changed successfully`,
-        `${requestUrl.origin}/update-email-waiting-room?message=Your email change will complete once both emails have confirmed the change.`,
-        {
-            status: 301,
-        }
-    );
+    return NextResponse.json({
+        message: 'Check both of your emails to complete the email change.',
+        action: 'update-email',
+    }, { status: 200 });
 }
