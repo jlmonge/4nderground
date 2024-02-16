@@ -28,12 +28,12 @@ const REPORT_REASONS = [{
     id: 3,
     value: 'quality',
     str: 'Low quality',
-    desc: 'Content is extremely low quality. Includes (but not limited to) empty recordings, irrelevant comments.'
+    desc: 'Content is extremely low quality. Examples of this are empty recordings and irrelevant comments.'
 }, {
     id: 4,
     value: 'pi',
     str: 'Personal information',
-    desc: 'Content that contains personal information. Includes (but not limited to) doxing, recording of private conversation.'
+    desc: 'Content that contains personal information. Examples of this are doxxing, recording of private conversation.'
 }, {
     id: 5,
     value: 'malicious',
@@ -43,7 +43,7 @@ const REPORT_REASONS = [{
     id: 6,
     value: 'harassment',
     str: 'Harassment',
-    desc: 'Content that involves racism and/or serious threats.'
+    desc: 'Content that involves racism and/or threats.'
 }, {
     id: 7,
     value: 'impersonation',
