@@ -1,3 +1,32 @@
-.curTab {
-    text-decoration: underline;
+@import "mixins";
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.links {
+    margin: 0;
+    padding: 0;
+
+    &__heading {
+        margin: 0;
+    }
+}
+
+.user-id {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.btn {
+    @include fanciful-btn(44px, 57px, linear-gradient(180deg, #818181 0%, #171717 100%));
+    width: fit-content;
+
+    &__red {
+        @include fanciful-btn(44px, 57px, linear-gradient(180deg, #FF3D3D 0%, #F44 100%));
+        width: fit-content;
+    }
+
+
 }

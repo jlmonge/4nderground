@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import styles from '../../styles/Fancylink.module.scss';
 
-export default function FancyLink({ href, text, btnRight = true }) {
+export default function FancyLink({ href, text, btnRight = true, white = false }) {
     let btnText = btnRight ? '>' : '<';
     let left = (
-        <span className={styles["fl-text"]}>{text}</span>
+        <span className={white ? styles["fl-text--white"] : styles["fl-text"]}>{text}</span>
     );
     let right = (
         <>
-            <button type="button" className={styles["fl-btn"]}>
+            <button type="button" className={white ? styles["fl-btn--white"] : styles["fl-btn"]}>
                 {btnText}
             </button>
         </>

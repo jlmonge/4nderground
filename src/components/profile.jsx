@@ -4,11 +4,12 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
-import styles from '../styles/Profile.module.scss';
 import { varLog } from '../utils/helpers';
 import Link from 'next/link';
 import { UserContext } from '../user-provider';
 import Report from './report';
+import styles from '../styles/Profile.module.scss';
+import FancyLink from './Shared/fancylink';
 
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
@@ -236,6 +237,7 @@ function ProfileLinks({ userId, isMe, db }) {
                         <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} onDelete={handleDeleteLink} onChange={handleChangeLink} />
                     )}
                     <button
+                        className={styles["btn"]}
                         type="submit"
                         // TODO: disable save if no new information (is this worth the)
                         // TODO: possible performance hit?)
@@ -246,35 +248,38 @@ function ProfileLinks({ userId, isMe, db }) {
                 </form>
                 <button
                     type="button"
+                    className={styles["btn"]}
                     onClick={handleAddLink}
                     disabled={draftLinks.length >= 3}
                 >
                     Add link
                 </button>
-                <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+                <button type="button" className={styles["btn"]} onClick={() => setIsEditing(false)}>
+                    Cancel
+                </button>
                 <p>{status}</p>
-                <p>draftLinks debug: {JSON.stringify(draftLinks)}</p>
+                {/* <p>draftLinks debug: {JSON.stringify(draftLinks)}</p> */}
             </>
         );
     } else if (!isEditing && isMe) {
         linksContent = (
             <>
-                <ul style={{ padding: '0' }}>
+                <ul className={styles["links"]}>
                     {links.map((l) =>
                         <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} />
                     )}
                 </ul>
-                <button type="button" onClick={handleStartEdit}>
+                <button className={styles["btn"]} type="button" onClick={handleStartEdit}>
                     Edit links
                 </button>
-                <p>links debug: {JSON.stringify(links)}</p>
+                {/* <p>links debug: {JSON.stringify(links)}</p> */}
             </>
         );
     } else {
         linksContent = (
             <>
                 <p>this not u just sayin lol</p>
-                <ul style={{ padding: '0' }}>
+                <ul className={styles["links"]}>
                     {links.map((l) =>
                         <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} />
                     )}
@@ -286,7 +291,7 @@ function ProfileLinks({ userId, isMe, db }) {
     return (
         <>
             <section>
-                <h3>Links</h3>
+                <h3 className={styles["links__heading"]}>Links</h3>
                 {linksContent}
             </section>
         </>
@@ -339,22 +344,26 @@ export default function Profile({ userId, handleClose }) {
     };
 
     return (
-        <>
-            <p>{userId} {isMe && '(you)'}</p>
+        <div className={styles["profile"]}>
+            <FancyLink href="/settings" text="Settings" btnRight={false} white
+                onClick={handleClose}
+            />
+            <p className={styles["user-id"]}>{userId} {isMe && '(you)'}</p>
             <ProfileLinks userId={userId} isMe={isMe} db={supabase} />
             {!isMe && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <button onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
-                    <button onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
+                    <button className={styles["btn__red"]} onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
+                    <button className={styles["btn__red"]} onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
                     <Report contentType={'profile'} contentId={userId} />
                 </div>
             )}
             {isMe &&
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Link href="/settings" onClick={handleClose}>Settings</Link>
-                    <button onClick={logout}>Logout</button>
+                    <button onClick={logout} className={styles["btn__red"]}>
+                        Logout
+                    </button>
                 </div>
             }
-        </>
+        </div>
     );
 }

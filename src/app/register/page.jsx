@@ -11,10 +11,9 @@ export default function Register() {
     return (
         <div className={`${styles["accessflow-page"]} ${almarai.className}`}>
             <h2 className={styles["af-h2"]}>Welcome</h2>
-            <p style={{ color: 'red' }}>Registration temporarily disabled while email service is getting set up.</p>
-            {/* <AccessForm hasEmail hasPassword hasAgreement
+            <AccessForm hasEmail hasPassword hasAgreement
                 hasRequirements action="/auth/register"
-            /> */}
+            />
             <div className={styles["accessflow-links"]}>
                 <FancyLink
                     href="/login"

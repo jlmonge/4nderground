@@ -1,3 +1,16 @@
+.dialog {
+    background-color: rgb(110 110 110 / 90%);
+    color: white;
+    width: max(20em, 33vw);
+    border-radius: 5%;
+    border-style: groove;
+    border-color: #a5a5a5;
+
+    &::backdrop {
+        background: rgb(0 0 0 / 50%);
+    }
+}
+
 .aviicon {
     border: 2px outset;
     flex-shrink: 0;

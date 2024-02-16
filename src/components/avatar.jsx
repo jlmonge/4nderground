@@ -20,12 +20,9 @@ export default function Avatar({ userId, size = "large" }) {
 
     return userId ? (
         <>
-            <dialog ref={dialogRef} style={{
-                backgroundColor: 'black',
-                color: 'white',
-                height: '512px',
-                width: '90vw',
-            }}>
+            <dialog ref={dialogRef}
+                className={styles["dialog"]}
+            >
                 <button
                     id="close"
                     onClick={handleClose}
