@@ -1,5 +1,9 @@
 import styles from '../../styles/Textpage.module.scss';
 
+export const metadata = {
+    title: 'Rules',
+};
+
 const RULES = [{
     id: 0,
     desc: 'Do not upload copyrighted content.',

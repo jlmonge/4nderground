@@ -1,5 +1,9 @@
 import styles from '../../styles/Textpage.module.scss';
 
+export const metadata = {
+    title: 'Privacy',
+};
+
 export default function PrivacyPage() {
     return (
         <div className={styles["textpage"]}>
