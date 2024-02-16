@@ -20,7 +20,7 @@ export async function POST(req) {
         }, { status: 400 })
     }
 
-    console.log(`Account deleted. Godspeed, ${userId}`)
+    console.log(`Account deleted. Godspeed ${userId}`)
     return NextResponse.json({
         message: 'Account successfully deleted'
     }, { status: 200 });
