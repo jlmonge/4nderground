@@ -32,12 +32,12 @@ export default function DeleteAccount() {
 
     return (
         <>
-            <div className={styles["af-inputwreqs"]}>
-                <label htmlFor="confirm" className={styles["requirements__medium"]}>
+            <div className={styles["delete"]}>
+                <label htmlFor="confirm" className={styles["delete__label"]}>
                     To proceed with deleting your 4nderground account, type &quot;<em>{confirmText}</em>&quot; then press the button.
                 </label>
                 <input type="text" id="confirm"
-                    className={styles["af-inputtext-container"]}
+                    className={styles["delete__input"]}
                     onChange={handleChange}
                     maxLength={confirmText.length}
                 />
