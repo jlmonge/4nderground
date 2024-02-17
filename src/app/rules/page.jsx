@@ -18,7 +18,7 @@ const RULES = [{
     desc: 'Do not post low-quality content. Examples of this are empty recordings and irrelevant comments.',
 }, {
     id: 4,
-    desc: 'Do not post or request personal information. Examples of this are doxxing, recording of private conversation.',
+    desc: 'Do not post or request personal information. Examples of this are doxxing and recording of private conversation.',
 }, {
     id: 5,
     desc: "Do not post or share material that interferes with users' security and privacy.",

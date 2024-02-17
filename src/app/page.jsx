@@ -23,7 +23,7 @@ export default function HomePage() {
                 <li className={styles["features-item"]}>Share socials on your profile</li>
 
             </ul>
-            <Link href="/register" className={styles["btn"]}><span className={`${nunito.className}`}>Please sign me up!!</span></Link>
+            <Link prefetch={false} href="/register" className={styles["btn"]}><span className={`${nunito.className}`}>Please sign me up!!</span></Link>
         </div>
     );
 }

@@ -4,11 +4,12 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
-import styles from '../styles/Profile.module.scss';
 import { varLog } from '../utils/helpers';
 import Link from 'next/link';
 import { UserContext } from '../user-provider';
 import Report from './report';
+import styles from '../styles/Profile.module.scss';
+import FancyLink from './Shared/fancylink';
 
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
@@ -18,40 +19,39 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
     if (isEditing) {
         linkContent = (
             <>
-                <label>
-                    <input
-                        type="text"
-                        //id={`edit-link-url-${(link.pos).toString()}`} 
-                        name="edit-link-url"
-                        placeholder="Link URL"
-                        className="link-input"
-                        required
-                        value={link.url}
-                        onChange={e => {
-                            onChange({
-                                ...link,
-                                url: e.target.value,
-                            });
-                        }}
-                    />
-                </label>
-                <label>
-                    <input
-                        type="text"
-                        //id={`edit-link-text-${(link.pos).toString()}`}
-                        name="edit-link-text" // TODO: CONST!!
-                        placeholder="Link text"
-                        className="link-input"
-                        value={link.text}
-                        required
-                        onChange={e => {
-                            onChange({
-                                ...link,
-                                text: e.target.value,
-                            });
-                        }}
-                    />
-                </label>
+                <label htmlFor={`edit-link${(link.pos).toString()}-url`} className={styles["visually-hidden"]}>Edit link text</label>
+                <input
+                    type="text"
+                    id={`edit-link${(link.pos).toString()}-url`}
+                    name="edit-link-url"
+                    placeholder="Link URL"
+                    className={styles["input"]}
+                    required
+                    value={link.url}
+                    onChange={e => {
+                        onChange({
+                            ...link,
+                            url: e.target.value,
+                        });
+                    }}
+                />
+                <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
+                <input
+                    type="text"
+                    id={`edit-link${(link.pos).toString()}-text`}
+                    name="edit-link-text" // TODO: CONST!!
+                    placeholder="Link text"
+                    className={styles["input"]}
+                    value={link.text}
+                    required
+                    onChange={e => {
+                        onChange({
+                            ...link,
+                            text: e.target.value,
+                        });
+                    }}
+                />
+
 
                 {
                     isEditing &&
@@ -61,19 +61,9 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                         title="Delete link"
                         //aria-label="Delete comment" // TODO: accessibility update
                         //role="button"
-                        style={{
-                            width: `${BTN_SIZE}px`,
-                            height: `${BTN_SIZE}px`,
-                            position: 'relative',
-                        }}
+                        className={styles["btn__red"]}
                     >
-                        <Image
-                            src="/trash-2.svg"
-                            alt="Delete link"
-                            sizes={BTN_SIZE}
-                            fill
-                            style={{ objectFit: 'contain' }} // optional
-                        />
+                        X
                     </button>
                 }
 
@@ -95,23 +85,9 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
     }
     return (
         <>
-            <li style={{ listStyle: 'none' }}>
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: '4px'
-                }}>
-                    <Image
-                        src="/link.svg"
-                        alt="Link icon"
-                        width={ICON_SIZE}
-                        height={ICON_SIZE}
-                        style={{ width: 'auto', height: 'auto' }}
-                    />
-                    <p>{link.pos}</p>
-                    {linkContent}
-                </div>
+            <li className={styles["link__li"]}>
+                <p>{link.pos}</p>
+                {linkContent}
             </li>
         </>
     );
@@ -144,7 +120,7 @@ function ProfileLinks({ userId, isMe, db }) {
     };
 
     const handleAddLink = () => {
-        console.log(`draftPos: ${draftPos}`)
+        // console.log(`draftPos: ${draftPos}`)
         if (draftPos <= 3) { // btn disabled once pos reaches 4, but this is a failsafe
             setDraftLinks([...draftLinks, {
                 pos: draftPos,
@@ -181,8 +157,8 @@ function ProfileLinks({ userId, isMe, db }) {
 
         const form = e.target;
         const formData = new FormData(form);
-        console.log(`before: ${JSON.stringify(links, null, 2)}`);
-        console.log(`formData:`);
+        // console.log(`before: ${JSON.stringify(links, null, 2)}`);
+        // console.log(`formData:`);
         const fieldRegex = new RegExp('^(.+?)-');
         const idRegex = new RegExp('\-(.*)');
         let newLinks = [];
@@ -192,15 +168,15 @@ function ProfileLinks({ userId, isMe, db }) {
         for (let entry of formData.entries()) {
             let fieldName = entry[0];
             let fieldValue = entry[1];
-            console.log(`entry: ${entry}`);
+            // console.log(`entry: ${entry}`);
             if (fieldName === 'edit-link-url') {
                 newLink['pos'] = pos;
                 newLink['url'] = fieldValue;
             } else if (fieldName === 'edit-link-text') {
                 newLink['text'] = fieldValue;
-                console.log(`newLink: ${JSON.stringify(newLink)}`);
+                // console.log(`newLink: ${JSON.stringify(newLink)}`);
                 newLinks.push(newLink);
-                console.log(`newLinks: ${newLinks}`);
+                // console.log(`newLinks: ${newLinks}`);
                 newLink = {};
                 pos++;
             }
@@ -212,7 +188,7 @@ function ProfileLinks({ userId, isMe, db }) {
         });
         const resJson = await res.json()
         if (!res.ok) {
-            console.log("changes could not be saved. tough.")
+            // console.log("changes could not be saved. tough.")
         } else {
             setIsEditing(false);
             setLinks([...newLinks]);
@@ -231,50 +207,58 @@ function ProfileLinks({ userId, isMe, db }) {
     if (isEditing && isMe) {
         linksContent = (
             <>
-                <form onSubmit={handleSaveChanges}>
-                    {draftLinks.map((l, idx) =>
-                        <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} onDelete={handleDeleteLink} onChange={handleChangeLink} />
-                    )}
+                <form onSubmit={handleSaveChanges} className={styles["form"]}>
+                    <ol className={styles["links"]}>
+                        {draftLinks.map((l, idx) =>
+                            <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} onDelete={handleDeleteLink} onChange={handleChangeLink} />
+                        )}
+                    </ol>
                     <button
-                        type="submit"
-                        // TODO: disable save if no new information (is this worth the)
-                        // TODO: possible performance hit?)
-                        disabled={JSON.stringify(draftLinks) === JSON.stringify(links)}
+                        type="button"
+                        className={styles["btn"]}
+                        onClick={handleAddLink}
+                        disabled={draftLinks.length >= 3}
                     >
-                        Save changes
+                        Add link
                     </button>
+                    <div className={styles["form__btns"]}>
+                        <button type="button" className={styles["btn"]} onClick={() => setIsEditing(false)}>
+                            Cancel
+                        </button>
+                        <button
+                            className={styles["btn__save-links"]}
+                            type="submit"
+                            // TODO: disable save if no new information (is this worth the)
+                            // TODO: possible performance hit?)
+                            disabled={JSON.stringify(draftLinks) === JSON.stringify(links)}
+                        >
+                            Save changes
+                        </button>
+                    </div>
                 </form>
-                <button
-                    type="button"
-                    onClick={handleAddLink}
-                    disabled={draftLinks.length >= 3}
-                >
-                    Add link
-                </button>
-                <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
                 <p>{status}</p>
-                <p>draftLinks debug: {JSON.stringify(draftLinks)}</p>
+                {/* <p>draftLinks debug: {JSON.stringify(draftLinks)}</p> */}
             </>
         );
     } else if (!isEditing && isMe) {
         linksContent = (
             <>
-                <ul style={{ padding: '0' }}>
+                <ol className={styles["links"]}>
                     {links.map((l) =>
                         <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} />
                     )}
-                </ul>
-                <button type="button" onClick={handleStartEdit}>
+                </ol>
+                <button className={styles["btn"]} type="button" onClick={handleStartEdit}>
                     Edit links
                 </button>
-                <p>links debug: {JSON.stringify(links)}</p>
+                {/* <p>links debug: {JSON.stringify(links)}</p> */}
             </>
         );
     } else {
         linksContent = (
             <>
-                <p>this not u just sayin lol</p>
-                <ul style={{ padding: '0' }}>
+                {/* <p>this not u just sayin lol</p> */}
+                <ul className={styles["links"]}>
                     {links.map((l) =>
                         <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} />
                     )}
@@ -285,8 +269,8 @@ function ProfileLinks({ userId, isMe, db }) {
 
     return (
         <>
-            <section>
-                <h3>Links</h3>
+            <section className={styles["links__section"]}>
+                <h3 className={styles["links__heading"]}>Links</h3>
                 {linksContent}
             </section>
         </>
@@ -317,6 +301,11 @@ export default function Profile({ userId, handleClose }) {
         // console.log('logout lol');
     };
 
+    // const handleCloseTest = () => {
+    //     handleClose();
+    //     console.log("clicked; closing");
+    // }
+
     const handleAddRestrict = async (urID, action) => {
         if (!user) {
             console.log('You must be logged in to perform this action.')
@@ -332,29 +321,41 @@ export default function Profile({ userId, handleClose }) {
         const resJson = await res.json();
 
         if (!res.ok) {
-            console.log(`${action} failed`)
+            // console.log(`${action} failed`)
         } else {
-            console.log(`${resJson.message}`)
+            // console.log(`${resJson.message}`)
         }
     };
 
     return (
-        <>
-            <p>{userId} {isMe && '(you)'}</p>
+        <div className={styles["profile"]}>
+            {isMe &&
+                <div onClick={handleClose} className={styles["fitcontent"]}>
+                    <FancyLink
+                        href="/settings"
+                        text="Settings"
+                        btnRight={false} white
+
+                    />
+                </div>
+            }
+            <p className={styles["user-id"]}>{userId} {isMe && '(you)'}</p>
             <ProfileLinks userId={userId} isMe={isMe} db={supabase} />
+            <hr className={styles["divider"]} />
             {!isMe && (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <button onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
-                    <button onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
-                    <Report contentType={'profile'} contentId={userId} />
+                <div className={styles["profile__btns"]}>
+                    <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
+                    <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
+                    <Report contentType={'profile'} contentId={userId} large />
                 </div>
             )}
             {isMe &&
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Link href="/settings" onClick={handleClose}>Settings</Link>
-                    <button onClick={logout}>Logout</button>
+                <div className={styles["profile__btns"]}>
+                    <button onClick={logout} className={styles["btn__red"]}>
+                        Logout
+                    </button>
                 </div>
             }
-        </>
+        </div>
     );
 }

@@ -18,9 +18,9 @@ export default function Footer() {
             </div>
             <div className={styles["links"]}>
                 <a href="mailto:info@4nderground.com" className={styles["footer-link"]}>Contact Us</a>
-                <Link href="/rules" className={styles["footer-link"]}>Rules</Link>
-                <Link href="/legal" className={styles["footer-link"]}>Legal</Link>
-                <Link href="/privacy" className={styles["footer-link"]}>Privacy</Link>
+                <Link prefetch={false} href="/rules" className={styles["footer-link"]}>Rules</Link>
+                <Link prefetch={false} href="/legal" className={styles["footer-link"]}>Legal</Link>
+                <Link prefetch={false} href="/privacy" className={styles["footer-link"]}>Privacy</Link>
             </div>
         </footer>
     );

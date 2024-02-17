@@ -104,7 +104,9 @@ export default function AccessForm({
                 console.log(`received user: ${resJson.user}`)
                 router.push('/player');
             }
-
+        } else if (!res.ok && resJson.action === 'register') {
+            setStatusText(
+                <span style={{ color: 'red' }}>Registration temporarily disabled while our email services are awaiting approval :( If you&apos;re as disappointed as we are, <a href="mailto:info@4nderground.com">tell us about it</a>!!</span>);
         }
 
     }

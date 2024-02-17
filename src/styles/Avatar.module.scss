@@ -1,3 +1,37 @@
+.dialog {
+    margin: 25vh auto;
+    padding: 0;
+    background-color: rgb(155 155 155 / 90%);
+    color: white;
+    width: max(30em, 33vw);
+    border-radius: 5%;
+    border-style: groove;
+    border-color: #a5a5a5;
+
+    &::backdrop {
+        background: rgb(0 0 0 / 50%);
+    }
+
+    &__close {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        background-color: transparent;
+        border-style: none;
+        padding: 0.25rem;
+        margin: 2px;
+        font-size: 1em;
+        color: white;
+    }
+
+    &__inner {
+        // width: 100%; PROBLEM
+        // height: 100%; PROBLEM
+        padding: 0.5rem;
+        // background-color: rgb(0 0 0 / 50%);
+    }
+}
+
 .aviicon {
     border: 2px outset;
     flex-shrink: 0;

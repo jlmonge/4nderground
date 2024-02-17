@@ -20,31 +20,22 @@ export default function Avatar({ userId, size = "large" }) {
 
     return userId ? (
         <>
-            <dialog ref={dialogRef} style={{
-                backgroundColor: 'black',
-                color: 'white',
-                height: '512px',
-                width: '90vw',
-            }}>
-                <button
-                    id="close"
-                    onClick={handleClose}
-                    type="button"
-                    style={{
-                        position: 'absolute',
-                        top: '0',
-                        right: '0',
-                        backgroundColor: 'transparent',
-                        borderStyle: 'none',
-                        padding: '0',
-                        margin: '2px',
-                        fontSize: '16px',
-                        color: 'white',
-                    }}
-                >
-                    X
-                </button>
-                <Profile userId={userId} handleClose={handleClose} />
+            <dialog
+                ref={dialogRef}
+                className={styles["dialog"]}
+                onClick={handleClose}
+            >
+                <div className={styles["dialog__inner"]} onClick={e => e.stopPropagation()}>
+                    <button
+                        id="close"
+                        onClick={handleClose}
+                        type="button"
+                        className={styles["dialog__close"]}
+                    >
+                        X
+                    </button>
+                    <Profile userId={userId} handleClose={handleClose} />
+                </div>
             </dialog>
             <div
                 className={`${styles["aviicon"]} ${size === "small" ? styles["aviicon-small"] : styles["aviicon-big"]}`}
