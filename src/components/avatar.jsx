@@ -27,17 +27,7 @@ export default function Avatar({ userId, size = "large" }) {
                     id="close"
                     onClick={handleClose}
                     type="button"
-                    style={{
-                        position: 'absolute',
-                        top: '0',
-                        right: '0',
-                        backgroundColor: 'transparent',
-                        borderStyle: 'none',
-                        padding: '0',
-                        margin: '2px',
-                        fontSize: '16px',
-                        color: 'white',
-                    }}
+                    className={styles["dialog__close"]}
                 >
                     X
                 </button>

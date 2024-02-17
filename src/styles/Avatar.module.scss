@@ -1,13 +1,26 @@
 .dialog {
-    background-color: rgb(110 110 110 / 90%);
+    margin: 25vh auto;
+    background-color: rgb(155 155 155 / 90%);
     color: white;
-    width: max(20em, 33vw);
+    width: max(30em, 33vw);
     border-radius: 5%;
     border-style: groove;
     border-color: #a5a5a5;
 
     &::backdrop {
         background: rgb(0 0 0 / 50%);
+    }
+
+    &__close {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        background-color: transparent;
+        border-style: none;
+        padding: 0;
+        margin: 2px;
+        font-size: 1.5em;
+        color: white;
     }
 }
 

@@ -19,40 +19,39 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
     if (isEditing) {
         linkContent = (
             <>
-                <label>
-                    <input
-                        type="text"
-                        //id={`edit-link-url-${(link.pos).toString()}`} 
-                        name="edit-link-url"
-                        placeholder="Link URL"
-                        className="link-input"
-                        required
-                        value={link.url}
-                        onChange={e => {
-                            onChange({
-                                ...link,
-                                url: e.target.value,
-                            });
-                        }}
-                    />
-                </label>
-                <label>
-                    <input
-                        type="text"
-                        //id={`edit-link-text-${(link.pos).toString()}`}
-                        name="edit-link-text" // TODO: CONST!!
-                        placeholder="Link text"
-                        className="link-input"
-                        value={link.text}
-                        required
-                        onChange={e => {
-                            onChange({
-                                ...link,
-                                text: e.target.value,
-                            });
-                        }}
-                    />
-                </label>
+                <label htmlFor={`edit-link${(link.pos).toString()}-url`} className={styles["visually-hidden"]}>Edit link text</label>
+                <input
+                    type="text"
+                    id={`edit-link${(link.pos).toString()}-url`}
+                    name="edit-link-url"
+                    placeholder="Link URL"
+                    className={styles["input"]}
+                    required
+                    value={link.url}
+                    onChange={e => {
+                        onChange({
+                            ...link,
+                            url: e.target.value,
+                        });
+                    }}
+                />
+                <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
+                <input
+                    type="text"
+                    id={`edit-link${(link.pos).toString()}-text`}
+                    name="edit-link-text" // TODO: CONST!!
+                    placeholder="Link text"
+                    className={styles["input"]}
+                    value={link.text}
+                    required
+                    onChange={e => {
+                        onChange({
+                            ...link,
+                            text: e.target.value,
+                        });
+                    }}
+                />
+
 
                 {
                     isEditing &&
@@ -62,19 +61,9 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                         title="Delete link"
                         //aria-label="Delete comment" // TODO: accessibility update
                         //role="button"
-                        style={{
-                            width: `${BTN_SIZE}px`,
-                            height: `${BTN_SIZE}px`,
-                            position: 'relative',
-                        }}
+                        className={styles["btn__red"]}
                     >
-                        <Image
-                            src="/trash-2.svg"
-                            alt="Delete link"
-                            sizes={BTN_SIZE}
-                            fill
-                            style={{ objectFit: 'contain' }} // optional
-                        />
+                        X
                     </button>
                 }
 
@@ -96,23 +85,9 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
     }
     return (
         <>
-            <li style={{ listStyle: 'none' }}>
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: '4px'
-                }}>
-                    <Image
-                        src="/link.svg"
-                        alt="Link icon"
-                        width={ICON_SIZE}
-                        height={ICON_SIZE}
-                        style={{ width: 'auto', height: 'auto' }}
-                    />
-                    <p>{link.pos}</p>
-                    {linkContent}
-                </div>
+            <li className={styles["link__li"]}>
+                <p>{link.pos}</p>
+                {linkContent}
             </li>
         </>
     );
@@ -232,31 +207,35 @@ function ProfileLinks({ userId, isMe, db }) {
     if (isEditing && isMe) {
         linksContent = (
             <>
-                <form onSubmit={handleSaveChanges}>
-                    {draftLinks.map((l, idx) =>
-                        <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} onDelete={handleDeleteLink} onChange={handleChangeLink} />
-                    )}
+                <form onSubmit={handleSaveChanges} className={styles["form"]}>
+                    <ol className={styles["links"]}>
+                        {draftLinks.map((l, idx) =>
+                            <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} onDelete={handleDeleteLink} onChange={handleChangeLink} />
+                        )}
+                    </ol>
                     <button
+                        type="button"
                         className={styles["btn"]}
-                        type="submit"
-                        // TODO: disable save if no new information (is this worth the)
-                        // TODO: possible performance hit?)
-                        disabled={JSON.stringify(draftLinks) === JSON.stringify(links)}
+                        onClick={handleAddLink}
+                        disabled={draftLinks.length >= 3}
                     >
-                        Save changes
+                        Add link
                     </button>
+                    <div className={styles["form__btns"]}>
+                        <button type="button" className={styles["btn"]} onClick={() => setIsEditing(false)}>
+                            Cancel
+                        </button>
+                        <button
+                            className={styles["btn__save-links"]}
+                            type="submit"
+                            // TODO: disable save if no new information (is this worth the)
+                            // TODO: possible performance hit?)
+                            disabled={JSON.stringify(draftLinks) === JSON.stringify(links)}
+                        >
+                            Save changes
+                        </button>
+                    </div>
                 </form>
-                <button
-                    type="button"
-                    className={styles["btn"]}
-                    onClick={handleAddLink}
-                    disabled={draftLinks.length >= 3}
-                >
-                    Add link
-                </button>
-                <button type="button" className={styles["btn"]} onClick={() => setIsEditing(false)}>
-                    Cancel
-                </button>
                 <p>{status}</p>
                 {/* <p>draftLinks debug: {JSON.stringify(draftLinks)}</p> */}
             </>
@@ -264,11 +243,11 @@ function ProfileLinks({ userId, isMe, db }) {
     } else if (!isEditing && isMe) {
         linksContent = (
             <>
-                <ul className={styles["links"]}>
+                <ol className={styles["links"]}>
                     {links.map((l) =>
                         <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} />
                     )}
-                </ul>
+                </ol>
                 <button className={styles["btn"]} type="button" onClick={handleStartEdit}>
                     Edit links
                 </button>
@@ -278,7 +257,7 @@ function ProfileLinks({ userId, isMe, db }) {
     } else {
         linksContent = (
             <>
-                <p>this not u just sayin lol</p>
+                {/* <p>this not u just sayin lol</p> */}
                 <ul className={styles["links"]}>
                     {links.map((l) =>
                         <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} />
@@ -290,7 +269,7 @@ function ProfileLinks({ userId, isMe, db }) {
 
     return (
         <>
-            <section>
+            <section className={styles["links__section"]}>
                 <h3 className={styles["links__heading"]}>Links</h3>
                 {linksContent}
             </section>
@@ -345,15 +324,16 @@ export default function Profile({ userId, handleClose }) {
 
     return (
         <div className={styles["profile"]}>
-            <FancyLink href="/settings" text="Settings" btnRight={false} white
+            {isMe && <FancyLink href="/settings" text="Settings" btnRight={false} white
                 onClick={handleClose}
-            />
+            />}
             <p className={styles["user-id"]}>{userId} {isMe && '(you)'}</p>
             <ProfileLinks userId={userId} isMe={isMe} db={supabase} />
+            <hr className={styles["divider"]} />
             {!isMe && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <button className={styles["btn__red"]} onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
-                    <button className={styles["btn__red"]} onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
+                    <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
+                    <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
                     <Report contentType={'profile'} contentId={userId} />
                 </div>
             )}

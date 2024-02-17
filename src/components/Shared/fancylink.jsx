@@ -8,7 +8,7 @@ export default function FancyLink({ href, text, btnRight = true, white = false }
     );
     let right = (
         <>
-            <button type="button" className={white ? styles["fl-btn--white"] : styles["fl-btn"]}>
+            <button tabIndex={-1} type="button" className={white ? styles["fl-btn--white"] : styles["fl-btn"]}>
                 {btnText}
             </button>
         </>
