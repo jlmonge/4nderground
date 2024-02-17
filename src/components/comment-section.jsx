@@ -7,7 +7,6 @@ import { useContext, useEffect, useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserContext } from '../user-provider';
 import styles from '../styles/Comments.module.scss';
-import Image from 'next/image';
 
 /*
 DISPLAY WISE: A comment consists of:

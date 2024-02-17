@@ -1,11 +1,9 @@
 'use client';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { varLog } from '../utils/helpers';
-import Link from 'next/link';
 import { UserContext } from '../user-provider';
 import Report from './report';
 import styles from '../styles/Profile.module.scss';

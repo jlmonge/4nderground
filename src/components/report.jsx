@@ -1,7 +1,6 @@
 'use client';
 
 import { Fragment, useState, useRef, useContext } from 'react';
-import Image from 'next/image';
 import { UserContext } from '../user-provider';
 import styles from '../styles/Report.module.scss';
 import Tooltip from './Shared/tooltip';
