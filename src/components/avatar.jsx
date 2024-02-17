@@ -20,18 +20,22 @@ export default function Avatar({ userId, size = "large" }) {
 
     return userId ? (
         <>
-            <dialog ref={dialogRef}
+            <dialog
+                ref={dialogRef}
                 className={styles["dialog"]}
+                onClick={handleClose}
             >
-                <button
-                    id="close"
-                    onClick={handleClose}
-                    type="button"
-                    className={styles["dialog__close"]}
-                >
-                    X
-                </button>
-                <Profile userId={userId} handleClose={handleClose} />
+                <div className={styles["dialog__inner"]} onClick={e => e.stopPropagation()}>
+                    <button
+                        id="close"
+                        onClick={handleClose}
+                        type="button"
+                        className={styles["dialog__close"]}
+                    >
+                        X
+                    </button>
+                    <Profile userId={userId} handleClose={handleClose} />
+                </div>
             </dialog>
             <div
                 className={`${styles["aviicon"]} ${size === "small" ? styles["aviicon-small"] : styles["aviicon-big"]}`}

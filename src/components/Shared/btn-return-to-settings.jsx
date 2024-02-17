@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function ReturnToSettingsButton() {
     return (
         <>
-            <Link href="/settings">Back</Link>
+            <Link prefetch={false} href="/settings">Back</Link>
         </>
     );
 }

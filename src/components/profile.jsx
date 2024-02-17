@@ -301,6 +301,11 @@ export default function Profile({ userId, handleClose }) {
         // console.log('logout lol');
     };
 
+    // const handleCloseTest = () => {
+    //     handleClose();
+    //     console.log("clicked; closing");
+    // }
+
     const handleAddRestrict = async (urID, action) => {
         if (!user) {
             console.log('You must be logged in to perform this action.')
@@ -324,21 +329,28 @@ export default function Profile({ userId, handleClose }) {
 
     return (
         <div className={styles["profile"]}>
-            {isMe && <FancyLink href="/settings" text="Settings" btnRight={false} white
-                onClick={handleClose}
-            />}
+            {isMe &&
+                <div onClick={handleClose} className={styles["fitcontent"]}>
+                    <FancyLink
+                        href="/settings"
+                        text="Settings"
+                        btnRight={false} white
+
+                    />
+                </div>
+            }
             <p className={styles["user-id"]}>{userId} {isMe && '(you)'}</p>
             <ProfileLinks userId={userId} isMe={isMe} db={supabase} />
             <hr className={styles["divider"]} />
             {!isMe && (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className={styles["profile__btns"]}>
                     <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
                     <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
-                    <Report contentType={'profile'} contentId={userId} />
+                    <Report contentType={'profile'} contentId={userId} large />
                 </div>
             )}
             {isMe &&
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className={styles["profile__btns"]}>
                     <button onClick={logout} className={styles["btn__red"]}>
                         Logout
                     </button>

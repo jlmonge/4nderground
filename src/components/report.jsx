@@ -53,7 +53,7 @@ const REPORT_REASONS = [{
 
 // TODO: notice how aretracks is unnecesary; just check if contentid is valid
 // TODO: when checking if report btn is clickable.
-export default function Report({ contentType, contentId = null }) {
+export default function Report({ contentType, contentId = null, large = false }) {
     const dialogRef = useRef(null);
     const [reason, setReason] = useState('');
     const [isReported, setIsReported] = useState(false);
@@ -148,7 +148,13 @@ export default function Report({ contentType, contentId = null }) {
                     </form>
                 </dialog>
             )}
-            <button className={styles["opendialog-btn"]} data="Report" onClick={contentId ? handleOpen : undefined} type="button" disabled={!contentId}>
+            <button
+                className={styles["opendialog-btn"]}
+                style={large ? { fontSize: '1em' } : {}}
+                data="Report"
+                onClick={contentId ? handleOpen : undefined}
+                type="button" disabled={!contentId}
+            >
                 Report
             </button>
         </>
