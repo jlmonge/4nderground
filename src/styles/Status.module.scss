@@ -1,0 +1,42 @@
+.status {
+    min-height: 1.2em;
+    color: #6e6e6e;
+
+    &__loading {
+        animation: slow-stretch ease-in-out 2s infinite alternate;
+        transform-origin: left;
+        text-align: left;
+    }
+
+    &__response {
+        animation: attention ease-in-out 0.5s;
+        animation-iteration-count: 1;
+        transform-origin: left;
+        text-align: left;
+    }
+
+    &__error {
+        color: red;
+    }
+
+}
+
+@keyframes slow-stretch {
+    from {
+        transform: scaleX(1);
+    }
+
+    to {
+        transform: scaleX(1.5);
+    }
+}
+
+@keyframes attention {
+    from {
+        transform: scaleX(1.5);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+}
