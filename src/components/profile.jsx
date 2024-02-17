@@ -120,7 +120,7 @@ function ProfileLinks({ userId, isMe, db }) {
     };
 
     const handleAddLink = () => {
-        console.log(`draftPos: ${draftPos}`)
+        // console.log(`draftPos: ${draftPos}`)
         if (draftPos <= 3) { // btn disabled once pos reaches 4, but this is a failsafe
             setDraftLinks([...draftLinks, {
                 pos: draftPos,
@@ -157,8 +157,8 @@ function ProfileLinks({ userId, isMe, db }) {
 
         const form = e.target;
         const formData = new FormData(form);
-        console.log(`before: ${JSON.stringify(links, null, 2)}`);
-        console.log(`formData:`);
+        // console.log(`before: ${JSON.stringify(links, null, 2)}`);
+        // console.log(`formData:`);
         const fieldRegex = new RegExp('^(.+?)-');
         const idRegex = new RegExp('\-(.*)');
         let newLinks = [];
@@ -168,15 +168,15 @@ function ProfileLinks({ userId, isMe, db }) {
         for (let entry of formData.entries()) {
             let fieldName = entry[0];
             let fieldValue = entry[1];
-            console.log(`entry: ${entry}`);
+            // console.log(`entry: ${entry}`);
             if (fieldName === 'edit-link-url') {
                 newLink['pos'] = pos;
                 newLink['url'] = fieldValue;
             } else if (fieldName === 'edit-link-text') {
                 newLink['text'] = fieldValue;
-                console.log(`newLink: ${JSON.stringify(newLink)}`);
+                // console.log(`newLink: ${JSON.stringify(newLink)}`);
                 newLinks.push(newLink);
-                console.log(`newLinks: ${newLinks}`);
+                // console.log(`newLinks: ${newLinks}`);
                 newLink = {};
                 pos++;
             }
@@ -188,7 +188,7 @@ function ProfileLinks({ userId, isMe, db }) {
         });
         const resJson = await res.json()
         if (!res.ok) {
-            console.log("changes could not be saved. tough.")
+            // console.log("changes could not be saved. tough.")
         } else {
             setIsEditing(false);
             setLinks([...newLinks]);
@@ -321,9 +321,9 @@ export default function Profile({ userId, handleClose }) {
         const resJson = await res.json();
 
         if (!res.ok) {
-            console.log(`${action} failed`)
+            // console.log(`${action} failed`)
         } else {
-            console.log(`${resJson.message}`)
+            // console.log(`${resJson.message}`)
         }
     };
 
