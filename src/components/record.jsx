@@ -1,6 +1,5 @@
 'use client';
 
-// import Image from 'next/image';
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { REC_REQS, GENRES, MAX_DURATION } from '../utils/constants';
 import { uploadFileHelper } from '../app/service/uploadFileHelper';
