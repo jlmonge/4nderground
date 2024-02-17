@@ -98,8 +98,8 @@ function ProfileLinks({ userId, isMe, db }) {
     const [draftPos, setDraftPos] = useState(1);
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
     const [response, setResponse] = useState('');
+    const [isError, setIsError] = useState(false);
 
 
     useEffect(() => {
@@ -158,8 +158,8 @@ function ProfileLinks({ userId, isMe, db }) {
         e.preventDefault();
 
         setLoading(true);
-        setIsError(false);
         setResponse('');
+        setIsError(false);
 
         try {
             const form = e.target;
@@ -294,14 +294,15 @@ function Logout({ handleClose }) {
     const { setUser } = useContext(UserContext);
     const router = useRouter(); // next/navigation
     const [loading, setLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
     const [response, setResponse] = useState('');
+    const [isError, setIsError] = useState(false);
 
 
     const logout = async () => {
         setLoading(true);
-        setIsError(false);
         setResponse('');
+        setIsError(false);
+
         try {
             const res = await fetch(`/auth/logout`, {
                 method: 'POST',
@@ -339,6 +340,9 @@ export default function Profile({ userId, handleClose }) {
     const [isMe, setIsMe] = useState(false);
     const supabase = createClientComponentClient();
     const { user } = useContext(UserContext);
+    const [loading, setLoading] = useState(false);
+    const [response, setResponse] = useState('');
+    const [isError, setIsError] = useState(false);
 
     useEffect(() => {
         setIsMe(user?.id === userId);
@@ -357,20 +361,35 @@ export default function Profile({ userId, handleClose }) {
             console.log('You must be logged in to perform this action.')
             return;
         }
-        const data = new FormData();
-        data.append('myID', user.id);
-        data.append('urID', urID);
-        const res = await fetch(`/api/${action}/add`, {
-            method: 'POST',
-            body: data
-        });
-        const resJson = await res.json();
+        setLoading(true);
+        setResponse('');
+        setIsError(false);
 
-        if (!res.ok) {
-            // console.log(`${action} failed`)
-        } else {
-            // console.log(`${resJson.message}`)
+        try {
+            const data = new FormData();
+            data.append('myID', user.id);
+            data.append('urID', urID);
+            const res = await fetch(`/api/${action}/add`, {
+                method: 'POST',
+                body: data
+            });
+            const resJson = await res.json();
+            setResponse(resJson.message);
+
+            if (!res.ok) {
+                // console.log(`${action} failed`)
+                setIsError(true);
+            } else {
+                // console.log(`${resJson.message}`)
+            }
+        } catch (e) {
+            console.log(e);
+            setResponse('Something bad happened.');
+            setIsError(true);
+        } finally {
+            setLoading(false);
         }
+
     };
 
     return (
@@ -396,6 +415,7 @@ export default function Profile({ userId, handleClose }) {
                         <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
                         <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
                         <Report contentType={'profile'} contentId={userId} large />
+                        <Status loading={loading} response={response} isError={isError} />
                     </>
                 }
             </div>
