@@ -64,13 +64,13 @@ export default function Report({ contentType, contentId = null, large = false })
         if (!reason) return; // pls error
         if (!user) return; // pls error
 
-        try {
-            const data = new FormData();
-            data.append('reportedid', contentId)
-            data.append('reporterid', user.id)
-            data.append('reason', reason);
-            data.append('type', contentType);
+        const data = new FormData();
+        data.append('reportedid', contentId)
+        data.append('reporterid', user.id)
+        data.append('reason', reason);
+        data.append('type', contentType);
 
+        try {
             const res = await fetch('/api/report/add', {
                 method: 'POST',
                 body: data,

@@ -1,10 +1,10 @@
 import styles from '../../styles/Status.module.scss';
 
-export default function Status({ isLoading, response, isError }) {
+export default function Status({ loading, response, isError }) {
     let content;
 
     // loading and response use different animations
-    if (isLoading) {
+    if (loading) {
         content = <p className={styles["status__loading"]}>Doing as you say...</p>
     } else if (response) {
         content = (
@@ -18,7 +18,7 @@ export default function Status({ isLoading, response, isError }) {
     return (
         <div className={styles["status"]}>
             {content}
-            {/* isLoading: {String(isLoading)}, response: {response}, isError: {String(isError)} */}
+            {/* loading: {String(loading)}, response: {response}, isError: {String(isError)} */}
         </div>
     )
 }

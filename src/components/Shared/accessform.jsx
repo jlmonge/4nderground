@@ -75,15 +75,15 @@ export default function AccessForm({
     const router = useRouter();
     const { user, setUser } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
-    const [statusError, setStatusError] = useState(false);
-    const [statusText, setStatusText] = useState('');
+    const [isError, setIsError] = useState(false);
+    const [response, setResponse] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         setLoading(true);
-        setStatusError(false);
-        setStatusText('')
+        setIsError(false);
+        setResponse('');
 
         try {
             const data = new FormData(e.target);
@@ -96,7 +96,7 @@ export default function AccessForm({
             })
 
             const resJson = await res.json();
-            setStatusText(resJson.message);
+            setResponse(resJson.message);
 
             if (res.ok) {
                 console.log("GOOD RESPONSE");
@@ -108,10 +108,10 @@ export default function AccessForm({
                     router.push('/player');
                 }
             } else {
-                setStatusError(true);
+                setIsError(true);
                 // remove below once ses stops shitting on us
                 if (resJson.action === 'register') {
-                    setStatusText(
+                    setResponse(
                         <span>Registration temporarily disabled while our email services are awaiting approval :( If you&apos;re as disappointed as we are, <a href="mailto:info@4nderground.com">tell us about it</a>!!</span>
                     );
                 }
@@ -119,8 +119,8 @@ export default function AccessForm({
             }
         } catch (e) {
             console.log(e);
-            setStatusError(true);
-            setStatusText('Something bad happened.')
+            setIsError(true);
+            setResponse('Something bad happened.')
         } finally {
             setLoading(false);
         }
@@ -138,7 +138,7 @@ export default function AccessForm({
                     &gt;&gt;
                 </button>
             </form>
-            <Status isLoading={loading} response={statusText} isError={statusError} />
+            <Status loading={loading} response={response} isError={isError} />
         </div>
     );
 }

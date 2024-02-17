@@ -47,10 +47,10 @@ export async function POST(req) {
     if (error) {
         console.log(`error: ${error}`)
         return NextResponse.json({
-            message: 'Failed to save your changes to the database'
+            message: 'Failed to save your changes to the database.'
         }, { status: 400 });
     }
     return NextResponse.json({
-        message: 'Saved your changes'
+        message: 'Changes saved.'
     }, { status: 200 });
 }
