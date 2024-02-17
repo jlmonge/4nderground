@@ -194,13 +194,13 @@ function ProfileLinks({ userId, isMe, db }) {
                 body: JSON.stringify({ oldLinks: links, newLinks, userId }),
             });
             const resJson = await res.json()
+            setResponse(resJson.message)
             if (!res.ok) {
                 setIsError(true);
             } else {
                 setIsEditing(false);
                 setLinks([...newLinks]);
             }
-            setResponse(resJson.message)
         } catch (e) {
             console.log(e);
             setIsError(true);
@@ -293,21 +293,45 @@ function ProfileLinks({ userId, isMe, db }) {
 function Logout({ handleClose }) {
     const { setUser } = useContext(UserContext);
     const router = useRouter(); // next/navigation
+    const [loading, setLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [response, setResponse] = useState('');
+
 
     const logout = async () => {
-        await fetch(`/auth/logout`, {
-            method: 'POST',
-        });
-        setUser(null);
-        handleClose();
-        router.refresh();
-        // console.log('logout lol');
+        setLoading(true);
+        setIsError(false);
+        setResponse('');
+        try {
+            const res = await fetch(`/auth/logout`, {
+                method: 'POST',
+            });
+            const resJson = await res.json()
+
+            setResponse(resJson.message)
+            if (!res.ok) {
+                setIsError(true);
+            } else {
+                setUser(null);
+                handleClose();
+                router.refresh();
+            }
+        } catch (e) {
+            console.log(e);
+            setIsError(true);
+            setResponse('Something bad happened.')
+        } finally {
+            setLoading(false);
+        }
+
     };
 
     return (
-        <button onClick={logout} className={styles["btn__red"]}>
-            Logout
-        </button>
+        <>
+            <button onClick={logout} className={styles["btn__red"]}>Logout</button>
+            <Status loading={loading} response={response} isError={isError} />
+        </>
+
     )
 }
 

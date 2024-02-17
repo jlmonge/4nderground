@@ -9,9 +9,14 @@ export async function POST(request) {
 
     const { error } = await supabase.auth.signOut();
 
-    console.log(error);
+    if (error) {
+        console.log(`error: ${error}`)
+        return NextResponse.json({
+            message: 'Failed to log out.'
+        }, { status: 400 });
+    }
 
-    return NextResponse.redirect(`${requestUrl.origin}`, {
-        status: 301,
-    });
+    return NextResponse.json({
+        message: 'Logged out.'
+    }, { status: 200 });
 }
