@@ -3,6 +3,10 @@ import styles from '../styles/Textpage.module.scss';
 import Image from 'next/image';
 import ufo from '../../public/ufo.gif'
 
+export const metadata = {
+    title: 'Page Not Found',
+};
+
 export default function NotFound() {
     return (
         <div className={styles["textpage"]}>
