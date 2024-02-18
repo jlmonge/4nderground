@@ -31,7 +31,7 @@ export async function POST(request) {
     });
 
     if (error) {
-        console.log(`error: ${error}`);
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
         return NextResponse.json({
             message: 'Registration failed.',
             action: 'register',

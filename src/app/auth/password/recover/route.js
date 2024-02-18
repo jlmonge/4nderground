@@ -12,7 +12,7 @@ export async function POST(req) {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email);
     console.log(`sent link, see data: ${JSON.stringify(data)}`);
     if (error) {
-        console.log(`error: ${error}`)
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
         return NextResponse.json({
             message: 'Recovery request failed.',
             action: 'recover'

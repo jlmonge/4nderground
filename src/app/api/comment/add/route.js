@@ -26,7 +26,7 @@ export async function POST(req) {
         .select('id, comment, user_id, posted_at');
 
     if (error || !data[0]) {
-        console.log(`error: ${error}`)
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
         return NextResponse.json({
             message: 'Failed to add your comment.'
         }, { status: 400 });

@@ -88,8 +88,6 @@ export default function Report({ contentType, contentId = null, large = false })
             if (!res.ok) {
                 setIsError(true);
             } else {
-                console.log("report success.");
-                console.log(`${JSON.stringify(resJson.data)}`);
                 setIsReported(true);
             }
         } catch (e) {

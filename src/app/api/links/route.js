@@ -45,7 +45,7 @@ export async function POST(req) {
 
     console.log(`data: ${data}`);
     if (error) {
-        console.log(`error: ${error}`)
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
         return NextResponse.json({
             message: 'Failed to save your changes to the database.'
         }, { status: 400 });

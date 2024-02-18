@@ -10,7 +10,7 @@ export async function POST(request) {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-        console.log(`error: ${error}`)
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
         return NextResponse.json({
             message: 'Failed to log out.'
         }, { status: 400 });
