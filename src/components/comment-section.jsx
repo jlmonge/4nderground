@@ -6,6 +6,7 @@ import Avatar from './avatar';
 import { useContext, useEffect, useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserContext } from '../user-provider';
+import Status from './Shared/status';
 import styles from '../styles/Comments.module.scss';
 
 /*
@@ -25,22 +26,39 @@ DB WISE: A comment consists of:
 const BTN_SIZE = 20;
 
 function Comment({ comment, onDelete, isMyComment, curUserId }) {
+    const [loading, setLoading] = useState(false);
+    const [response, setResponse] = useState('');
+    const [isError, setIsError] = useState(false);
+
     const handleDelete = async () => {
-        const data = new FormData();
-        data.append('commentUserId', comment.user_id);
-        data.append('commentId', comment.id);
+        setLoading(true);
+        setResponse('');
+        setIsError(false);
 
-        const res = await fetch('/api/comment/delete', {
-            method: 'POST',
-            body: data,
-        });
+        try {
+            const data = new FormData();
+            data.append('commentUserId', comment.user_id);
+            data.append('commentId', comment.id);
 
-        if (!res.ok) {
-            console.log("delete failed. dopey.")
-        } else {
-            onDelete(comment.id)
+            const res = await fetch('/api/comment/delete', {
+                method: 'POST',
+                body: data,
+            });
+            const resJson = await res.json();
+            setResponse(resJson.message);
+
+            if (!res.ok) {
+                setIsError(true);
+            } else {
+                onDelete(comment.id);
+            }
+        } catch (e) {
+            console.log(e);
+            setIsError(true);
+            setResponse('Something bad happened');
+        } finally {
+            setLoading(false);
         }
-
     }
 
     let whenPostedText;
@@ -63,16 +81,20 @@ function Comment({ comment, onDelete, isMyComment, curUserId }) {
     let optionsJSX;
     if (isMyComment) {
         optionsJSX = (
-            <button
-                onClick={handleDelete}
-                type="button"
-                title="Delete comment"
-                //aria-label="Delete comment" // TODO: accessibility update
-                //role="button"
-                className={styles["c-delete"]}
-            >
-                Delete
-            </button>
+            <div className={styles["c-delete"]}>
+                <button
+                    onClick={handleDelete}
+                    type="button"
+                    title="Delete comment"
+                    //aria-label="Delete comment" // TODO: accessibility update
+                    //role="button"
+                    className={styles["c-deletebtn"]}
+                >
+                    Delete
+                </button>
+                <Status loading={loading} response={response} isError={isError} />
+            </div>
+
         );
 
     } else if (curUserId) {
@@ -94,31 +116,46 @@ function Comment({ comment, onDelete, isMyComment, curUserId }) {
 
 function AddComment({ onAddComment, trackId }) {
     const [comment, setComment] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [response, setResponse] = useState('');
+    const [isError, setIsError] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = new FormData();
-        data.append('comment', comment);
-        data.append('trackId', trackId);
 
-        const res = await fetch('/api/comment/add', {
-            method: 'POST',
-            body: data,
-        });
-        const resJson = await res.json();
+        setLoading(true);
+        setResponse('');
+        setIsError(false);
 
-        if (!res.ok) {
-            console.log("COMMENT NOT ADDED");
-        } else {
-            onAddComment(resJson.commentObj); // add comment on the client-side
+        try {
+            const data = new FormData();
+            data.append('comment', comment);
+            data.append('trackId', trackId);
+
+            const res = await fetch('/api/comment/add', {
+                method: 'POST',
+                body: data,
+            });
+            const resJson = await res.json();
+            setResponse(resJson.message);
+
+            if (!res.ok) {
+                setIsError(true);
+            } else {
+                onAddComment(resJson.commentObj); // add comment on the client-side
+                setComment('');
+            }
+        } catch (e) {
+            console.log(e);
+            setResponse('Something bad happened');
+            setIsError(true);
+        } finally {
+            setLoading(false);
         }
-
-        setComment('');
-
     };
 
     return (
-        <>
+        <div className={styles["mycomment"]}>
             <form
                 method="POST"
                 onSubmit={handleSubmit}
@@ -138,7 +175,8 @@ function AddComment({ onAddComment, trackId }) {
                     <span className={styles["mcs-text"]}>&gt;&gt;</span>
                 </button>
             </form>
-        </>
+            <Status loading={loading} response={response} isError={isError} />
+        </div>
     );
 }
 
@@ -169,7 +207,7 @@ function CommentList({ comments, onDeleteComment, curUserId }) {
         );
     }
 
-    const debug = () => console.log(JSON.stringify(comments, null, `\t`));
+    // const debug = () => console.log(JSON.stringify(comments, null, `\t`));
 
     return (
         <>
@@ -211,7 +249,7 @@ export default function CommentSection({ trackId }) {
     }, [trackId, supabase]);
 
     const handleAddComment = (commentObj) => {
-        console.log(`NEW COMMENT: ${JSON.stringify(commentObj, null, '\t')}`);
+        // console.log(`NEW COMMENT: ${JSON.stringify(commentObj, null, '\t')}`);
         setComments([
             commentObj,
             ...comments,
@@ -222,7 +260,7 @@ export default function CommentSection({ trackId }) {
         setComments(
             comments.filter(c => c.id !== commentId)
         );
-        console.log(":o bye comment");
+        // console.log(":o bye comment");
     };
 
     if (trackId) {

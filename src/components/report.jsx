@@ -2,8 +2,9 @@
 
 import { Fragment, useState, useRef, useContext } from 'react';
 import { UserContext } from '../user-provider';
-import styles from '../styles/Report.module.scss';
 import Tooltip from './Shared/tooltip';
+import Status from './Shared/status';
+import styles from '../styles/Report.module.scss';
 
 const BTN_SIZE = 16;
 const DIALOG_WIDTH_VW = 90;
@@ -57,36 +58,47 @@ export default function Report({ contentType, contentId = null, large = false })
     const [reason, setReason] = useState('');
     const [isReported, setIsReported] = useState(false);
     const { user, setUser } = useContext(UserContext);
+    const [loading, setLoading] = useState(false);
+    const [response, setResponse] = useState('');
+    const [isError, setIsError] = useState(false);
 
     async function handleSubmit(e) {
         e.preventDefault();
 
-        if (!reason) return; // pls error
-        if (!user) return; // pls error
-
-        const data = new FormData();
-        data.append('reportedid', contentId)
-        data.append('reporterid', user.id)
-        data.append('reason', reason);
-        data.append('type', contentType);
+        setLoading(true);
+        setResponse('');
+        setIsError(false);
 
         try {
+            if (!reason) throw Error('No reason');
+            if (!user) throw Error('No one is logged in');
+            const data = new FormData();
+            data.append('reportedid', contentId);
+            data.append('reporterid', user.id);
+            data.append('reason', reason);
+            data.append('type', contentType);
+
             const res = await fetch('/api/report/add', {
                 method: 'POST',
                 body: data,
             });
             const resJson = await res.json();
+            setResponse(resJson.message);
 
             if (!res.ok) {
-                console.log("report fail.");
+                setIsError(true);
             } else {
                 console.log("report success.");
                 console.log(`${JSON.stringify(resJson.data)}`);
                 setIsReported(true);
             }
-
         } catch (e) {
             console.log(e);
+            setResponse('Something bad happened.');
+            setIsError(true);
+
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -143,7 +155,7 @@ export default function Report({ contentType, contentId = null, large = false })
                             </div>
                         ))}
                         <button type="submit" disabled={!reason || isReported}>Submit</button>
-                        <p>{isReported && 'Your report has been received. Thank you.'}</p>
+                        <Status loading={loading} response={response} isError={isError} />
                     </form>
                 </dialog>
             )}
