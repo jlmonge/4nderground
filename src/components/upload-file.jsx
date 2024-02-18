@@ -1,16 +1,15 @@
 'use client';
 
 import { useContext, useState } from 'react';
-import Link from 'next/link';
 import { uploadFileHelper } from '../app/service/uploadFileHelper';
 import {
     DEBUG, GENRES, FILE_REQS, MAX_SIZE,
     ERR_NO_FILE, ERR_TOO_BIG, ERR_NO_EXT, ERR_TOO_SHORT, ERR_TOO_LONG,
     ERR_NOT_AUDIO, ERR_ARRAY, ERR_NOT_LOGGED_IN
 } from '../utils/constants';
-import styles from '../styles/Upload.module.scss';
 import { UserContext } from '../user-provider';
 import UploadSuccess from './Shared/upload-success';
+import styles from '../styles/Upload.module.scss';
 
 function Debug({ error, uploadSuccess, path }) {
     return (
@@ -22,9 +21,9 @@ function Debug({ error, uploadSuccess, path }) {
 
 function Status({ error, loading }) {
     if (error.reason || error.message) {
-        return <p style={{ color: 'red' }}>{error.message}</p>
+        return <p style={{ color: 'red' }}>{error.message}</p>;
     } else if (loading) {
-        return <p>Uploading...</p>
+        return <p className={styles["loading"]}>Uploading...</p>;
     }
 }
 

@@ -75,15 +75,15 @@ export default function AccessForm({
     const router = useRouter();
     const { user, setUser } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
     const [response, setResponse] = useState('');
+    const [isError, setIsError] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         setLoading(true);
-        setIsError(false);
         setResponse('');
+        setIsError(false);
 
         try {
             const data = new FormData(e.target);
