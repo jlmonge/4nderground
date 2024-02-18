@@ -22,7 +22,7 @@ export async function restrictUserHelper(req, action) {
         .select();
     //console.log(`${action} data: ${JSON.stringify(data)}`);
     if (error) {
-        console.log(`error: ${error}`)
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
         return NextResponse.json({
             message: `${capitalizeFirstLetter(action)} failed.`
         }, { status: 400 });
