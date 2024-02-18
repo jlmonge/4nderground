@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { REC_REQS, GENRES, MAX_DURATION } from '../utils/constants';
 import { uploadFileHelper } from '../app/service/uploadFileHelper';
-import styles from '../styles/Upload.module.scss';
 import UploadSuccess from './Shared/upload-success';
+import styles from '../styles/Upload.module.scss';
 
 const BTN_SIZE = 128;
 const constraints = {
@@ -16,7 +16,7 @@ function Status({ error, loading }) {
     if (error.reason || error.message) {
         return <p style={{ color: 'red' }}>{error.message}</p>
     } else if (loading) {
-        return <p>Uploading...</p>
+        return <p className={styles["loading"]}>Uploading...</p>
     }
 }
 

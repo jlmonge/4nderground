@@ -24,11 +24,16 @@ export async function POST(req) {
         .eq('id', commentId)
         .select()   // for data to return something..
 
-    if (error) throw new Error('supabase delete failed')
+    if (error) {
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
+        return NextResponse.json({
+            message: 'Failed to delete your comment.'
+        }, { status: 400 });
+    }
 
     console.log(`DELETE COMPLETED. ${data}`)
 
     return NextResponse.json({
-        placeholder: 'probably useless. refactor routes to Response from NextResponse.'
+        message: 'Comment deleted.'
     }, { status: 200 });
 }

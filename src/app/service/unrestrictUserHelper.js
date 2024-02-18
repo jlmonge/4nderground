@@ -16,8 +16,8 @@ export async function unrestrictUserHelper(req, action) {
         urCol = 'blocked_id';
     }
 
-    console.log(`debug: (myCol, myID) => (${myCol},${myID})`);
-    console.log(`debug: (urCol, urID) => (${urCol},${urID})`);
+    // console.log(`debug: (myCol, myID) => (${myCol},${myID})`);
+    // console.log(`debug: (urCol, urID) => (${urCol},${urID})`);
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const { data, error } = await supabase
@@ -26,11 +26,14 @@ export async function unrestrictUserHelper(req, action) {
         .eq(myCol, myID)
         .eq(urCol, urID)
         .select()
-    if (error) throw new Error(error);
-    console.log(`un${action} data: ${JSON.stringify(data)}`);
-
+    if (error) {
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
+        return NextResponse.json({
+            message: `Un${action} failed.`
+        }, { status: 400 });
+    }
 
     return NextResponse.json({
-        message: `OFFICIAL RESPONSE: un${action}: ${myID} to ${urID}`
+        message: `User un${action === 'ignore' ? 'ignored' : 'blocked'}.`
     }, { status: 200 });
 }

@@ -18,9 +18,8 @@
     padding: 0.5rem;
 }
 
-.mycomment-container {
-    display: flex;
-    flex-direction: row;
+.mycomment {
+    overflow-x: hidden;
 }
 
 .mycomment-form {
@@ -102,6 +101,12 @@
 }
 
 .c-delete {
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
+}
+
+.c-deletebtn {
     @include fanciful-btn(44px, 57px, linear-gradient(180deg, #FF3D3D 0%, #F44 100%));
 }
 

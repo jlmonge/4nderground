@@ -33,6 +33,11 @@
     &__avi {
         flex-shrink: 0;
     }
+
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .reqbtn {

@@ -15,7 +15,7 @@ export async function POST(req) {
     const { data, error } = await supabase.auth.updateUser({ email: newEmail });
 
     if (error) {
-        console.log(`error: ${error}`);
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
         return NextResponse.json({
             message: 'Email change failed.',
             action: 'email-update'

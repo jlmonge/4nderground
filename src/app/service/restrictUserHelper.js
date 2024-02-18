@@ -1,6 +1,7 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { capitalizeFirstLetter } from '../../utils/helpers';
 
 export async function restrictUserHelper(req, action) {
     const formData = await req.formData();
@@ -20,9 +21,14 @@ export async function restrictUserHelper(req, action) {
         .insert(insertObj)
         .select();
     //console.log(`${action} data: ${JSON.stringify(data)}`);
-    if (error) throw new Error(error);
+    if (error) {
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
+        return NextResponse.json({
+            message: `${capitalizeFirstLetter(action)} failed.`
+        }, { status: 400 });
+    }
 
     return NextResponse.json({
-        message: `${action}: ${myID} to ${urID}`
+        message: `User ${action === 'ignore' ? 'ignored' : 'blocked'}.`
     }, { status: 200 });
 }

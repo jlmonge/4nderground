@@ -23,9 +23,14 @@ export async function POST(req) {
             }
         ])
         .select();
-    if (error) throw new Error(JSON.stringify(error));
+    if (error) {
+        console.log(`error: ${JSON.stringify(error, null, 2)}`);
+        return NextResponse.json({
+            message: 'Report failed.'
+        }, { status: 400 });
+    }
 
     return NextResponse.json({
-        data: JSON.stringify(data)
+        message: 'User reported.'
     }, { status: 200 });
 }

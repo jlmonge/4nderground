@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from '../../styles/Accessflow.module.scss';
 import { UserContext } from '../../user-provider';
+import Status from './status';
+import styles from '../../styles/Accessflow.module.scss';
 
 function Email() {
     return (
@@ -73,42 +74,56 @@ export default function AccessForm({
 }) {
     const router = useRouter();
     const { user, setUser } = useContext(UserContext);
-    const [statusText, setStatusText] = useState('');
-    const [statusOk, setStatusOk] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [response, setResponse] = useState('');
+    const [isError, setIsError] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        setStatusText('')
-        setStatusOk(false);
-        const data = new FormData(e.target);
-        // console.log(`email: ${data.get('email')}`);
-        // console.log(`password: ${data.get('password')}`);
-        // console.log(`agreement: ${data.get('agreement')}`);
+        setLoading(true);
+        setResponse('');
+        setIsError(false);
 
-        const res = await fetch(action, {
-            method: 'POST',
-            body: data,
-        })
+        try {
+            const data = new FormData(e.target);
+            // console.log(`email: ${data.get('email')}`);
+            // console.log(`password: ${data.get('password')}`);
+            // console.log(`agreement: ${data.get('agreement')}`);
+            const res = await fetch(action, {
+                method: 'POST',
+                body: data,
+            })
 
-        const resJson = await res.json();
-        setStatusText(resJson.message);
+            const resJson = await res.json();
+            setResponse(resJson.message);
 
-        if (res.ok) {
-            console.log("GOOD RESPONSE");
-            setStatusOk(true);
-            if (
-                resJson.action === 'login'
-            ) {
-                setUser(resJson.user);
-                console.log(`received user: ${resJson.user}`)
-                router.push('/player');
+            if (res.ok) {
+                console.log("GOOD RESPONSE");
+                if (
+                    resJson.action === 'login'
+                ) {
+                    setUser(resJson.user);
+                    console.log(`received user: ${resJson.user}`)
+                    router.push('/player');
+                }
+            } else {
+                setIsError(true);
+                // remove below once ses stops shitting on us
+                if (resJson.action === 'register') {
+                    setResponse(
+                        <span>Registration temporarily disabled while our email services are awaiting approval :( If you&apos;re as disappointed as we are, <a href="mailto:info@4nderground.com">tell us about it</a>!!</span>
+                    );
+                }
+
             }
-        } else if (!res.ok && resJson.action === 'register') {
-            setStatusText(
-                <span style={{ color: 'red' }}>Registration temporarily disabled while our email services are awaiting approval :( If you&apos;re as disappointed as we are, <a href="mailto:info@4nderground.com">tell us about it</a>!!</span>);
+        } catch (e) {
+            console.log(e);
+            setIsError(true);
+            setResponse('Something bad happened.')
+        } finally {
+            setLoading(false);
         }
-
     }
 
     return (
@@ -123,9 +138,7 @@ export default function AccessForm({
                     &gt;&gt;
                 </button>
             </form>
-            <p key={statusText} className={`${styles["af-status"]} ${statusOk ? styles["af-statusok"] : styles["af-statusnotok"]}`}>
-                {statusText}
-            </p>
+            <Status loading={loading} response={response} isError={isError} />
         </div>
     );
 }

@@ -50,42 +50,42 @@ export const MAX_DURATION = 600; // TODO: must be 600s on deploy (10m)
 // Errors
 // Status codes:https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 export const ERR_NO_FILE = Object.freeze({
-    message: 'No file was uploaded',
+    message: 'No file was uploaded.',
     reason: 'no-file',
     status: 400,
 });
 export const ERR_TOO_BIG = Object.freeze({
-    message: `The file you tried to upload exceeds the file size limit of ${NUM_MB} MB`,
+    message: `The file you tried to upload exceeds the file size limit of ${NUM_MB} MB.`,
     reason: 'too-big',
     status: 413,
 });
 export const ERR_NO_EXT = Object.freeze({
-    message: `File has no extension`,
+    message: `File has no extension.`,
     reason: 'no-ext',
     status: 400,
 });
 export const ERR_TOO_SHORT = Object.freeze({
-    message: `The file you tried to upload is below the minimum duration of ${MIN_DURATION} seconds`,
+    message: `The file you tried to upload is below the minimum duration of ${MIN_DURATION} seconds.`,
     reason: 'too-short',
     status: 400,
 });
 export const ERR_TOO_LONG = Object.freeze({
-    message: `The file you tried to upload exceeds the maximum duration of ${MAX_DURATION} seconds`,
+    message: `The file you tried to upload exceeds the maximum duration of ${MAX_DURATION} seconds.`,
     reason: 'too-long',
     status: 400,
 });
 export const ERR_NOT_AUDIO = Object.freeze({
-    message: `Not an audio file`,
+    message: `Not an audio file.`,
     reason: 'not-audio',
     status: 415,
 });
 export const ERR_NOT_LOGGED_IN = Object.freeze({
-    message: `You are not logged in`,
+    message: `You are not logged in.`,
     reason: 'not-logged-in',
     status: 401,
 });
 export const ERR_UPLOAD_COOLDOWN = Object.freeze({
-    message: `You must wait 24 hours after the posting of your last track before posting again`,
+    message: `You must wait 24 hours after the posting of your last track before posting again.`,
     reason: 'upload-cooldown',
     status: 403,
 });
