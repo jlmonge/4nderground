@@ -1,31 +1,34 @@
-.tt-container {
-    display: flex;
-    flex-direction: row;
-}
-
-.tt-icon {
-    background-color: black;
-    mask-image: url('/info.svg');
-    width: 1em;
-    height: 1em;
-}
-
-.tt-textcontainer {
+.tooltip {
     position: relative;
-}
-
-.tt-text {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0.5em;
-    width: 45vw;
-}
-
-.hide {
-    display: none;
-}
-
-.show {
     display: inline-block;
+    border-bottom: 1px dotted black;
+
+    &__text {
+        position: absolute;
+        bottom: 150%;
+        left: 50%;
+        margin-left: -6em;
+        visibility: hidden;
+        width: 12em;
+        background-color: black;
+        color: white;
+        text-align: center;
+        border-radius: 8px;
+        padding: 0.5em;
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 46%;
+            margin-left: auto;
+            border-width: 8px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+    }
+
+    &:hover &__text {
+        visibility: visible;
+    }
 }
