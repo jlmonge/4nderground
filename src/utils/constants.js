@@ -46,6 +46,7 @@ const NUM_MB = 5 // TODO: must be 100MB (cloudflare limit) on deploy
 export const MAX_SIZE = NUM_MB * MB;
 export const MIN_DURATION = 1; // TODO: must be 30s on deploy
 export const MAX_DURATION = 600; // TODO: must be 600s on deploy (10m)
+export const COMMENT_CHARS_MAX = 1024;
 
 // Errors
 // Status codes:https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
