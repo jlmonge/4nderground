@@ -134,20 +134,24 @@ export default function Report({ contentType, contentId = null, large = false })
                         </button>
                         <div className={styles["report"]}>
                             <h3>Report</h3>
-                            <form method="POST" onSubmit={handleSubmit} style={{ gap: '10px' }}>
+                            <form method="POST" onSubmit={handleSubmit} className={styles["form"]}>
                                 {REPORT_REASONS.map((r) => (
-                                    <div key={r.id} style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                    }}>
-                                        <label style={{ minWidth: '11em' }}>
+                                    <div key={r.id} className={styles["form__reason"]}>
+                                        <label>
                                             <input type="radio" name="report_reason" value={r.value} onChange={handleChange} checked={reason === r.value} required />
                                             {r.str}
                                         </label>
                                         <Tooltip info={r.desc} />
                                     </div>
                                 ))}
-                                <button type="submit" disabled={!reason || isReported}>Submit</button>
+                                <hr className={styles["divider"]} />
+                                <button
+                                    type="submit"
+                                    disabled={!reason || isReported}
+                                    className={styles["submit-btn"]}
+                                >
+                                    Submit
+                                </button>
                                 <Status loading={loading} response={response} isError={isError} />
                             </form>
                         </div>

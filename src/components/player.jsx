@@ -218,9 +218,11 @@ export default function Player() {
                 <div className={styles["avi-container"]}>
                     <Avatar userId={!!tracks.length ? tracks[trackIndex].uploader_id : null} size="small" />
                 </div>
-                <div className={styles["report-container"]}>
-                    <Report contentType='track' contentId={tracks.length ? tracks[trackIndex].id : null} />
-                </div>
+                {user?.id &&
+                    <div className={styles["report-container"]}>
+                        <Report contentType='track' contentId={tracks.length ? tracks[trackIndex].id : null} />
+                    </div>
+                }
                 <div className={styles["genre-container"]}>
                     <label htmlFor="genre" className={styles["genre-label"]}>Genre</label>
                     <div className={styles["genreselect-container"]}>
