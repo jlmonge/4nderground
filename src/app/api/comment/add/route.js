@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { UploadError } from '../../../../utils/errors';
 import { COMMENT_CHARS_MAX, ERR_NOT_LOGGED_IN } from '../../../../utils/constants';
 import { NextResponse } from 'next/server';
+import { getMinAgo } from '../../../../utils/helpers';
 
 export async function POST(req) {
     const cookieStore = cookies();
@@ -21,10 +22,25 @@ export async function POST(req) {
         }, { status: 400 });
     }
 
-    const { data: preData, error: preError } = await supabase
+    const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
         .select('last_commented_at')
-        .eq('')
+        .eq('id', user.id);
+
+    if (profilesError) throw profilesError;
+    console.log(`last_uploaded_at of ( ${user.email} ) AKA (${user.id} ): 
+        ( ${JSON.stringify(profilesData)} ) with date ${profilesData[0].last_commented_at}`);
+
+    const minAgo = new Date(getMinAgo());
+    const lastPostedAt = new Date(profilesData[0].last_commented_at);
+    console.log(`dayAgo: ${minAgo}, lastPostedAt: ${lastPostedAt}`);
+    if (lastPostedAt > minAgo) {
+        return NextResponse.json({
+            message: 'You must wait 1 minute before posting another comment.'
+        }, {
+            status: 400
+        });
+    }
 
     const { data, error } = await supabase
         .from('comments')

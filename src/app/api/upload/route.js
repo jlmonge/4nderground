@@ -44,7 +44,7 @@ async function processUser() {
     const lastPostedAt = new Date(profilesData[0].last_uploaded_at);
     console.log(`dayAgo: ${dayAgo}, lastPostedAt: ${lastPostedAt}`);
     if (lastPostedAt > dayAgo) throw new UploadError(ERR_UPLOAD_COOLDOWN.reason);
-    //throw new Error('LMAO! LMAO! BALLS!');
+    //throw new Error('deliberate throw');
 
     return { dbClient, user };
 }
