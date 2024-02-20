@@ -115,46 +115,47 @@ export default function Report({ contentType, contentId = null, large = false })
     return (
         <>
             {contentId && (
-                <dialog ref={dialogRef} style={{
-                    backgroundColor: 'black',
-                    color: 'white',
-                    width: `${DIALOG_WIDTH_VW}vw`,
-                }}>
-                    <button
-                        id="close"
-                        onClick={handleClose}
-                        type="button"
-                        style={{
-                            position: 'absolute',
-                            top: '0',
-                            right: '0',
-                            backgroundColor: 'transparent',
-                            borderStyle: 'none',
-                            padding: '0',
-                            margin: '2px',
-                            fontSize: '16px',
-                            color: 'white',
-                        }}
+                <dialog
+                    ref={dialogRef}
+                    className={styles["dialog"]}
+                    onClick={handleClose}
+                >
+                    <div
+                        className={styles["dialog__inner"]}
+                        onClick={e => e.stopPropagation()}
                     >
-                        X
-                    </button>
-                    <h1>Report</h1>
-                    <form method="POST" onSubmit={handleSubmit} style={{ gap: '10px' }}>
-                        {REPORT_REASONS.map((r) => (
-                            <div key={r.id} style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                            }}>
-                                <label style={{ minWidth: '11em' }}>
-                                    <input type="radio" name="report_reason" value={r.value} onChange={handleChange} checked={reason === r.value} required />
-                                    {r.str}
-                                </label>
-                                <Tooltip info={r.desc} />
-                            </div>
-                        ))}
-                        <button type="submit" disabled={!reason || isReported}>Submit</button>
-                        <Status loading={loading} response={response} isError={isError} />
-                    </form>
+                        <button
+                            id="close"
+                            onClick={handleClose}
+                            type="button"
+                            className={styles["dialog__close"]}
+                        >
+                            X
+                        </button>
+                        <div className={styles["report"]}>
+                            <h3>Report</h3>
+                            <form method="POST" onSubmit={handleSubmit} className={styles["form"]}>
+                                {REPORT_REASONS.map((r) => (
+                                    <div key={r.id} className={styles["form__reason"]}>
+                                        <label>
+                                            <input type="radio" name="report_reason" value={r.value} onChange={handleChange} checked={reason === r.value} required />
+                                            {r.str}
+                                        </label>
+                                        <Tooltip info={r.desc} />
+                                    </div>
+                                ))}
+                                <hr className={styles["divider"]} />
+                                <button
+                                    type="submit"
+                                    disabled={!reason || isReported}
+                                    className={styles["submit-btn"]}
+                                >
+                                    Submit
+                                </button>
+                                <Status loading={loading} response={response} isError={isError} />
+                            </form>
+                        </div>
+                    </div>
                 </dialog>
             )}
             <button

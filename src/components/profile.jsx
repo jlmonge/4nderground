@@ -406,19 +406,24 @@ export default function Profile({ userId, handleClose }) {
             }
             <p className={styles["user-id"]}>{userId} {isMe && '(you)'}</p>
             <ProfileLinks userId={userId} isMe={isMe} db={supabase} />
-            <hr className={styles["divider"]} />
-            <div className={styles["profile__btns"]}>
-                {isMe ?
-                    <Logout handleClose={handleClose} />
-                    :
-                    <>
-                        <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
-                        <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
-                        <Report contentType={'profile'} contentId={userId} large />
-                        <Status loading={loading} response={response} isError={isError} />
-                    </>
-                }
-            </div>
+            {user?.id &&
+                <>
+                    <hr className={styles["divider"]} />
+                    <div className={styles["profile__btns"]}>
+                        {isMe ?
+                            <Logout handleClose={handleClose} />
+                            :
+                            <>
+                                <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'ignore')}>Ignore user</button>
+                                <button className={styles["btn"]} onClick={() => handleAddRestrict(userId, 'block')}>Block user</button>
+                                <Report contentType={'profile'} contentId={userId} large />
+                                <Status loading={loading} response={response} isError={isError} />
+                            </>
+                        }
+                    </div>
+                </>
+            }
+
         </div>
     );
 }

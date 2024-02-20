@@ -1,5 +1,72 @@
 @import "mixins";
 
+// shared with ./Avatar.module.scss
+.dialog {
+    margin: 25vh auto;
+    padding: 0;
+    background-color: rgb(155 155 155 / 90%);
+    color: white;
+    width: max(20em, 25vw);
+    border-radius: 5%;
+    border-style: groove;
+    border-color: #a5a5a5;
+    overflow: visible; // only difference; to support tooltips
+
+    &::backdrop {
+        background: rgb(0 0 0 / 50%);
+    }
+
+    &__close {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        background-color: transparent;
+        border-style: none;
+        padding: 0.25rem;
+        margin: 2px;
+        font-size: 1em;
+        color: white;
+    }
+
+    &__inner {
+        // width: 100%; PROBLEM
+        // height: 100%; PROBLEM
+        padding: 0.75rem 1rem;
+        // background-color: rgb(0 0 0 / 50%);
+    }
+}
+
+.report {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+// forms are flex by default
+.form {
+    gap: 0.5em;
+
+    &__reason {
+        display: flex;
+        flex-direction: row;
+        gap: 0.75em;
+    }
+}
+
+.divider {
+    margin: 0;
+    width: 100%;
+}
+
 .opendialog-btn {
     @include fanciful-btn(44px, 57px, linear-gradient(180deg, #FF3D3D 0%, #F44 100%));
+}
+
+.submit-btn {
+    @include fanciful-btn(44px, 57px, linear-gradient(180deg, #FF3D3D 0%, #F44 100%));
+    font-size: 1em;
+
+    @media (min-width: 744px) {
+        font-size: 1em;
+    }
 }
