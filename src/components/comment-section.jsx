@@ -137,6 +137,11 @@ function AddComment({ onAddComment, trackId }) {
             const data = new FormData();
             data.append('comment', comment);
             data.append('trackId', trackId);
+            if (comment.length > COMMENT_CHARS_MAX) {
+                setResponse(`Comments are limited to ${COMMENT_CHARS_MAX} characters.`);
+                setIsError(true);
+                return;
+            }
 
             const res = await fetch('/api/comment/add', {
                 method: 'POST',
