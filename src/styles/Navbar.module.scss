@@ -11,6 +11,13 @@ $white: #FFFFFF;
     // background-image: url("/mirrored-bgtop.svg");
     // background-repeat: repeat-x;
     // background-size: cover;
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .all-flow {
@@ -24,6 +31,14 @@ $white: #FFFFFF;
 
 .logo {
     @include logo;
+
+    // &__text {
+    //     display: inline-block;
+    //     transform: scaleY(0.5);
+    //     text-transform: uppercase;
+    //     color: variables.$gg-text;
+    //     text-shadow: .5px .5px 1px black;
+    // }
 }
 
 .nav-link {
