@@ -135,9 +135,11 @@ function AddComment({ onAddComment, trackId }) {
 
         try {
             const data = new FormData();
-            data.append('comment', comment);
+            const trimmedComment = comment.trim();
+
+            data.append('comment', trimmedComment);
             data.append('trackId', trackId);
-            if (comment.length > COMMENT_CHARS_MAX) {
+            if (trimmedComment.length > COMMENT_CHARS_MAX) {
                 setResponse(`Comments are limited to ${COMMENT_CHARS_MAX} characters.`);
                 setIsError(true);
                 return;
@@ -192,7 +194,7 @@ function AddComment({ onAddComment, trackId }) {
                 <button
                     type="submit"
                     className={styles["mycomment-submit"]}
-                    disabled={comment.length > COMMENT_CHARS_MAX}
+                    disabled={comment.trim().length === 0 || comment.length > COMMENT_CHARS_MAX}
                 >
                     <span className={styles["mcs-text"]}>&gt;&gt;</span>
                 </button>

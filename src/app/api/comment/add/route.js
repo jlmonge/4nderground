@@ -33,7 +33,7 @@ export async function POST(req) {
 
     const minAgo = new Date(getMinAgo());
     const newestComment = new Date(userCommentsData[0].posted_at);
-    console.log(`minAgo: ${minAgo}, newestComment: ${newestComment}`);
+    // console.log(`minAgo: ${minAgo}, newestComment: ${newestComment}`);
     if (newestComment > minAgo) {
         return NextResponse.json({
             message: 'You must wait 1 minute before posting another comment.'
@@ -45,7 +45,7 @@ export async function POST(req) {
     // console.log(`userCommentsData.length: ${userCommentsData.length}`)
     if (userCommentsData.length > 100) {
         return NextResponse.json({
-            message: "Cannot exceed 100 comments per day. Please contact us if you'd like more."
+            message: "Cannot exceed 100 comments per day."
         }, {
             status: 400
         });
