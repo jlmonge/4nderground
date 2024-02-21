@@ -22,21 +22,40 @@ export async function POST(req) {
         }, { status: 400 });
     }
 
-    const { data: profilesData, error: profilesError } = await supabase
-        .from('profiles')
-        .select('last_commented_at')
-        .eq('id', user.id);
+    const { data: userCommentsData, error: userCommentsError } = await supabase
+        .from('comments')
+        .select('track_id, posted_at')
+        .eq('user_id', user.id)
+        .order('posted_at', { ascending: false });
 
-    if (profilesError) throw profilesError;
-    console.log(`last_uploaded_at of ( ${user.email} ) AKA (${user.id} ): 
-        ( ${JSON.stringify(profilesData)} ) with date ${profilesData[0].last_commented_at}`);
+    if (userCommentsError) throw userCommentsError;
+    // console.log(`userCommentsData: ${JSON.stringify(userCommentsData)}`);
 
     const minAgo = new Date(getMinAgo());
-    const lastPostedAt = new Date(profilesData[0].last_commented_at);
-    console.log(`dayAgo: ${minAgo}, lastPostedAt: ${lastPostedAt}`);
-    if (lastPostedAt > minAgo) {
+    const newestComment = new Date(userCommentsData[0].posted_at);
+    console.log(`minAgo: ${minAgo}, newestComment: ${newestComment}`);
+    if (newestComment > minAgo) {
         return NextResponse.json({
             message: 'You must wait 1 minute before posting another comment.'
+        }, {
+            status: 400
+        });
+    }
+
+    // console.log(`userCommentsData.length: ${userCommentsData.length}`)
+    if (userCommentsData.length > 100) {
+        return NextResponse.json({
+            message: "Cannot exceed 100 comments per day. Please contact us if you'd like more."
+        }, {
+            status: 400
+        });
+    }
+
+    const userCommentsCurTrack = userCommentsData.filter((comment) => comment.track_id === trackId);
+    // console.log(`userCommentsCurTrack: ${JSON.stringify(userCommentsCurTrack)}`)
+    if (userCommentsCurTrack.length > 2) {
+        return NextResponse.json({
+            message: 'Cannot exceed 2 comments per track.'
         }, {
             status: 400
         });
