@@ -14,6 +14,10 @@ const BTN_SIZE = 24;
 const ICON_SIZE = 12;
 
 function ProfileLink({ link, isEditing, onDelete, onChange }) {
+    // const handleBlur = (e) => {
+    //     console.log(`blurring. ${e}`);
+    // }
+
     let linkContent;
     if (isEditing) {
         linkContent = (
@@ -27,6 +31,7 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                     className={styles["input"]}
                     required
                     value={link.url}
+                    // onBlur={handleBlur}
                     onChange={e => {
                         onChange({
                             ...link,

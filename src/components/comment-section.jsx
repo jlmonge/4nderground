@@ -8,7 +8,6 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserContext } from '../user-provider';
 import Status from './Shared/status';
 import styles from '../styles/Comments.module.scss';
-import InvalidInput from './Shared/invalid-input';
 import { COMMENT_CHARS_MAX } from '../utils/constants';
 import { useAutosizeTextArea } from '../hooks/useAutosizeTextArea';
 
