@@ -109,13 +109,6 @@ export default function AccessForm({
                 }
             } else {
                 setIsError(true);
-                // remove below once ses stops shitting on us
-                if (resJson.action === 'register') {
-                    setResponse(
-                        <span>Registration temporarily disabled while our email services are awaiting approval :( If you&apos;re as disappointed as we are, <a href="mailto:info@4nderground.com">tell us about it</a>!!</span>
-                    );
-                }
-
             }
         } catch (e) {
             console.log(e);

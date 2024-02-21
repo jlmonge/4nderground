@@ -1,5 +1,35 @@
 export const DEBUG = false;
 
+// Numerical constants
+const MB = 1_000_000;
+const NUM_MB = 100 // TODO: must be 100MB (cloudflare limit) on deploy
+export const MAX_SIZE = NUM_MB * MB;
+export const MIN_DURATION = 15; // TODO: must be 30s on deploy
+export const MAX_DURATION = 420; // TODO: must be 420s (7m)  on deploy
+export const COMMENT_CHARS_MAX = 1024;
+
+export const FILE_REQS = [{
+    type: 'copyright',
+    desc: 'Free of copyrighted material',
+}, {
+    type: 'type',
+    desc: 'Audio',
+}, {
+    type: 'size',
+    desc: `Under ${NUM_MB}MB`,
+}, {
+    type: 'duration',
+    desc: `Between ${MIN_DURATION} seconds and ${MAX_DURATION / 60} minutes`
+}];
+
+export const REC_REQS = [{
+    type: 'copyright',
+    desc: 'Free of copyrighted material',
+}, {
+    type: 'duration',
+    desc: `Between ${MIN_DURATION} seconds and ${MAX_DURATION / 60} minutes`,
+}];
+
 export const GENRES = Object.freeze({
     'all': 'All',
     'hip-hop': 'Hip-Hop',
@@ -17,36 +47,6 @@ export const GENRES = Object.freeze({
     // 'noise': 'Noise',
     'experimental': 'Experimental'
 });
-
-export const FILE_REQS = [{
-    type: 'copyright',
-    desc: 'Free of copyrighted material',
-}, {
-    type: 'type',
-    desc: 'Audio',
-}, {
-    type: 'size',
-    desc: 'Under 100MB',
-}, {
-    type: 'duration',
-    desc: 'Between 15 seconds and 7 minutes'
-}];
-
-export const REC_REQS = [{
-    type: 'copyright',
-    desc: 'Free of copyrighted material',
-}, {
-    type: 'duration',
-    desc: 'Between 15 seconds and 7 minutes',
-}];
-
-// Numerical constants
-const MB = 1_000_000;
-const NUM_MB = 5 // TODO: must be 100MB (cloudflare limit) on deploy
-export const MAX_SIZE = NUM_MB * MB;
-export const MIN_DURATION = 1; // TODO: must be 30s on deploy
-export const MAX_DURATION = 600; // TODO: must be 600s on deploy (10m)
-export const COMMENT_CHARS_MAX = 1024;
 
 // Errors
 // Status codes:https://en.wikipedia.org/wiki/List_of_HTTP_status_codes

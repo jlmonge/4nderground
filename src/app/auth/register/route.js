@@ -16,7 +16,7 @@ export async function POST(request) {
     // 'agreement' returns "on" or null; null is falsy!
     if (!agreement) {
         return NextResponse.json({
-            message: 'Registration failed'
+            message: 'You must agree to the terms to sign up.'
         }, { status: 400 });
     }
     const cookieStore = cookies();
