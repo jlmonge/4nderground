@@ -23,10 +23,12 @@
 }
 
 .mycomment-form {
+    position: relative;
     display: flex;
     flex-direction: row;
     border: 1px solid gray;
     align-items: stretch;
+    background-color: white;
 
     &:focus-within {
         outline: 1px solid gray;
@@ -36,10 +38,25 @@
 .mycomment-comment {
     flex-grow: 2;
     border: none;
-    padding: 0.75rem 0.25rem;
+    padding: 0.25rem;
+    margin-bottom: 1rem;
+    font-family: inherit;
 
     &:focus {
         outline: none;
+    }
+}
+
+.mycomment-chars {
+    position: absolute;
+    left: 0.25rem;
+    bottom: 0;
+    font-size: 0.75em;
+    color: #6E6E6E;
+    font-style: italic;
+
+    &--toolong {
+        color: red;
     }
 }
 
@@ -47,7 +64,7 @@
     width: auto;
     border: none;
 
-    &:hover {
+    &:hover:enabled {
         .mcs-text {
             display: inline-block;
             transform: translateX(0.2em);

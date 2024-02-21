@@ -32,19 +32,19 @@ async function processUser() {
 
     const { data: profilesData, error } = await dbClient
         .from('profiles')
-        .select('last_posted_at')
+        .select('last_uploaded_at')
         .eq('id', user.id);
 
     if (error) throw error;
-    console.log(`last_posted_at of ( ${user.email} ) AKA (${user.id} ): 
-        ( ${profilesData} ) with date ${profilesData[0].last_posted_at}`);
+    console.log(`last_uploaded_at of ( ${user.email} ) AKA (${user.id} ): 
+        ( ${profilesData} ) with date ${profilesData[0].last_uploaded_at}`);
 
 
     const dayAgo = new Date(getDayAgo());
-    const lastPostedAt = new Date(profilesData[0].last_posted_at);
+    const lastPostedAt = new Date(profilesData[0].last_uploaded_at);
     console.log(`dayAgo: ${dayAgo}, lastPostedAt: ${lastPostedAt}`);
     if (lastPostedAt > dayAgo) throw new UploadError(ERR_UPLOAD_COOLDOWN.reason);
-    //throw new Error('LMAO! LMAO! BALLS!');
+    //throw new Error('deliberate throw');
 
     return { dbClient, user };
 }

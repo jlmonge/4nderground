@@ -3,11 +3,13 @@
 
 import Report from './report';
 import Avatar from './avatar';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserContext } from '../user-provider';
 import Status from './Shared/status';
 import styles from '../styles/Comments.module.scss';
+import { COMMENT_CHARS_MAX } from '../utils/constants';
+import { useAutosizeTextArea } from '../hooks/useAutosizeTextArea';
 
 /*
 DISPLAY WISE: A comment consists of:
@@ -119,6 +121,9 @@ function AddComment({ onAddComment, trackId }) {
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState('');
     const [isError, setIsError] = useState(false);
+    const textAreaRef = useRef(null);
+
+    useAutosizeTextArea(textAreaRef.current, comment)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -129,8 +134,15 @@ function AddComment({ onAddComment, trackId }) {
 
         try {
             const data = new FormData();
-            data.append('comment', comment);
+            const trimmedComment = comment.trim();
+
+            data.append('comment', trimmedComment);
             data.append('trackId', trackId);
+            if (trimmedComment.length > COMMENT_CHARS_MAX) {
+                setResponse(`Comments are limited to ${COMMENT_CHARS_MAX} characters.`);
+                setIsError(true);
+                return;
+            }
 
             const res = await fetch('/api/comment/add', {
                 method: 'POST',
@@ -162,16 +174,27 @@ function AddComment({ onAddComment, trackId }) {
                 className={styles["mycomment-form"]}
             >
                 <label className={styles["visually-hidden"]} htmlFor="write-comment">Write a comment</label>
-                <input
+                <textarea
                     placeholder="Write a comment..."
                     type="text"
                     id="write-comment"
                     required
                     value={comment}
+                    ref={textAreaRef}
                     onChange={e => setComment(e.target.value)}
                     className={styles["mycomment-comment"]}
+                    rows={1}
                 />
-                <button type="submit" className={styles["mycomment-submit"]}>
+                <span className={comment.length <= COMMENT_CHARS_MAX ? styles["mycomment-chars"] : (
+                    `${styles["mycomment-chars"]} ${styles["mycomment-chars--toolong"]}`
+                )}>
+                    {comment.length}/{COMMENT_CHARS_MAX}
+                </span>
+                <button
+                    type="submit"
+                    className={styles["mycomment-submit"]}
+                    disabled={comment.trim().length === 0 || comment.length > COMMENT_CHARS_MAX}
+                >
                     <span className={styles["mcs-text"]}>&gt;&gt;</span>
                 </button>
             </form>
