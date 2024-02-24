@@ -19,7 +19,7 @@
     background-repeat: repeat-x;
     background-size: cover;
     width: 100%;
-    height: calc(487.06px * 0.55);
+    height: clamp(calc(267.883px * 0.7), 25vw, 267.883px);
     z-index: -2;
     filter: drop-shadow(0 -12px 8px rgba(0, 0, 0, 0.25));
 }
