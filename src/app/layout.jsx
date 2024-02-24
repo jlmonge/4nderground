@@ -23,7 +23,7 @@ export default async function RootLayout({ children }) {
                 <div className={styles["bgtop"]}></div>
                 <UserProvider>
                     <Navbar className={nunito.className} />
-                    <main>
+                    <main id="main-content">
                         {children}
                     </main>
                     <Footer className={nunito.className} />

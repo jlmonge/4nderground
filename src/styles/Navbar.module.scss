@@ -60,3 +60,19 @@ $white: #FFFFFF;
         border-bottom: 3px solid $white;
     }
 }
+
+.skip-to-content {
+    position: absolute;
+    background-color: white;
+    color: black;
+    transform: translateY(-120%);
+    padding: .5rem 1rem;
+    z-index: -1;
+
+
+    &:focus,
+    &:active {
+        transform: translateY(0);
+        z-index: 1;
+    }
+}

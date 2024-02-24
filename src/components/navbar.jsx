@@ -24,6 +24,9 @@ export default function Navbar() {
 
     return (
         <>
+            <a className={styles["skip-to-content"]} href="#main-content">
+                Skip to main content
+            </a>
             <nav className={`${styles["nav"]} ${colors["gg-text"]} ${nunito.className}`}>
                 <div className={styles["all-flow"]}>
                     {logo}
