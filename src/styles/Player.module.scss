@@ -17,8 +17,25 @@
     margin: 0 auto;
 }
 
+
+
 .decor-bars {
     @include abs-pos(118px, 134px);
+}
+
+.playback-bar {
+    @include abs-pos(118px, 131px);
+    width: 75px;
+    height: 8px;
+    background-color: black;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 2px;
+}
+
+.playback-bar__tick {
+    height: 100%;
+    background-color: white;
 }
 
 .bar-white {
@@ -233,12 +250,14 @@
         height: 242px;
     }
 
-    .decor-bars {
+    .decor-bars,
+    .playback-bar {
         @include abs-pos(193px, 131px);
     }
 
     .bar-white,
-    .bar-grey {
+    .bar-grey,
+    .playback-bar {
         width: 205px;
     }
 

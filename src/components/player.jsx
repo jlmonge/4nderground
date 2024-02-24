@@ -52,6 +52,56 @@ function ElapsedTime() {
     )
 }
 
+function PlaybackBar() {
+    const { playing, getPosition, duration, seek } = useGlobalAudioPlayer();
+    const [pos, setPos] = useState(0);
+    const frameRef = useRef();
+    const playbackBarRef = useRef(null);
+
+    useEffect(() => {
+        const animate = () => {
+            setPos(getPosition());
+            frameRef.current = requestAnimationFrame(animate);
+        }
+
+        frameRef.current = window.requestAnimationFrame(animate);
+
+        return () => {
+            if (frameRef.current) {
+                cancelAnimationFrame(frameRef.current);
+            }
+        }
+    }, [getPosition])
+
+    const goTo = useCallback((event) => {
+        const { eventOffsetX } = event;
+        console.log("clicked");
+
+        if (playbackBarRef.current) {
+            const refOffsetX = playbackBarRef.current.offsetLeft;
+            const refWidth = playbackBarRef.current.clientWidth;
+            const percent = (eventOffsetX - refOffsetX) / refWidth;
+            seek(percent * duration);
+        }
+    }, [duration, playing, seek])
+
+    if (duration === Infinity) return null;
+
+    return (
+        <div
+            className={styles["playback-bar"]}
+            ref={playbackBarRef}
+            onClick={goTo}
+        >
+            <div
+                style={{ width: `${(pos / duration) * 100}%` }}
+                className={styles["playback-bar__tick"]}
+            />
+
+        </div>
+    )
+}
+
 function VolumeControls() {
     const { volume, setVolume } = useGlobalAudioPlayer();
 
@@ -207,14 +257,6 @@ export default function Player() {
     return (
         <div className={styles["player-page"]}>
             <div className={styles["player"]}>
-                <div className={styles["decor-bars"]}>
-                    <div className={styles["bar-white"]}></div>
-                    <div className={styles["bar-grey"]}></div>
-                    <div className={styles["bar-white"]}></div>
-                    <div className={styles["bar-grey"]}></div>
-                    <div className={styles["bar-white"]}></div>
-                    <div className={styles["bar-grey"]}></div>
-                </div>
                 <div className={styles["avi-container"]}>
                     <Avatar userId={!!tracks.length ? tracks[trackIndex].uploader_id : null} size="small" />
                 </div>
@@ -249,6 +291,15 @@ export default function Player() {
                 </div>
                 <p className={styles["trackposted"]}>{whenPostedText}</p>
                 <ElapsedTime />
+                <PlaybackBar />
+                {/* <div className={styles["decor-bars"]}>
+                    <div className={styles["bar-white"]}></div>
+                    <div className={styles["bar-grey"]}></div>
+                    <div className={styles["bar-white"]}></div>
+                    <div className={styles["bar-grey"]}></div>
+                    <div className={styles["bar-white"]}></div>
+                    <div className={styles["bar-grey"]}></div>
+                </div> */}
                 <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
                     {totalTimeText}
                 </p>

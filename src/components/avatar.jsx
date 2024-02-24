@@ -45,7 +45,9 @@ export default function Avatar({ userId, size = "large" }) {
                 }}
                 title={userId} // show userid on hover
                 onClick={handleOpen}
-            />
+            >
+                {userId == '5f0e055b-493d-4986-a1d3-c852e91669aa' ? 'TEST' : ''}
+            </button>
         </>
     ) : (
         <div
