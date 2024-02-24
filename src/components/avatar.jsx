@@ -37,7 +37,8 @@ export default function Avatar({ userId, size = "large" }) {
                     <Profile userId={userId} handleClose={handleClose} />
                 </div>
             </dialog>
-            <div
+            <button
+                type="button"
                 className={`${styles["aviicon"]} ${size === "small" ? styles["aviicon-small"] : styles["aviicon-big"]}`}
                 style={{
                     backgroundColor: `#${userId.slice(0, 6)}`,
