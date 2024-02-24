@@ -73,17 +73,16 @@ function PlaybackBar() {
         }
     }, [getPosition])
 
-    const goTo = useCallback((event) => {
-        const { eventOffsetX } = event;
-        console.log("clicked");
+    const goTo = useCallback((e) => {
+        const { pageX: eventOffsetX } = e;
 
         if (playbackBarRef.current) {
-            const refOffsetX = playbackBarRef.current.offsetLeft;
+            const refOffsetX = playbackBarRef.current.getBoundingClientRect().left;
             const refWidth = playbackBarRef.current.clientWidth;
             const percent = (eventOffsetX - refOffsetX) / refWidth;
             seek(percent * duration);
         }
-    }, [duration, playing, seek])
+    }, [duration, playing, seek]);
 
     if (duration === Infinity) return null;
 
@@ -157,7 +156,7 @@ export default function Player() {
     const { user, setUser } = useContext(UserContext);
     const supabase = createClientComponentClient();
     // src is url of file being played.
-    const { load, playing, togglePlayPause, src } = useGlobalAudioPlayer();
+    const { load, playing, togglePlayPause, src } = useGlobalAudioPlayer({ src: null });
 
     const handleSelectChange = (e) => {
         const newGenre = e.target.value;
@@ -249,7 +248,6 @@ export default function Player() {
                 onend: () => setTrackIndex((trackIndex + 1) % tracks.length),
             });
         } else {
-            load('test.mp3');
             console.log("no tracks found")
         }
     }, [load, tracks, trackIndex]);
