@@ -52,6 +52,59 @@ function ElapsedTime() {
     )
 }
 
+function PlaybackBar() {
+    const { playing, getPosition, duration, seek } = useGlobalAudioPlayer();
+    const [pos, setPos] = useState(0);
+    const frameRef = useRef();
+    const playbackBarRef = useRef(null);
+
+    useEffect(() => {
+        const animate = () => {
+            setPos(getPosition());
+            frameRef.current = requestAnimationFrame(animate);
+        }
+
+        frameRef.current = window.requestAnimationFrame(animate);
+
+        return () => {
+            if (frameRef.current) {
+                cancelAnimationFrame(frameRef.current);
+            }
+        }
+    }, [getPosition])
+
+    // const goTo = useCallback((e) => {
+    //     const { pageX: eventOffsetX } = e;
+
+    //     if (playbackBarRef.current) {
+    //         const refOffsetX = playbackBarRef.current.getBoundingClientRect().left;
+    //         const refWidth = playbackBarRef.current.clientWidth;
+    //         const percent = (eventOffsetX - refOffsetX) / refWidth;
+    //         seek(percent * duration);
+    //     }
+    // }, [duration, playing, seek]);
+
+    const handlePlayback = (slider) => {
+        return seek(slider.target.value);
+    }
+
+    if (duration === Infinity) return null;
+
+    return (
+        <>
+            <input
+                className={styles["playback-bar"]}
+                type="range"
+                min={0}
+                max={Math.trunc(duration)}
+                step={1}
+                onChange={handlePlayback}
+                value={Math.trunc(pos)}
+            />
+        </>
+    )
+}
+
 function VolumeControls() {
     const { volume, setVolume } = useGlobalAudioPlayer();
 
@@ -107,7 +160,7 @@ export default function Player() {
     const { user, setUser } = useContext(UserContext);
     const supabase = createClientComponentClient();
     // src is url of file being played.
-    const { load, playing, togglePlayPause, src } = useGlobalAudioPlayer();
+    const { load, playing, togglePlayPause, stop, src } = useGlobalAudioPlayer({ src: null });
 
     const handleSelectChange = (e) => {
         const newGenre = e.target.value;
@@ -199,22 +252,17 @@ export default function Player() {
                 onend: () => setTrackIndex((trackIndex + 1) % tracks.length),
             });
         } else {
-            load('test.mp3');
             console.log("no tracks found")
         }
-    }, [load, tracks, trackIndex]);
+
+        return () => {
+            stop();
+        }
+    }, [load, tracks, trackIndex, stop]);
 
     return (
         <div className={styles["player-page"]}>
             <div className={styles["player"]}>
-                <div className={styles["decor-bars"]}>
-                    <div className={styles["bar-white"]}></div>
-                    <div className={styles["bar-grey"]}></div>
-                    <div className={styles["bar-white"]}></div>
-                    <div className={styles["bar-grey"]}></div>
-                    <div className={styles["bar-white"]}></div>
-                    <div className={styles["bar-grey"]}></div>
-                </div>
                 <div className={styles["avi-container"]}>
                     <Avatar userId={!!tracks.length ? tracks[trackIndex].uploader_id : null} size="small" />
                 </div>
@@ -248,10 +296,21 @@ export default function Player() {
                     </div>
                 </div>
                 <p className={styles["trackposted"]}>{whenPostedText}</p>
-                <ElapsedTime />
-                <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
-                    {totalTimeText}
-                </p>
+                <div className={styles["timeline"]}>
+                    <ElapsedTime />
+                    <PlaybackBar />
+                    {/* <div className={styles["decor-bars"]}>
+                        <div className={styles["bar-white"]}></div>
+                        <div className={styles["bar-grey"]}></div>
+                        <div className={styles["bar-white"]}></div>
+                        <div className={styles["bar-grey"]}></div>
+                        <div className={styles["bar-white"]}></div>
+                        <div className={styles["bar-grey"]}></div>
+                    </div> */}
+                    <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
+                        {totalTimeText}
+                    </p>
+                </div>
                 <PlayerControls handleBack={handleBack} handlePlayPause={handlePlayPause} handleForward={handleForward}
                     isPausedMisnomer={playing} isEmpty={!tracks.length}
                 />
