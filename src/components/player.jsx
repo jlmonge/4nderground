@@ -73,41 +73,35 @@ function PlaybackBar() {
         }
     }, [getPosition])
 
-    const goTo = useCallback((e) => {
-        const { pageX: eventOffsetX } = e;
+    // const goTo = useCallback((e) => {
+    //     const { pageX: eventOffsetX } = e;
 
-        if (playbackBarRef.current) {
-            const refOffsetX = playbackBarRef.current.getBoundingClientRect().left;
-            const refWidth = playbackBarRef.current.clientWidth;
-            const percent = (eventOffsetX - refOffsetX) / refWidth;
-            seek(percent * duration);
-        }
-    }, [duration, playing, seek]);
+    //     if (playbackBarRef.current) {
+    //         const refOffsetX = playbackBarRef.current.getBoundingClientRect().left;
+    //         const refWidth = playbackBarRef.current.clientWidth;
+    //         const percent = (eventOffsetX - refOffsetX) / refWidth;
+    //         seek(percent * duration);
+    //     }
+    // }, [duration, playing, seek]);
 
-    const dragEnter = (e) => {
-        console.log("start draggin deez nuts");
-    }
-
-    const dragLeave = (e) => {
-        console.log("stop draggin deez nuts");
+    const handlePlayback = (slider) => {
+        return seek(slider.target.value);
     }
 
     if (duration === Infinity) return null;
 
     return (
-        <div
-            className={styles["playback-bar"]}
-            ref={playbackBarRef}
-            onClick={goTo}
-            onDragEnter={dragEnter}
-            onDragLeave={dragLeave}
-        >
-            <div
-                style={{ width: `${(pos / duration) * 100}%` }}
-                className={styles["playback-bar__tick"]}
+        <>
+            <input
+                className={styles["playback-bar"]}
+                type="range"
+                min={0}
+                max={Math.trunc(duration)}
+                step={1}
+                onChange={handlePlayback}
+                value={Math.trunc(pos)}
             />
-
-        </div>
+        </>
     )
 }
 
@@ -166,7 +160,7 @@ export default function Player() {
     const { user, setUser } = useContext(UserContext);
     const supabase = createClientComponentClient();
     // src is url of file being played.
-    const { load, playing, togglePlayPause, src } = useGlobalAudioPlayer({ src: null });
+    const { load, playing, togglePlayPause, stop, src } = useGlobalAudioPlayer({ src: null });
 
     const handleSelectChange = (e) => {
         const newGenre = e.target.value;
@@ -260,7 +254,11 @@ export default function Player() {
         } else {
             console.log("no tracks found")
         }
-    }, [load, tracks, trackIndex]);
+
+        return () => {
+            stop();
+        }
+    }, [load, tracks, trackIndex, stop]);
 
     return (
         <div className={styles["player-page"]}>
