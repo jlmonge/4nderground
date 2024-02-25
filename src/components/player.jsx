@@ -84,6 +84,14 @@ function PlaybackBar() {
         }
     }, [duration, playing, seek]);
 
+    const dragEnter = (e) => {
+        console.log("start draggin deez nuts");
+    }
+
+    const dragLeave = (e) => {
+        console.log("stop draggin deez nuts");
+    }
+
     if (duration === Infinity) return null;
 
     return (
@@ -91,6 +99,8 @@ function PlaybackBar() {
             className={styles["playback-bar"]}
             ref={playbackBarRef}
             onClick={goTo}
+            onDragEnter={dragEnter}
+            onDragLeave={dragLeave}
         >
             <div
                 style={{ width: `${(pos / duration) * 100}%` }}
@@ -288,19 +298,21 @@ export default function Player() {
                     </div>
                 </div>
                 <p className={styles["trackposted"]}>{whenPostedText}</p>
-                <ElapsedTime />
-                <PlaybackBar />
-                {/* <div className={styles["decor-bars"]}>
-                    <div className={styles["bar-white"]}></div>
-                    <div className={styles["bar-grey"]}></div>
-                    <div className={styles["bar-white"]}></div>
-                    <div className={styles["bar-grey"]}></div>
-                    <div className={styles["bar-white"]}></div>
-                    <div className={styles["bar-grey"]}></div>
-                </div> */}
-                <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
-                    {totalTimeText}
-                </p>
+                <div className={styles["timeline"]}>
+                    <ElapsedTime />
+                    <PlaybackBar />
+                    {/* <div className={styles["decor-bars"]}>
+                        <div className={styles["bar-white"]}></div>
+                        <div className={styles["bar-grey"]}></div>
+                        <div className={styles["bar-white"]}></div>
+                        <div className={styles["bar-grey"]}></div>
+                        <div className={styles["bar-white"]}></div>
+                        <div className={styles["bar-grey"]}></div>
+                    </div> */}
+                    <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
+                        {totalTimeText}
+                    </p>
+                </div>
                 <PlayerControls handleBack={handleBack} handlePlayPause={handlePlayPause} handleForward={handleForward}
                     isPausedMisnomer={playing} isEmpty={!tracks.length}
                 />

@@ -15,6 +15,7 @@
     height: 237px;
     position: relative;
     margin: 0 auto;
+    user-select: none;
 }
 
 
@@ -23,14 +24,21 @@
     @include abs-pos(118px, 134px);
 }
 
+.timeline {
+    @include abs-pos(61px, 127px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .playback-bar {
-    @include abs-pos(118px, 131px);
+    // @include abs-pos(118px, 131px);
     width: 75px;
     height: 8px;
     background-color: black;
     cursor: pointer;
     overflow: hidden;
-    border-radius: 2px;
+    border-radius: 4px;
 }
 
 .playback-bar__tick {
@@ -100,14 +108,6 @@
     font-size: 10px;
 }
 
-.elapsedtime {
-    @include abs-pos(81px, 127px);
-}
-
-.totaltime {
-    @include abs-pos(201px, 127px);
-}
-
 .queue-container {
     @include abs-pos(196px, 37px);
     display: flex;
@@ -153,6 +153,8 @@
         -2px 0 8px white,
         2px 0 8px white,
     ;
+    min-width: 3em;
+    text-align: center;
 
 }
 
@@ -199,7 +201,7 @@
     outline: none;
     overflow: hidden;
     border: 0.5px solid black;
-    border-radius: 3px;
+    border-radius: 4px;
     margin: 0;
 }
 
@@ -250,8 +252,7 @@
         height: 242px;
     }
 
-    .decor-bars,
-    .playback-bar {
+    .decor-bars {
         @include abs-pos(193px, 131px);
     }
 
@@ -274,12 +275,8 @@
         font-size: 14px;
     }
 
-    .elapsedtime {
+    .timeline {
         @include abs-pos(147px, 124px);
-    }
-
-    .totaltime {
-        @include abs-pos(408px, 124px);
     }
 
     .queue-container {
