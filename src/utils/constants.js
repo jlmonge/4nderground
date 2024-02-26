@@ -4,7 +4,7 @@ export const DEBUG = false;
 const MB = 1_000_000;
 const NUM_MB = 100 // TODO: must be 100MB (cloudflare limit) on deploy
 export const MAX_SIZE = NUM_MB * MB;
-export const MIN_DURATION = 15; // TODO: must be 30s on deploy
+export const MIN_DURATION = 1; // TODO: must be 15s on deploy
 export const MAX_DURATION = 420; // TODO: must be 420s (7m)  on deploy
 export const COMMENT_CHARS_MAX = 1024;
 

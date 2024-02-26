@@ -7,6 +7,12 @@ import { useRef, useEffect } from 'react';
 import Profile from './profile';
 import styles from '../styles/Avatar.module.scss';
 
+const testUsers = new Set([
+    '5f0e055b-493d-4986-a1d3-c852e91669aa', // "tom"
+    '86e6e7e7-f48f-470b-9adf-1fb018bacbe0', // "harry"
+    'e290162b-45fa-42c2-8ee1-bc702397b1c7', // "jerry"
+])
+
 export default function Avatar({ userId, size = "large" }) {
     const dialogRef = useRef(null);
 
@@ -46,7 +52,7 @@ export default function Avatar({ userId, size = "large" }) {
                 title={userId} // show userid on hover
                 onClick={handleOpen}
             >
-                {userId == '5f0e055b-493d-4986-a1d3-c852e91669aa' ? 'TEST' : ''}
+                {testUsers.has(userId) ? 'TEST' : ''}
             </button>
         </>
     ) : (
