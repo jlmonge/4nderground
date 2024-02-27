@@ -21,19 +21,23 @@ function EditURL({ link, onChange }) {
     const validateURL = (e) => {
         setWarning('');
 
-        let url = e.target.value;
+        let url = e.target.value.trim();
         if (!url) return;
         if (url.length > LINK_URL_CHARS_MAX) setWarning(`Max length ${LINK_URL_CHARS_MAX} exceeded.`);
+
+
         if (!(url.startsWith("http://") || url.startsWith("https://"))) {
             url = `https://${url}`;
         }
 
-        // console.log(`URL: ${url}`);
-        const isValid = isURL(url);
-        // console.log(`is this a valid url? ${isValid.toString()}`)
         if (!isURL(url)) {
             setWarning('URL must be valid.');
         }
+
+        onChange({
+            ...link,
+            url: e.target.value.trim(),
+        });
     }
 
     const handleChange = (e) => {
@@ -86,7 +90,7 @@ function EditText({ link, onChange }) {
     }
 
     return (
-        <div className={styles["edit-url"]}>
+        <div className={styles["edit-text"]}>
             <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
             <input
                 type="text"

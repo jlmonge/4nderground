@@ -39,7 +39,12 @@
 .edit-url {
     display: flex;
     flex-direction: column;
-    width: 200%;
+    width: 100%;
+}
+
+.edit-text {
+    display: flex;
+    flex-direction: column;
 }
 
 .edit-warning {
