@@ -31,9 +31,19 @@
     &__li {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         gap: 0.25em;
     }
+}
+
+.edit-url {
+    display: flex;
+    flex-direction: column;
+    width: 200%;
+}
+
+.edit-warning {
+    color: red;
 }
 
 .profile__btns {
@@ -43,6 +53,7 @@
 }
 
 .input {
+    // width: 100% prevents overflow
     width: 100%;
     font-size: 1em;
 

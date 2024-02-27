@@ -3,6 +3,8 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
+import isURL from 'validator/lib/isURL';
+import { LINK_URL_CHARS_MAX } from '../utils/constants';
 import { varLog } from '../utils/helpers';
 import { UserContext } from '../user-provider';
 import Report from './report';
@@ -13,6 +15,55 @@ import styles from '../styles/Profile.module.scss';
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
 
+function EditURL({ link, onChange }) {
+    const [warning, setWarning] = useState(''); // display below input
+
+    const validate = (e) => {
+        setWarning('');
+        let url = e.target.value;
+        if (!url) return;
+
+        if (url.length > LINK_URL_CHARS_MAX) setWarning('URL limited to 512 characters.')
+
+        if (!(url.startsWith("http://") || url.startsWith("https://"))) {
+            url = `https://${url}`;
+        }
+
+        // console.log(`URL: ${url}`);
+        const isValid = isURL(url);
+        // console.log(`is this a valid url? ${isValid.toString()}`)
+        if (!isURL(url)) {
+            setWarning('URL must be valid.');
+        }
+    }
+
+    return (
+        <div className={styles["edit-url"]}>
+            <label htmlFor={`edit-link${(link.pos).toString()}-url`} className={styles["visually-hidden"]}>Edit link text</label>
+            <input
+                type="text"
+                id={`edit-link${(link.pos).toString()}-url`}
+                maxLength={LINK_URL_CHARS_MAX}
+                name="edit-link-url"
+                placeholder="Link URL"
+                className={styles["input"]}
+                required
+                value={link.url}
+                onBlur={validate}
+                onChange={e => {
+                    onChange({
+                        ...link,
+                        url: e.target.value,
+                    });
+                }}
+            />
+            {
+                warning && <span className={styles["edit-warning"]}>{warning}</span>
+            }
+        </div>
+    )
+}
+
 function ProfileLink({ link, isEditing, onDelete, onChange }) {
     // const handleBlur = (e) => {
     //     console.log(`blurring. ${e}`);
@@ -22,23 +73,7 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
     if (isEditing) {
         linkContent = (
             <>
-                <label htmlFor={`edit-link${(link.pos).toString()}-url`} className={styles["visually-hidden"]}>Edit link text</label>
-                <input
-                    type="text"
-                    id={`edit-link${(link.pos).toString()}-url`}
-                    name="edit-link-url"
-                    placeholder="Link URL"
-                    className={styles["input"]}
-                    required
-                    value={link.url}
-                    // onBlur={handleBlur}
-                    onChange={e => {
-                        onChange({
-                            ...link,
-                            url: e.target.value,
-                        });
-                    }}
-                />
+                <EditURL link={link} onChange={onChange} />
                 <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
                 <input
                     type="text"
@@ -55,22 +90,16 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
                         });
                     }}
                 />
-
-
-                {
-                    isEditing &&
-                    <button
-                        onClick={() => onDelete(link.pos)}
-                        type="button"
-                        title="Delete link"
-                        //aria-label="Delete comment" // TODO: accessibility update
-                        //role="button"
-                        className={styles["btn__red"]}
-                    >
-                        X
-                    </button>
-                }
-
+                <button
+                    onClick={() => onDelete(link.pos)}
+                    type="button"
+                    title="Delete link"
+                    //aria-label="Delete comment" // TODO: accessibility update
+                    //role="button"
+                    className={styles["btn__red"]}
+                >
+                    X
+                </button>
             </>
 
         )
