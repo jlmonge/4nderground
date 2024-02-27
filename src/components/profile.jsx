@@ -76,9 +76,14 @@ function EditText({ link, onChange }) {
     const validateText = (e) => {
         setWarning('');
 
-        const text = e.target.value;
+        const text = e.target.value.trim();
         if (!text.length) return;
         if (text.length > LINK_TEXT_CHARS_MAX) setWarning(`Max length ${LINK_TEXT_CHARS_MAX} exceeded.`);
+
+        onChange({
+            ...link,
+            text: e.target.value.trim(),
+        });
     }
 
     const handleChange = (e) => {
