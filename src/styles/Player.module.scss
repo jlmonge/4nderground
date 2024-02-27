@@ -18,12 +18,6 @@
     user-select: none;
 }
 
-
-
-.decor-bars {
-    @include abs-pos(118px, 134px);
-}
-
 .timeline {
     @include abs-pos(61px, 127px);
     display: flex;
@@ -275,10 +269,6 @@
         background-size: 100% 100%;
         width: 624px;
         height: 242px;
-    }
-
-    .decor-bars {
-        @include abs-pos(193px, 131px);
     }
 
     .bar-white,

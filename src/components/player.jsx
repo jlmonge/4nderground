@@ -2,7 +2,6 @@
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Fragment, Suspense, useEffect, useState, useRef, useContext, useCallback } from 'react';
-import { useGlobalAudioPlayer } from 'react-use-audio-player';
 import { UserContext } from '../user-provider';
 import Report from './report';
 import CommentSection from '../components/comment-section';
@@ -77,7 +76,17 @@ export default function Player() {
         if (tracks.length) {
             setTrackIndex(trackIndex > 0 ? trackIndex - 1 : tracks.length - 1);
             setPaused(false);
-            audioRef.current.play();
+            audioRef.current.play()
+                .then(_ => {
+                    audioRef.current.autoplay = true;
+                })
+                .catch(e => {
+                    // prevents "play() was interrupted by load()" error, which
+                    // is caused by rapidly pressing back/next or letting the
+                    // current track end. this does not seem to affect
+                    // performance or user experience
+                });
+
             audioRef.current.autoplay = true;
         }
     };
@@ -106,8 +115,16 @@ export default function Player() {
         if (tracks.length) {
             setTrackIndex((trackIndex + 1) % tracks.length);
             setPaused(false);
-            audioRef.current.play();
-            audioRef.current.autoplay = true;
+            audioRef.current.play()
+                .then(_ => {
+                    audioRef.current.autoplay = true;
+                })
+                .catch(e => {
+                    // prevents "play() was interrupted by load()" error, which
+                    // is caused by rapidly pressing back/next or letting the
+                    // current track end. this does not seem to affect
+                    // performance or user experience
+                });
         }
     };
 
@@ -115,7 +132,7 @@ export default function Player() {
         if (tracks.length) {
             audioRef.current.currentTime = e.target.value;
         }
-    }
+    };
 
     const handleVolume = (e) => {
         if (tracks.length) {
@@ -183,6 +200,7 @@ export default function Player() {
             let file_path = tracks[trackIndex].file_path;
             audioRef.current.currentTime = 0;
             audioRef.current.src = file_path;
+            audioRef.current.load();
         } else {
             console.log("no tracks found")
         }
@@ -231,23 +249,24 @@ export default function Player() {
                 <p className={styles["trackposted"]}>{whenPostedText}</p>
                 <div className={styles["timeline"]}>
                     <p className={`${styles["tracktime"]} ${styles["curtime"]}`}>{`${Math.trunc(curTime / 60)}:${Math.trunc(curTime % 60).toString().padStart(2, '0')}`}</p>
-                    <input
-                        className={styles["playback-bar"]}
-                        type="range"
-                        min={0}
-                        max={tracks.length ? Math.trunc(tracks[trackIndex].duration) : 0}
-                        step={1}
-                        onChange={handleSeek}
-                        value={Math.trunc(curTime)}
-                    />
-                    {/* <div className={styles["decor-bars"]}>
-                        <div className={styles["bar-white"]}></div>
-                        <div className={styles["bar-grey"]}></div>
-                        <div className={styles["bar-white"]}></div>
-                        <div className={styles["bar-grey"]}></div>
-                        <div className={styles["bar-white"]}></div>
-                        <div className={styles["bar-grey"]}></div>
-                    </div> */}
+                    {tracks.length ?
+                        <input
+                            className={styles["playback-bar"]}
+                            type="range"
+                            min={0}
+                            max={tracks.length ? Math.trunc(tracks[trackIndex].duration) : 0}
+                            step={1}
+                            onChange={handleSeek}
+                            value={Math.trunc(curTime)}
+                        /> :
+                        <div className={styles["decor-bars"]}>
+                            <div className={styles["bar-white"]}></div>
+                            <div className={styles["bar-grey"]}></div>
+                            <div className={styles["bar-white"]}></div>
+                            <div className={styles["bar-grey"]}></div>
+                            <div className={styles["bar-white"]}></div>
+                            <div className={styles["bar-grey"]}></div>
+                        </div>}
                     <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
                         {totalTimeText}
                     </p>
@@ -268,11 +287,11 @@ export default function Player() {
                     />
                 </div>
             </div>
-            <p>{curTime}</p>
+            {/* <p>{curTime}</p>
             <p>debug: volume: {volume}</p>
             <p>debug: trackIndex: {trackIndex}</p>
             <p>debug: tracks: {JSON.stringify(tracks, null, 2)}</p>
-            <p>debug: tracks.length: {tracks.length}</p>
+            <p>debug: tracks.length: {tracks.length}</p> */}
             <CommentSection trackId={(tracks.length) ? tracks[trackIndex].id : null} />
         </div>
     );
