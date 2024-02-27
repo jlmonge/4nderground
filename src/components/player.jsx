@@ -2,7 +2,6 @@
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Fragment, Suspense, useEffect, useState, useRef, useContext, useCallback } from 'react';
-import { useGlobalAudioPlayer } from 'react-use-audio-player';
 import { UserContext } from '../user-provider';
 import Report from './report';
 import CommentSection from '../components/comment-section';
@@ -14,130 +13,14 @@ import styles from '../styles/Player.module.scss'
 const BTN_SIZE = 24;
 const DEBUG = false; // redundant; replace soon
 
-function Loading() {
-    return (
-        <>
-            <p>Loading content...</p>
-        </>
-    );
-}
-
-
-//todo: when genre changes, pass it to player and filter tracks.
-//todo: if no tracks in genre, show empty player
-//todo: now i realize that we must show player when empty...
-
-function ElapsedTime() {
-    const frameRef = useRef();
-    const [pos, setPos] = useState(0);
-    const { getPosition } = useGlobalAudioPlayer();
-
-    useEffect(() => {
-        const animate = () => {
-            setPos(getPosition())
-            frameRef.current = requestAnimationFrame(animate)
-        }
-
-        frameRef.current = window.requestAnimationFrame(animate)
-
-        return () => {
-            if (frameRef.current) {
-                cancelAnimationFrame(frameRef.current)
-            }
-        }
-    }, [])
-
-    return (
-        <p className={`${styles["tracktime"]} ${styles["elapsedtime"]}`}>{`${Math.trunc(pos / 60)}:${Math.trunc(pos % 60).toString().padStart(2, '0')}`}</p>
-    )
-}
-
-function PlaybackBar() {
-    const { playing, getPosition, duration, seek } = useGlobalAudioPlayer();
-    const [pos, setPos] = useState(0);
-    const frameRef = useRef();
-    const playbackBarRef = useRef(null);
-
-    useEffect(() => {
-        const animate = () => {
-            setPos(getPosition());
-            frameRef.current = requestAnimationFrame(animate);
-        }
-
-        frameRef.current = window.requestAnimationFrame(animate);
-
-        return () => {
-            if (frameRef.current) {
-                cancelAnimationFrame(frameRef.current);
-            }
-        }
-    }, [getPosition])
-
-    // const goTo = useCallback((e) => {
-    //     const { pageX: eventOffsetX } = e;
-
-    //     if (playbackBarRef.current) {
-    //         const refOffsetX = playbackBarRef.current.getBoundingClientRect().left;
-    //         const refWidth = playbackBarRef.current.clientWidth;
-    //         const percent = (eventOffsetX - refOffsetX) / refWidth;
-    //         seek(percent * duration);
-    //     }
-    // }, [duration, playing, seek]);
-
-    const handlePlayback = (slider) => {
-        return seek(slider.target.value);
-    }
-
-    if (duration === Infinity) return null;
-
-    return (
-        <>
-            <input
-                className={styles["playback-bar"]}
-                type="range"
-                min={0}
-                max={Math.trunc(duration)}
-                step={1}
-                onChange={handlePlayback}
-                value={Math.trunc(pos)}
-            />
-        </>
-    )
-}
-
-function VolumeControls() {
-    const { volume, setVolume } = useGlobalAudioPlayer();
-
-    const handleVolume = useCallback((slider) => {
-        return setVolume(slider.target.value);
-    }, [setVolume]);
-
-    return (
-        <div className={styles["vol-container"]}>
-            <span className={styles["vol-label"]}>Vol</span>
-            <input
-                className={styles["vol-slider"]}
-                type="range"
-                min={0}
-                max={1}
-                step={0.01}
-                onChange={handleVolume}
-                value={volume}
-            />
-        </div>
-    )
-
-}
-
-function PlayerControls({ handleBack, handlePlayPause, handleForward, isPausedMisnomer, isEmpty }) {
-    // <svg> created via figma
+function PlayerControls({ handleBack, handlePlayPause, handleForward, isPaused, isEmpty }) {
     return (
         <div className={styles["ctrls-container"]}>
             <button type="button" onClick={handleBack} className={styles["skipback-btn"]} disabled={isEmpty}>
                 {/* <SkipBackBtn className={styles["ctrls-svg"]} /> */}
             </button>
             <button type="button" onClick={handlePlayPause}
-                className={isPausedMisnomer ? styles["pause-btn"] : styles["play-btn"]} disabled={isEmpty}>
+                className={isPaused ? styles["play-btn"] : styles["pause-btn"]} disabled={isEmpty}>
                 {/* {isPausedMisnomer
                     ? <PauseBtn className={styles["ctrls-svg"]} />
                     : <PlayBtn className={styles["ctrls-svg"]} />
@@ -150,19 +33,30 @@ function PlayerControls({ handleBack, handlePlayPause, handleForward, isPausedMi
     )
 }
 
+// TODO: DECOUPLE (GET+SET PLAYING STATUS, SET TRACKS W/ HTML5 AUDIO)
 export default function Player() {
-    // contains the current collection of tracks
+    // contains the current collection of tracks (depends on genre)
     const [tracks, setTracks] = useState([]);
     const [trackIndex, setTrackIndex] = useState(0);
-    // contains all tracks
+    // contains all tracks (regardless of genre)
     const [allTracks, setAllTracks] = useState([]);
     const [genre, setGenre] = useState(GENRES['all']);
-    const { user, setUser } = useContext(UserContext);
+    const [loading, setLoading] = useState(true);
+    const [paused, setPaused] = useState(true);
+    const [curTime, setCurTime] = useState(0);
+    const [volume, setVolume] = useState(1);
+    const { user } = useContext(UserContext);
     const supabase = createClientComponentClient();
-    // src is url of file being played.
-    const { load, playing, togglePlayPause, stop, src } = useGlobalAudioPlayer({ src: null });
+    const audioRef = useRef(null);
 
-    const handleSelectChange = (e) => {
+    // e properties: isTrusted (??)
+    const handleTimeUpdate = (e) => {
+        const time = audioRef.current.currentTime;
+        // console.log(`time updated: ${time}`);
+        setCurTime(time);
+    }
+
+    const handleGenreChange = (e) => {
         const newGenre = e.target.value;
 
         let newTracks;
@@ -179,17 +73,72 @@ export default function Player() {
     }
 
     const handleBack = () => {
-        // console.log('Skip Back');
-        setTrackIndex(trackIndex > 0 ? trackIndex - 1 : tracks.length - 1);
+        if (tracks.length) {
+            setTrackIndex(trackIndex > 0 ? trackIndex - 1 : tracks.length - 1);
+            setPaused(false);
+            audioRef.current.play()
+                .then(_ => {
+                    audioRef.current.autoplay = true;
+                })
+                .catch(e => {
+                    // prevents "play() was interrupted by load()" error, which
+                    // is caused by rapidly pressing back/next or letting the
+                    // current track end. this does not seem to affect
+                    // performance or user experience
+                });
+
+            audioRef.current.autoplay = true;
+        }
     };
 
     const handlePlayPause = () => {
-        togglePlayPause();
+        const isPlaying = audioRef.current.currentTime > 0 &&
+            !audioRef.current.paused &&
+            !audioRef.current.ended &&
+            audioRef.current.readyState > audioRef.current.HAVE_CURRENT_DATA;
+
+        if (!isPlaying) {
+            console.log("was paused, now playing");
+            setPaused(false);
+            audioRef.current.play();
+            audioRef.current.autoplay = true;
+
+        } else {
+            console.log("was playing, now paused");
+            setPaused(true);
+            audioRef.current.pause();
+            audioRef.current.autoplay = false;
+        }
     };
 
     const handleForward = () => {
-        // console.log('Skip Forward');
-        setTrackIndex((trackIndex + 1) % tracks.length);
+        if (tracks.length) {
+            setTrackIndex((trackIndex + 1) % tracks.length);
+            setPaused(false);
+            audioRef.current.play()
+                .then(_ => {
+                    audioRef.current.autoplay = true;
+                })
+                .catch(e => {
+                    // prevents "play() was interrupted by load()" error, which
+                    // is caused by rapidly pressing back/next or letting the
+                    // current track end. this does not seem to affect
+                    // performance or user experience
+                });
+        }
+    };
+
+    const handleSeek = (e) => {
+        if (tracks.length) {
+            audioRef.current.currentTime = e.target.value;
+        }
+    };
+
+    const handleVolume = (e) => {
+        if (tracks.length) {
+            audioRef.current.volume = e.target.value;
+            setVolume(e.target.value);
+        }
     };
 
     let queueNowPosOutput = '0'; // text or jsx
@@ -215,15 +164,17 @@ export default function Player() {
         const diffS = (Date.now() - new Date(tracks[trackIndex].created_at)) / 1000;
         const diffM = Math.trunc(diffS / 60);
         const diffH = Math.trunc(diffM / 60);
-        whenPostedText = `${diffH}h${diffM % 60}m ago`
+        whenPostedText = `${diffH}h${diffM % 60}m ago`;
     }
 
-
     useEffect(() => {
+        setLoading(true);
         const fetchTracks = async () => {
             const dayAgo = getDayAgo();
             let data, error;
             // console.log(`USER: ${JSON.stringify(user)}`);
+
+            // must be one line; doesn't work otherwise
             if (!user) {
                 // console.log('logged out');
                 ({ data, error } = await supabase.from('tracks').select('*').gt('created_at', dayAgo).order('created_at', { ascending: false }));
@@ -241,40 +192,46 @@ export default function Player() {
             setTracks(data ?? []);
         }
         fetchTracks();
-    }, [user?.id]);
+        setLoading(false);
+    }, [user]);
 
     useEffect(() => {
         if (tracks.length) {
             let file_path = tracks[trackIndex].file_path;
-            load(`${file_path}`, {
-                autoplay: trackIndex === 0 ? false : true,
-                html5: true,
-                onend: () => setTrackIndex((trackIndex + 1) % tracks.length),
-            });
+            audioRef.current.currentTime = 0;
+            audioRef.current.src = file_path;
+            audioRef.current.load();
         } else {
-            console.log("no tracks found")
+            // console.log("no tracks found")
         }
-
-        return () => {
-            stop();
-        }
-    }, [load, tracks, trackIndex, stop]);
+    }, [tracks, trackIndex]);
 
     return (
         <div className={styles["player-page"]}>
+            {
+                loading &&
+                <div className={styles["loading"]}>
+                    <span className={styles["loading__text"]}>Loading...</span>
+                </div>
+            }
             <div className={styles["player"]}>
+                <audio
+                    ref={audioRef}
+                    onEnded={handleForward}
+                    onTimeUpdate={handleTimeUpdate}
+                />
                 <div className={styles["avi-container"]}>
-                    <Avatar userId={!!tracks.length ? tracks[trackIndex].uploader_id : null} size="small" />
+                    <Avatar userId={(!!tracks.length) ? tracks[trackIndex].uploader_id : null} size="small" />
                 </div>
                 {user?.id &&
                     <div className={styles["report-container"]}>
-                        <Report contentType='track' contentId={tracks.length ? tracks[trackIndex].id : null} />
+                        <Report contentType='track' contentId={(tracks.length) ? tracks[trackIndex].id : null} />
                     </div>
                 }
                 <div className={styles["genre-container"]}>
                     <label htmlFor="genre" className={styles["genre-label"]}>Genre</label>
                     <div className={styles["genreselect-container"]}>
-                        <select id="genre" className={styles["genreselect"]} name="genre" onChange={handleSelectChange}>
+                        <select id="genre" className={styles["genreselect"]} name="genre" onChange={handleGenreChange}>
                             {
                                 Object.entries(GENRES).map(([key, str]) =>
                                     <option className={styles["genreselect-option"]} key={key} value={key}>{str}</option>
@@ -297,26 +254,51 @@ export default function Player() {
                 </div>
                 <p className={styles["trackposted"]}>{whenPostedText}</p>
                 <div className={styles["timeline"]}>
-                    <ElapsedTime />
-                    <PlaybackBar />
-                    {/* <div className={styles["decor-bars"]}>
-                        <div className={styles["bar-white"]}></div>
-                        <div className={styles["bar-grey"]}></div>
-                        <div className={styles["bar-white"]}></div>
-                        <div className={styles["bar-grey"]}></div>
-                        <div className={styles["bar-white"]}></div>
-                        <div className={styles["bar-grey"]}></div>
-                    </div> */}
+                    <p className={`${styles["tracktime"]} ${styles["curtime"]}`}>{`${Math.trunc(curTime / 60)}:${Math.trunc(curTime % 60).toString().padStart(2, '0')}`}</p>
+                    {tracks.length ?
+                        <input
+                            className={styles["playback-bar"]}
+                            type="range"
+                            min={0}
+                            max={tracks.length ? Math.trunc(tracks[trackIndex].duration) : 0}
+                            step={1}
+                            onChange={handleSeek}
+                            value={Math.trunc(curTime)}
+                        /> :
+                        <div className={styles["decor-bars"]}>
+                            <div className={styles["bar-white"]}></div>
+                            <div className={styles["bar-grey"]}></div>
+                            <div className={styles["bar-white"]}></div>
+                            <div className={styles["bar-grey"]}></div>
+                            <div className={styles["bar-white"]}></div>
+                            <div className={styles["bar-grey"]}></div>
+                        </div>}
                     <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
                         {totalTimeText}
                     </p>
                 </div>
                 <PlayerControls handleBack={handleBack} handlePlayPause={handlePlayPause} handleForward={handleForward}
-                    isPausedMisnomer={playing} isEmpty={!tracks.length}
+                    isPaused={paused} isEmpty={!tracks.length}
                 />
-                <VolumeControls />
+                <div className={styles["vol-container"]}>
+                    <span className={styles["vol-label"]}>Vol</span>
+                    <input
+                        className={styles["vol-slider"]}
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        onChange={handleVolume}
+                        value={volume}
+                    />
+                </div>
             </div>
-            <CommentSection trackId={tracks.length ? tracks[trackIndex].id : null} />
+            {/* <p>{curTime}</p>
+            <p>debug: volume: {volume}</p>
+            <p>debug: trackIndex: {trackIndex}</p>
+            <p>debug: tracks: {JSON.stringify(tracks, null, 2)}</p>
+            <p>debug: tracks.length: {tracks.length}</p> */}
+            <CommentSection trackId={(tracks.length) ? tracks[trackIndex].id : null} />
         </div>
     );
 }

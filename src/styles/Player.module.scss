@@ -18,10 +18,32 @@
     user-select: none;
 }
 
+.loading {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 10%;
+    left: 50%;
 
+    &__text {
+        border: 4px solid grey;
+        border-radius: 8px;
+        background-color: rgb(255 255 255 / 50%);
+        color: black;
+        padding: 4px;
+        animation: 2s ease-in-out infinite alternate pop3d;
+    }
+}
 
-.decor-bars {
-    @include abs-pos(118px, 134px);
+@keyframes pop3d {
+    from {
+        transform: perspective(1rem) rotateX(-10deg);
+    }
+
+    to {
+        transform: perspective(1rem) rotateX(10deg);
+    }
 }
 
 .timeline {
@@ -52,7 +74,7 @@
         width: 1px;
         background-color: grey;
         border-radius: 0;
-        box-shadow: -100px 0 0 100px white;
+        box-shadow: -150px 0 0 150px white;
     }
 
     // combining this into above breaks with webkit
@@ -275,10 +297,6 @@
         background-size: 100% 100%;
         width: 624px;
         height: 242px;
-    }
-
-    .decor-bars {
-        @include abs-pos(193px, 131px);
     }
 
     .bar-white,
