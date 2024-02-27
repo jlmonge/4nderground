@@ -202,7 +202,7 @@ export default function Player() {
             audioRef.current.src = file_path;
             audioRef.current.load();
         } else {
-            console.log("no tracks found")
+            // console.log("no tracks found")
         }
     }, [tracks, trackIndex]);
 
