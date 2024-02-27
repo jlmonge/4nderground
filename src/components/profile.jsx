@@ -4,7 +4,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import isURL from 'validator/lib/isURL';
-import { LINK_URL_CHARS_MAX } from '../utils/constants';
+import { LINK_URL_CHARS_MAX, LINK_TEXT_CHARS_MAX } from '../utils/constants';
 import { varLog } from '../utils/helpers';
 import { UserContext } from '../user-provider';
 import Report from './report';
@@ -18,13 +18,12 @@ const ICON_SIZE = 12;
 function EditURL({ link, onChange }) {
     const [warning, setWarning] = useState(''); // display below input
 
-    const validate = (e) => {
+    const validateURL = (e) => {
         setWarning('');
+
         let url = e.target.value;
         if (!url) return;
-
-        if (url.length > LINK_URL_CHARS_MAX) setWarning('URL limited to 512 characters.')
-
+        if (url.length > LINK_URL_CHARS_MAX) setWarning(`Max length ${LINK_URL_CHARS_MAX} exceeded.`);
         if (!(url.startsWith("http://") || url.startsWith("https://"))) {
             url = `https://${url}`;
         }
@@ -35,6 +34,14 @@ function EditURL({ link, onChange }) {
         if (!isURL(url)) {
             setWarning('URL must be valid.');
         }
+    }
+
+    const handleChange = (e) => {
+        setWarning('');
+        onChange({
+            ...link,
+            url: e.target.value,
+        });
     }
 
     return (
@@ -49,13 +56,49 @@ function EditURL({ link, onChange }) {
                 className={styles["input"]}
                 required
                 value={link.url}
-                onBlur={validate}
-                onChange={e => {
-                    onChange({
-                        ...link,
-                        url: e.target.value,
-                    });
-                }}
+                onBlur={validateURL}
+                onChange={handleChange}
+            />
+            {
+                warning && <span className={styles["edit-warning"]}>{warning}</span>
+            }
+        </div>
+    )
+}
+
+function EditText({ link, onChange }) {
+    const [warning, setWarning] = useState(''); // display below input
+
+    const validateText = (e) => {
+        setWarning('');
+
+        const text = e.target.value;
+        if (!text.length) return;
+        if (text.length > LINK_TEXT_CHARS_MAX) setWarning(`Max length ${LINK_TEXT_CHARS_MAX} exceeded.`);
+    }
+
+    const handleChange = (e) => {
+        setWarning('');
+        onChange({
+            ...link,
+            text: e.target.value,
+        });
+    }
+
+    return (
+        <div className={styles["edit-url"]}>
+            <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
+            <input
+                type="text"
+                id={`edit-link${(link.pos).toString()}-text`}
+                maxLength={LINK_TEXT_CHARS_MAX}
+                name="edit-link-text" // TODO: CONST!!
+                placeholder="Link text"
+                className={styles["input"]}
+                value={link.text}
+                required
+                onBlur={validateText}
+                onChange={handleChange}
             />
             {
                 warning && <span className={styles["edit-warning"]}>{warning}</span>
@@ -74,22 +117,7 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
         linkContent = (
             <>
                 <EditURL link={link} onChange={onChange} />
-                <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
-                <input
-                    type="text"
-                    id={`edit-link${(link.pos).toString()}-text`}
-                    name="edit-link-text" // TODO: CONST!!
-                    placeholder="Link text"
-                    className={styles["input"]}
-                    value={link.text}
-                    required
-                    onChange={e => {
-                        onChange({
-                            ...link,
-                            text: e.target.value,
-                        });
-                    }}
-                />
+                <EditText link={link} onChange={onChange} />
                 <button
                     onClick={() => onDelete(link.pos)}
                     type="button"
