@@ -14,106 +14,6 @@ import styles from '../styles/Player.module.scss'
 const BTN_SIZE = 24;
 const DEBUG = false; // redundant; replace soon
 
-function Replace() {
-    return (
-        <p>replace me</p>
-    )
-}
-// TODO: DECOUPLE (GET POSITION W/ HTML5 AUDIO)
-function ElapsedTime() {
-    return <Replace />
-    // const frameRef = useRef();
-    // const [pos, setPos] = useState(0);
-
-    // useEffect(() => {
-    //     const animate = () => {
-    //         setPos(getPosition())
-    //         frameRef.current = requestAnimationFrame(animate)
-    //     }
-
-    //     frameRef.current = window.requestAnimationFrame(animate)
-
-    //     return () => {
-    //         if (frameRef.current) {
-    //             cancelAnimationFrame(frameRef.current)
-    //         }
-    //     }
-    // }, [])
-
-    // return (
-    //     
-    // )
-}
-
-// TODO: DECOUPLE (GET POSITION, DURATION & SET POSITION W/ HTML5 AUDIO)
-function PlaybackBar() {
-    return <Replace />
-    // const { playing, getPosition, duration, seek } = useGlobalAudioPlayer();
-    // const [pos, setPos] = useState(0);
-    // const frameRef = useRef();
-    // const playbackBarRef = useRef(null);
-
-    // useEffect(() => {
-    //     const animate = () => {
-    //         setPos(getPosition());
-    //         frameRef.current = requestAnimationFrame(animate);
-    //     }
-
-    //     frameRef.current = window.requestAnimationFrame(animate);
-
-    //     return () => {
-    //         if (frameRef.current) {
-    //             cancelAnimationFrame(frameRef.current);
-    //         }
-    //     }
-    // }, [getPosition])
-
-    // const handlePlayback = (slider) => {
-    //     return seek(slider.target.value);
-    // }
-
-    // if (duration === Infinity) return null;
-
-    // return (
-    //     <>
-    //         <input
-    //             className={styles["playback-bar"]}
-    //             type="range"
-    //             min={0}
-    //             max={Math.trunc(duration)}
-    //             step={1}
-    //             onChange={handlePlayback}
-    //             value={Math.trunc(pos)}
-    //         />
-    //     </>
-    // )
-}
-
-// TODO: DECOUPLE (GET+SET VOLUME W/ HTML5 AUDIO)
-function VolumeControls() {
-    return <Replace />
-    // const { volume, setVolume } = useGlobalAudioPlayer();
-
-    // const handleVolume = useCallback((slider) => {
-    //     return setVolume(slider.target.value);
-    // }, [setVolume]);
-
-    // return (
-    //     <div className={styles["vol-container"]}>
-    //         <span className={styles["vol-label"]}>Vol</span>
-    //         <input
-    //             className={styles["vol-slider"]}
-    //             type="range"
-    //             min={0}
-    //             max={1}
-    //             step={0.01}
-    //             onChange={handleVolume}
-    //             value={volume}
-    //         />
-    //     </div>
-    // )
-}
-
 function PlayerControls({ handleBack, handlePlayPause, handleForward, isPaused, isEmpty }) {
     return (
         <div className={styles["ctrls-container"]}>
@@ -145,6 +45,7 @@ export default function Player() {
     const [loading, setLoading] = useState(true);
     const [paused, setPaused] = useState(true);
     const [curTime, setCurTime] = useState(0);
+    const [volume, setVolume] = useState(1);
     const { user } = useContext(UserContext);
     const supabase = createClientComponentClient();
     const audioRef = useRef(null);
@@ -210,6 +111,19 @@ export default function Player() {
         }
     };
 
+    const handleSeek = (e) => {
+        if (tracks.length) {
+            audioRef.current.currentTime = e.target.value;
+        }
+    }
+
+    const handleVolume = (e) => {
+        if (tracks.length) {
+            audioRef.current.volume = e.target.value;
+            setVolume(e.target.value);
+        }
+    };
+
     let queueNowPosOutput = '0'; // text or jsx
     let queueNowSpecialJSX;
     if (tracks.length) {
@@ -262,8 +176,6 @@ export default function Player() {
         }
         fetchTracks();
         setLoading(false);
-        // audioRef.current.onended = handleEnded;
-        // audioRef.current.ontimeupdate = handleTimeUpdate;
     }, [user]);
 
     useEffect(() => {
@@ -276,9 +188,8 @@ export default function Player() {
         }
     }, [tracks, trackIndex]);
 
-    return (
+    return loading ? <p>Loading</p> : (
         <div className={styles["player-page"]}>
-            {loading ? <p>Loading...</p> : null}
             <div className={styles["player"]}>
                 <audio
                     ref={audioRef}
@@ -320,7 +231,15 @@ export default function Player() {
                 <p className={styles["trackposted"]}>{whenPostedText}</p>
                 <div className={styles["timeline"]}>
                     <p className={`${styles["tracktime"]} ${styles["curtime"]}`}>{`${Math.trunc(curTime / 60)}:${Math.trunc(curTime % 60).toString().padStart(2, '0')}`}</p>
-                    <PlaybackBar />
+                    <input
+                        className={styles["playback-bar"]}
+                        type="range"
+                        min={0}
+                        max={tracks.length ? Math.trunc(tracks[trackIndex].duration) : 0}
+                        step={1}
+                        onChange={handleSeek}
+                        value={Math.trunc(curTime)}
+                    />
                     {/* <div className={styles["decor-bars"]}>
                         <div className={styles["bar-white"]}></div>
                         <div className={styles["bar-grey"]}></div>
@@ -336,9 +255,21 @@ export default function Player() {
                 <PlayerControls handleBack={handleBack} handlePlayPause={handlePlayPause} handleForward={handleForward}
                     isPaused={paused} isEmpty={!tracks.length}
                 />
-                <VolumeControls />
+                <div className={styles["vol-container"]}>
+                    <span className={styles["vol-label"]}>Vol</span>
+                    <input
+                        className={styles["vol-slider"]}
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        onChange={handleVolume}
+                        value={volume}
+                    />
+                </div>
             </div>
             <p>{curTime}</p>
+            <p>debug: volume: {volume}</p>
             <p>debug: trackIndex: {trackIndex}</p>
             <p>debug: tracks: {JSON.stringify(tracks, null, 2)}</p>
             <p>debug: tracks.length: {tracks.length}</p>
