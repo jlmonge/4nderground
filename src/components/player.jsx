@@ -206,8 +206,14 @@ export default function Player() {
         }
     }, [tracks, trackIndex]);
 
-    return loading ? <p>Loading</p> : (
+    return (
         <div className={styles["player-page"]}>
+            {
+                loading &&
+                <div className={styles["loading"]}>
+                    <span className={styles["loading__text"]}>Loading...</span>
+                </div>
+            }
             <div className={styles["player"]}>
                 <audio
                     ref={audioRef}

@@ -18,6 +18,34 @@
     user-select: none;
 }
 
+.loading {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 10%;
+    left: 50%;
+
+    &__text {
+        border: 4px solid grey;
+        border-radius: 8px;
+        background-color: rgb(255 255 255 / 50%);
+        color: black;
+        padding: 4px;
+        animation: 2s ease-in-out infinite alternate pop3d;
+    }
+}
+
+@keyframes pop3d {
+    from {
+        transform: perspective(1rem) rotateX(-10deg);
+    }
+
+    to {
+        transform: perspective(1rem) rotateX(10deg);
+    }
+}
+
 .timeline {
     @include abs-pos(61px, 127px);
     display: flex;
