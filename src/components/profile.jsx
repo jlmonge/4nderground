@@ -138,7 +138,7 @@ function ProfileLinks({ userId, isMe, db }) {
         }
 
         if (!isURL(url)) {
-            console.log(`invalid url detected`);
+            // console.log(`invalid url detected`);
             nextWarning = 'URL must be valid.';
         }
 
