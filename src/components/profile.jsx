@@ -3,7 +3,8 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
-import { varLog } from '../utils/helpers';
+import isURL from 'validator/lib/isURL';
+import { LINK_URL_CHARS_MAX, LINK_TEXT_CHARS_MAX } from '../utils/constants';
 import { UserContext } from '../user-provider';
 import Report from './report';
 import FancyLink from './Shared/fancylink';
@@ -13,64 +14,67 @@ import styles from '../styles/Profile.module.scss';
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
 
-function ProfileLink({ link, isEditing, onDelete, onChange }) {
-    // const handleBlur = (e) => {
-    //     console.log(`blurring. ${e}`);
-    // }
+function ProfileLink({ link, isEditing, handleLinkDelete, handleLinkChange, validateURL, validateText }) {
 
     let linkContent;
     if (isEditing) {
         linkContent = (
             <>
-                <label htmlFor={`edit-link${(link.pos).toString()}-url`} className={styles["visually-hidden"]}>Edit link text</label>
-                <input
-                    type="text"
-                    id={`edit-link${(link.pos).toString()}-url`}
-                    name="edit-link-url"
-                    placeholder="Link URL"
-                    className={styles["input"]}
-                    required
-                    value={link.url}
-                    // onBlur={handleBlur}
-                    onChange={e => {
-                        onChange({
-                            ...link,
-                            url: e.target.value,
-                        });
-                    }}
-                />
-                <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
-                <input
-                    type="text"
-                    id={`edit-link${(link.pos).toString()}-text`}
-                    name="edit-link-text" // TODO: CONST!!
-                    placeholder="Link text"
-                    className={styles["input"]}
-                    value={link.text}
-                    required
-                    onChange={e => {
-                        onChange({
-                            ...link,
-                            text: e.target.value,
-                        });
-                    }}
-                />
-
-
-                {
-                    isEditing &&
-                    <button
-                        onClick={() => onDelete(link.pos)}
-                        type="button"
-                        title="Delete link"
-                        //aria-label="Delete comment" // TODO: accessibility update
-                        //role="button"
-                        className={styles["btn__red"]}
-                    >
-                        X
-                    </button>
-                }
-
+                <div className={styles["edit-url"]}>
+                    <label htmlFor={`edit-link${(link.pos).toString()}-url`} className={styles["visually-hidden"]}>Edit link text</label>
+                    <input
+                        type="text"
+                        id={`edit-link${(link.pos).toString()}-url`}
+                        maxLength={LINK_URL_CHARS_MAX}
+                        name="edit-link-url"
+                        placeholder="Link URL"
+                        className={styles["input"]}
+                        required
+                        value={link.url}
+                        onBlur={e => validateURL(e, link)}
+                        onChange={e => {
+                            handleLinkChange({
+                                ...link,
+                                url: e.target.value,
+                                urlWarning: '',
+                            })
+                        }}
+                    />
+                    {
+                        link.urlWarning && <span className={styles["edit-warning"]}>{link.urlWarning}</span>
+                    }
+                </div>
+                <div className={styles["edit-text"]}>
+                    <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
+                    <input
+                        type="text"
+                        id={`edit-link${(link.pos).toString()}-text`}
+                        maxLength={LINK_TEXT_CHARS_MAX}
+                        name="edit-link-text"
+                        placeholder="Link text"
+                        className={styles["input"]}
+                        value={link.text}
+                        onBlur={e => validateText(e, link)}
+                        onChange={e => {
+                            handleLinkChange({
+                                ...link,
+                                text: e.target.value,
+                                textWarning: '',
+                            })
+                        }}
+                    />
+                    {
+                        link.textWarning && <span className={styles["edit-warning"]}>{link.textWarning}</span>
+                    }
+                </div>
+                <button
+                    onClick={() => handleLinkDelete(link.pos)}
+                    type="button"
+                    title="Delete link"
+                    className={styles["btn__red"]}
+                >
+                    X
+                </button>
             </>
 
         )
@@ -78,11 +82,12 @@ function ProfileLink({ link, isEditing, onDelete, onChange }) {
         linkContent = (
             <>
                 <a
+                    className={styles["link__a"]}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    {link.text}
+                    {link.text || link.url}
                 </a>
             </>
         )
@@ -104,8 +109,61 @@ function ProfileLinks({ userId, isMe, db }) {
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState('');
-    const [isError, setIsError] = useState(false);
+    const [isError, setIsError] = useState(false); // determined by submit status
 
+    const handleLinkChange = (l) => {
+        setDraftLinks(draftLinks.map(link => {
+            if (l.pos !== link.pos) {
+                // not the right link so don't change
+                return link;
+            } else {
+                // match found, change this link
+                return l;
+            }
+        }))
+    };
+
+    const validateURL = (e, link) => {
+        let nextWarning = '';
+
+        let url = e.target.value.trim();
+        if (!url) return;
+        if (url.length > LINK_URL_CHARS_MAX) {
+            nextWarning = `Max length ${LINK_URL_CHARS_MAX} exceeded.`;
+        }
+
+
+        if (!(url.startsWith("http://") || url.startsWith("https://"))) {
+            url = `https://${url}`;
+        }
+
+        if (!isURL(url)) {
+            // console.log(`invalid url detected`);
+            nextWarning = 'URL must be valid.';
+        }
+
+        handleLinkChange({
+            ...link,
+            url: e.target.value.trim(),
+            urlWarning: nextWarning,
+        });
+    }
+
+    const validateText = (e, link) => {
+        let nextWarning = '';
+
+        const text = e.target.value.trim();
+        if (!text.length) return;
+        if (text.length > LINK_TEXT_CHARS_MAX) {
+            nextWarning = `Max length ${LINK_TEXT_CHARS_MAX} exceeded.`;
+        }
+
+        handleLinkChange({
+            ...link,
+            text: e.target.value.trim(),
+            textWarning: nextWarning,
+        });
+    }
 
     useEffect(() => {
         const fetchLinks = async () => {
@@ -138,17 +196,7 @@ function ProfileLinks({ userId, isMe, db }) {
         }
     };
 
-    const handleChangeLink = (link) => {
-        setDraftLinks(draftLinks.map(l => {
-            if (l.pos === link.pos) {
-                return link;
-            } else {
-                return l;
-            }
-        }))
-    }
-
-    const handleDeleteLink = (pos) => {
+    const handleLinkDelete = (pos) => {
         const deleted = draftLinks.filter(l => l.pos !== pos);
         setDraftLinks(
             deleted.map((link, i) => ({
@@ -227,8 +275,17 @@ function ProfileLinks({ userId, isMe, db }) {
             <>
                 <form onSubmit={handleSaveChanges} className={styles["form"]}>
                     <ol className={styles["links"]}>
-                        {draftLinks.map((l, idx) =>
-                            <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} onDelete={handleDeleteLink} onChange={handleChangeLink} />
+                        {draftLinks.map((l) =>
+                            <ProfileLink
+                                key={l.pos}
+                                link={l}
+                                isEditing={isEditing}
+                                userId={userId}
+                                handleLinkDelete={handleLinkDelete}
+                                handleLinkChange={handleLinkChange}
+                                validateURL={validateURL}
+                                validateText={validateText}
+                            />
                         )}
                     </ol>
                     <button
@@ -248,7 +305,7 @@ function ProfileLinks({ userId, isMe, db }) {
                             type="submit"
                             // TODO: disable save if no new information (is this worth the)
                             // TODO: possible performance hit?)
-                            disabled={JSON.stringify(draftLinks) === JSON.stringify(links)}
+                            disabled={JSON.stringify(draftLinks) === JSON.stringify(links) || draftLinks.some(link => link.urlWarning) || draftLinks.some(link => link.textWarning)}
                         >
                             Save changes
                         </button>
@@ -289,6 +346,8 @@ function ProfileLinks({ userId, isMe, db }) {
             <section className={styles["links__section"]}>
                 <h3 className={styles["links__heading"]}>Links</h3>
                 {linksContent}
+                {/* <p>draftLinks: {JSON.stringify(draftLinks)}</p>
+                <p>links: {JSON.stringify(links)}</p> */}
                 {isMe && <Status loading={loading} response={response} isError={isError} />}
             </section>
         </>

@@ -2,6 +2,7 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { varLog } from '../../../utils/helpers';
+import { LINK_TEXT_CHARS_MAX, LINK_URL_CHARS_MAX } from '../../../utils/constants';
 
 export async function POST(req) {
     const reqJson = await req.json();
@@ -11,17 +12,46 @@ export async function POST(req) {
     // ^ (confirm?)
     const oldLinks = Array.from(reqJson.oldLinks);
     const newLinks = Array.from(reqJson.newLinks);
-    const userId = reqJson.userId
+    const userId = reqJson.userId;
+    if (!userId) {
+        return NextResponse.json({
+            message: `Must be logged in.`
+        }, { status: 400 });
+    }
+
     let i = 0;
 
-    // Create the array to be upserted.
     let upsert = []
     while (i < newLinks.length) {
+        const newPos = newLinks[i].pos, newUrl = newLinks[i].url, newText = newLinks[i].text;
+        // TODO: define constant for # of links
+        if (newPos > 3) {
+            return NextResponse.json({
+                message: `Must submit 3 or less links.`
+            }, { status: 400 });
+        }
+        if (newUrl.length > LINK_URL_CHARS_MAX) {
+            return NextResponse.json({
+                message: `All link URLs must be ${LINK_URL_CHARS_MAX} characters or less.`
+            }, { status: 400 });
+        }
+
+        if (newUrl.length <= 0) {
+            return NextResponse.json({
+                message: `All link URL fields must be filled.`
+            }, { status: 400 });
+        }
+
+        if (newText.length > LINK_TEXT_CHARS_MAX) {
+            return NextResponse.json({
+                message: `All link texts must be ${LINK_TEXT_CHARS_MAX} characters or less.`
+            }, { status: 400 });
+        }
         upsert.push({
             user_id: userId,
-            pos: newLinks[i].pos,
-            url: newLinks[i].url,
-            text: newLinks[i].text,
+            pos: newPos,
+            url: newUrl,
+            text: newText,
         });
         i++;
     }

@@ -1,13 +1,15 @@
 // shared with ./Report.module.scss
 .dialog {
-    margin: 25vh auto;
+    margin: 20vh auto;
     padding: 0;
     background-color: rgb(155 155 155 / 90%);
     color: white;
-    width: max(30em, 33vw);
+    width: min(45em, 75vw);
+    min-width: 20em;
     border-radius: 5%;
     border-style: groove;
     border-color: #a5a5a5;
+    max-height: 75vh;
 
     &::backdrop {
         background: rgb(0 0 0 / 50%);
@@ -29,6 +31,7 @@
         // width: 100%; PROBLEM
         // height: 100%; PROBLEM
         padding: 0.75rem 1rem;
+        overflow-x: hidden;
         // background-color: rgb(0 0 0 / 50%);
     }
 }

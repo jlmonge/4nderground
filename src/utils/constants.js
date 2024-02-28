@@ -7,6 +7,8 @@ export const MAX_SIZE = NUM_MB * MB;
 export const MIN_DURATION = 1; // TODO: must be 15s on deploy
 export const MAX_DURATION = 420; // TODO: must be 420s (7m)  on deploy
 export const COMMENT_CHARS_MAX = 1024;
+export const LINK_URL_CHARS_MAX = 512;
+export const LINK_TEXT_CHARS_MAX = 64;
 
 export const FILE_REQS = [{
     type: 'copyright',
