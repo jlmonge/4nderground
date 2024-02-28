@@ -346,8 +346,8 @@ function ProfileLinks({ userId, isMe, db }) {
             <section className={styles["links__section"]}>
                 <h3 className={styles["links__heading"]}>Links</h3>
                 {linksContent}
-                <p>draftLinks: {JSON.stringify(draftLinks)}</p>
-                <p>links: {JSON.stringify(links)}</p>
+                {/* <p>draftLinks: {JSON.stringify(draftLinks)}</p>
+                <p>links: {JSON.stringify(links)}</p> */}
                 {isMe && <Status loading={loading} response={response} isError={isError} />}
             </section>
         </>
