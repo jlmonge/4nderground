@@ -13,6 +13,7 @@
     gap: 0.25rem;
     margin: 0;
     padding: 0;
+    width: 100%;
 
     &__heading {
         margin: 0;
@@ -39,12 +40,13 @@
 .edit-url {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 200%;
 }
 
 .edit-text {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .edit-warning {

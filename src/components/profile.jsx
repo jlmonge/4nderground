@@ -15,124 +15,164 @@ import styles from '../styles/Profile.module.scss';
 const BTN_SIZE = 24;
 const ICON_SIZE = 12;
 
-function EditURL({ link, onChange }) {
-    const [warning, setWarning] = useState(''); // display below input
+// function EditURL({ link, handleChange }) {
+//     const [warning, setWarning] = useState(''); // display below input
 
-    const validateURL = (e) => {
-        setWarning('');
+//     const validateURL = (e) => {
+//         setWarning('');
 
-        let url = e.target.value.trim();
-        if (!url) return;
-        if (url.length > LINK_URL_CHARS_MAX) setWarning(`Max length ${LINK_URL_CHARS_MAX} exceeded.`);
+//         let url = e.target.value.trim();
+//         if (!url) return;
+//         if (url.length > LINK_URL_CHARS_MAX) setWarning(`Max length ${LINK_URL_CHARS_MAX} exceeded.`);
 
 
-        if (!(url.startsWith("http://") || url.startsWith("https://"))) {
-            url = `https://${url}`;
-        }
+//         if (!(url.startsWith("http://") || url.startsWith("https://"))) {
+//             url = `https://${url}`;
+//         }
 
-        if (!isURL(url)) {
-            setWarning('URL must be valid.');
-        }
+//         if (!isURL(url)) {
+//             setWarning('URL must be valid.');
+//         }
 
-        onChange({
-            ...link,
-            url: e.target.value.trim(),
-        });
-    }
+//         handleChange({
+//             ...link,
+//             url: e.target.value.trim(),
+//         });
+//     }
 
-    const handleChange = (e) => {
-        setWarning('');
-        onChange({
-            ...link,
-            url: e.target.value,
-        });
-    }
+//     const handleChangeExt = (e) => {
+//         setWarning('');
+//         handleChange({
+//             ...link,
+//             url: e.target.value,
+//         });
+//     }
 
-    return (
-        <div className={styles["edit-url"]}>
-            <label htmlFor={`edit-link${(link.pos).toString()}-url`} className={styles["visually-hidden"]}>Edit link text</label>
-            <input
-                type="text"
-                id={`edit-link${(link.pos).toString()}-url`}
-                maxLength={LINK_URL_CHARS_MAX}
-                name="edit-link-url"
-                placeholder="Link URL"
-                className={styles["input"]}
-                required
-                value={link.url}
-                onBlur={validateURL}
-                onChange={handleChange}
-            />
-            {
-                warning && <span className={styles["edit-warning"]}>{warning}</span>
-            }
-        </div>
-    )
-}
+//     return (
+//         <div className={styles["edit-url"]}>
+//             <label htmlFor={`edit-link${(link.pos).toString()}-url`} className={styles["visually-hidden"]}>Edit link text</label>
+//             <input
+//                 type="text"
+//                 id={`edit-link${(link.pos).toString()}-url`}
+//                 maxLength={LINK_URL_CHARS_MAX}
+//                 name="edit-link-url"
+//                 placeholder="Link URL"
+//                 className={styles["input"]}
+//                 required
+//                 value={link.url}
+//                 onBlur={validateURL}
+//                 onChange={handleChangeExt}
+//             />
+//             {
+//                 warning && <span className={styles["edit-warning"]}>{warning}</span>
+//             }
+//         </div>
+//     )
+// }
 
-function EditText({ link, onChange }) {
-    const [warning, setWarning] = useState(''); // display below input
+// function EditText({ link, handleChange }) {
+//     const [warning, setWarning] = useState(''); // display below input
 
-    const validateText = (e) => {
-        setWarning('');
+//     const validateText = (e) => {
+//         setWarning('');
 
-        const text = e.target.value.trim();
-        if (!text.length) return;
-        if (text.length > LINK_TEXT_CHARS_MAX) setWarning(`Max length ${LINK_TEXT_CHARS_MAX} exceeded.`);
+//         const text = e.target.value.trim();
+//         if (!text.length) return;
+//         if (text.length > LINK_TEXT_CHARS_MAX) setWarning(`Max length ${LINK_TEXT_CHARS_MAX} exceeded.`);
 
-        onChange({
-            ...link,
-            text: e.target.value.trim(),
-        });
-    }
+//         onChange({
+//             ...link,
+//             text: e.target.value.trim(),
+//         });
+//     }
 
-    const handleChange = (e) => {
-        setWarning('');
-        onChange({
-            ...link,
-            text: e.target.value,
-        });
-    }
+//     const handleChangeExt = (e) => {
+//         setWarning('');
+//         handleChange({
+//             ...link,
+//             text: e.target.value,
+//         });
+//     }
 
-    return (
-        <div className={styles["edit-text"]}>
-            <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
-            <input
-                type="text"
-                id={`edit-link${(link.pos).toString()}-text`}
-                maxLength={LINK_TEXT_CHARS_MAX}
-                name="edit-link-text" // TODO: CONST!!
-                placeholder="Link text"
-                className={styles["input"]}
-                value={link.text}
-                required
-                onBlur={validateText}
-                onChange={handleChange}
-            />
-            {
-                warning && <span className={styles["edit-warning"]}>{warning}</span>
-            }
-        </div>
-    )
-}
+//     return (
+//         <div className={styles["edit-text"]}>
+//             <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
+//             <input
+//                 type="text"
+//                 id={`edit-link${(link.pos).toString()}-text`}
+//                 maxLength={LINK_TEXT_CHARS_MAX}
+//                 name="edit-link-text"
+//                 placeholder="Link text"
+//                 className={styles["input"]}
+//                 value={link.text}
+//                 required
+//                 onBlur={validateText}
+//                 onChange={handleChangeExt}
+//             />
+//             {
+//                 warning && <span className={styles["edit-warning"]}>{warning}</span>
+//             }
+//         </div>
+//     )
+// }
 
-function ProfileLink({ link, isEditing, onDelete, onChange }) {
-    // const handleBlur = (e) => {
-    //     console.log(`blurring. ${e}`);
-    // }
+
+function ProfileLink({ link, isEditing, handleLinkDelete, handleLinkChange, validateURL, validateText, urlWarning, textWarning }) {
 
     let linkContent;
     if (isEditing) {
         linkContent = (
             <>
-                <EditURL link={link} onChange={onChange} />
-                <EditText link={link} onChange={onChange} />
+                <div className={styles["edit-url"]}>
+                    <label htmlFor={`edit-link${(link.pos).toString()}-url`} className={styles["visually-hidden"]}>Edit link text</label>
+                    <input
+                        type="text"
+                        id={`edit-link${(link.pos).toString()}-url`}
+                        maxLength={LINK_URL_CHARS_MAX}
+                        name="edit-link-url"
+                        placeholder="Link URL"
+                        className={styles["input"]}
+                        required
+                        value={link.url}
+                        onBlur={validateURL}
+                        onChange={e => {
+                            handleLinkChange({
+                                ...link,
+                                url: e.target.value,
+                            })
+                        }}
+                    />
+                    {
+                        urlWarning && <span className={styles["edit-warning"]}>{urlWarning}</span>
+                    }
+                </div>
+                <div className={styles["edit-text"]}>
+                    <label htmlFor={`edit-link${(link.pos).toString()}-text`} className={styles["visually-hidden"]}>Edit link text</label>
+                    <input
+                        type="text"
+                        id={`edit-link${(link.pos).toString()}-text`}
+                        maxLength={LINK_TEXT_CHARS_MAX}
+                        name="edit-link-text"
+                        placeholder="Link text"
+                        className={styles["input"]}
+                        value={link.text}
+                        required
+                        onBlur={validateText}
+                        onChange={e => {
+                            handleLinkChange({
+                                ...link,
+                                text: e.target.value,
+                            })
+                        }}
+                    />
+                    {
+                        textWarning && <span className={styles["edit-warning"]}>{textWarning}</span>
+                    }
+                </div>
                 <button
-                    onClick={() => onDelete(link.pos)}
+                    onClick={() => handleLinkDelete(link.pos)}
                     type="button"
                     title="Delete link"
-                    //aria-label="Delete comment" // TODO: accessibility update
-                    //role="button"
                     className={styles["btn__red"]}
                 >
                     X
@@ -170,8 +210,58 @@ function ProfileLinks({ userId, isMe, db }) {
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState('');
-    const [isError, setIsError] = useState(false);
+    const [urlWarning, setURLWarning] = useState('')
+    const [textWarning, setTextWarning] = useState('')
+    const [isError, setIsError] = useState(false); // determined by submit status
 
+    const handleLinkChange = (l) => {
+        setDraftLinks(draftLinks.map(link => {
+            if (l.pos !== link.pos) {
+                // not the right link so don't change
+                return link;
+            } else {
+                // link match, set text
+                return l;
+
+            }
+        }))
+    };
+
+    const validateURL = (e, link) => {
+        setURLWarning('');
+
+        let url = e.target.value.trim();
+        if (!url) return;
+        if (url.length > LINK_URL_CHARS_MAX) setURLWarning(`Max length ${LINK_URL_CHARS_MAX} exceeded.`);
+
+
+        if (!(url.startsWith("http://") || url.startsWith("https://"))) {
+            url = `https://${url}`;
+        }
+
+        if (!isURL(url)) {
+            setURLWarning('URL must be valid.');
+        }
+
+        // console.log("should trim")
+        handleLinkChange({
+            ...link,
+            url: e.target.value.trim(),
+        });
+    }
+
+    const validateText = (e, link) => {
+        setTextWarning('');
+
+        const text = e.target.value.trim();
+        if (!text.length) return;
+        if (text.length > LINK_TEXT_CHARS_MAX) setTextWarning(`Max length ${LINK_TEXT_CHARS_MAX} exceeded.`);
+
+        handleLinkChange({
+            ...link,
+            text: e.target.value.trim(),
+        });
+    }
 
     useEffect(() => {
         const fetchLinks = async () => {
@@ -204,17 +294,7 @@ function ProfileLinks({ userId, isMe, db }) {
         }
     };
 
-    const handleChangeLink = (link) => {
-        setDraftLinks(draftLinks.map(l => {
-            if (l.pos === link.pos) {
-                return link;
-            } else {
-                return l;
-            }
-        }))
-    }
-
-    const handleDeleteLink = (pos) => {
+    const handleLinkDelete = (pos) => {
         const deleted = draftLinks.filter(l => l.pos !== pos);
         setDraftLinks(
             deleted.map((link, i) => ({
@@ -293,8 +373,19 @@ function ProfileLinks({ userId, isMe, db }) {
             <>
                 <form onSubmit={handleSaveChanges} className={styles["form"]}>
                     <ol className={styles["links"]}>
-                        {draftLinks.map((l, idx) =>
-                            <ProfileLink key={l.pos} link={l} isEditing={isEditing} userId={userId} onDelete={handleDeleteLink} onChange={handleChangeLink} />
+                        {draftLinks.map((l) =>
+                            <ProfileLink
+                                key={l.pos}
+                                link={l}
+                                isEditing={isEditing}
+                                userId={userId}
+                                handleLinkDelete={handleLinkDelete}
+                                handleLinkChange={handleLinkChange}
+                                validateURL={validateURL}
+                                validateText={validateText}
+                                urlWarning={urlWarning}
+                                textWarning={textWarning}
+                            />
                         )}
                     </ol>
                     <button
@@ -314,7 +405,7 @@ function ProfileLinks({ userId, isMe, db }) {
                             type="submit"
                             // TODO: disable save if no new information (is this worth the)
                             // TODO: possible performance hit?)
-                            disabled={JSON.stringify(draftLinks) === JSON.stringify(links)}
+                            disabled={JSON.stringify(draftLinks) === JSON.stringify(links) || urlWarning || textWarning}
                         >
                             Save changes
                         </button>
@@ -355,6 +446,8 @@ function ProfileLinks({ userId, isMe, db }) {
             <section className={styles["links__section"]}>
                 <h3 className={styles["links__heading"]}>Links</h3>
                 {linksContent}
+                {/* <p>draftLinks: {JSON.stringify(draftLinks)}</p>
+                <p>links: {JSON.stringify(links)}</p> */}
                 {isMe && <Status loading={loading} response={response} isError={isError} />}
             </section>
         </>
