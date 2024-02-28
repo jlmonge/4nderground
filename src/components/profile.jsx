@@ -134,12 +134,12 @@ function ProfileLink({ link, isEditing, handleLinkDelete, handleLinkChange, vali
                         className={styles["input"]}
                         required
                         value={link.url}
-                        onBlur={validateURL}
+                        onBlur={e => validateURL(e, link)}
                         onChange={e => {
                             handleLinkChange({
                                 ...link,
                                 url: e.target.value,
-                            })
+                            }, 'url')
                         }}
                     />
                     {
@@ -157,12 +157,12 @@ function ProfileLink({ link, isEditing, handleLinkDelete, handleLinkChange, vali
                         className={styles["input"]}
                         value={link.text}
                         required
-                        onBlur={validateText}
+                        onBlur={e => validateText(e, link)}
                         onChange={e => {
                             handleLinkChange({
                                 ...link,
                                 text: e.target.value,
-                            })
+                            }, 'text')
                         }}
                     />
                     {
@@ -214,7 +214,7 @@ function ProfileLinks({ userId, isMe, db }) {
     const [textWarning, setTextWarning] = useState('')
     const [isError, setIsError] = useState(false); // determined by submit status
 
-    const handleLinkChange = (l) => {
+    const handleLinkChange = (l, warningType = '') => {
         setDraftLinks(draftLinks.map(link => {
             if (l.pos !== link.pos) {
                 // not the right link so don't change
@@ -225,6 +225,12 @@ function ProfileLinks({ userId, isMe, db }) {
 
             }
         }))
+
+        if (warningType === 'url') {
+            setURLWarning('');
+        } else if (warningType === 'text') {
+            setTextWarning('');
+        }
     };
 
     const validateURL = (e, link) => {
@@ -257,6 +263,7 @@ function ProfileLinks({ userId, isMe, db }) {
         if (!text.length) return;
         if (text.length > LINK_TEXT_CHARS_MAX) setTextWarning(`Max length ${LINK_TEXT_CHARS_MAX} exceeded.`);
 
+        console.log(`e.target.value.trim(): -${e.target.value.trim()}-`)
         handleLinkChange({
             ...link,
             text: e.target.value.trim(),
@@ -446,8 +453,8 @@ function ProfileLinks({ userId, isMe, db }) {
             <section className={styles["links__section"]}>
                 <h3 className={styles["links__heading"]}>Links</h3>
                 {linksContent}
-                {/* <p>draftLinks: {JSON.stringify(draftLinks)}</p>
-                <p>links: {JSON.stringify(links)}</p> */}
+                <p>draftLinks: {JSON.stringify(draftLinks)}</p>
+                <p>links: {JSON.stringify(links)}</p>
                 {isMe && <Status loading={loading} response={response} isError={isError} />}
             </section>
         </>
