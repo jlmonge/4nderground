@@ -36,6 +36,12 @@ export async function POST(req) {
             }, { status: 400 });
         }
 
+        if (newUrl.length <= 0) {
+            return NextResponse.json({
+                message: `All link URL fields must be filled.`
+            }, { status: 400 });
+        }
+
         if (newText.length > LINK_TEXT_CHARS_MAX) {
             return NextResponse.json({
                 message: `All link texts must be ${LINK_TEXT_CHARS_MAX} characters or less.`
