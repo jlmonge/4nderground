@@ -1,6 +1,6 @@
 @mixin logo {
     position: relative;
-    margin-top: -0.5rem;
+    // margin-top: -0.5rem;
     width: clamp(3em, 10vw, 4em);
     height: clamp(3em, 10vw, 4em);
     color: variables.$gg-text;

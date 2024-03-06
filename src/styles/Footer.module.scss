@@ -6,6 +6,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    border-top: 1px solid #0000001f;
     padding: 0 0.5rem;
     margin: auto 0.5rem 0.5rem;
     gap: 0 min(10vw, 1rem);
@@ -13,6 +14,7 @@
     font-size: 1em;
     text-shadow: 1px 1px 1px black;
     text-transform: lowercase;
+    // background: linear-gradient(#52FF00, #FFFFFF);
     // background-image: url("/mirrored-bgbtm.svg");
     // background-repeat: repeat-x;
     // background-size: cover;
@@ -25,18 +27,19 @@
 .extlogo {
     display: flex;
     flex-direction: row;
+    padding-top: 4px;
     // animation: 60s spin linear infinite;
 }
 
-@keyframes spin {
-    from {
-        transform: rotateY(0deg);
-    }
+// @keyframes spin {
+//     from {
+//         transform: rotateY(0deg);
+//     }
 
-    to {
-        transform: rotateY(360deg);
-    }
-}
+//     to {
+//         transform: rotateY(360deg);
+//     }
+// }
 
 .extlogo-l {
     @include logo;
