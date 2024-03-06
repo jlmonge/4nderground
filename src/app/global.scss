@@ -5,17 +5,15 @@ html {
 }
 
 body {
-  // flex is used to keep footer at bottom of page even on pages where
-  // there isnt enough content to push the footer to the bottom
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-
   margin: 0;
   padding: 0;
-  height: 100%;
   background-color: #D0FFBA;
   color: black;
+  // flex is used to keep footer at bottom of page even on pages where
+  // there isnt enough content to push the footer to the bottom
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 main {

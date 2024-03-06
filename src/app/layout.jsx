@@ -17,9 +17,9 @@ export default async function RootLayout({ children }) {
     return (
         <html lang="en" className={publicSans.className}>
             <body>
-                <div className={styles["bgl"]}></div>
+                {/* <div className={styles["bgl"]}></div>
                 <div className={styles["bgm"]}></div>
-                <div className={styles["bgr"]}></div>
+                <div className={styles["bgr"]}></div> */}
                 <div className={styles["bgtop"]}></div>
                 <UserProvider>
                     <Navbar className={nunito.className} />
