@@ -37,7 +37,7 @@ export default function RulesPage() {
             <ol className={styles["ol"]}>
                 {
                     RULES.map(r =>
-                        <li key={r.id}>{r.desc}</li>
+                        <li className={styles["li"]} key={r.id}>{r.desc}</li>
                     )
                 }
             </ol>
