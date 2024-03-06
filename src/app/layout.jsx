@@ -20,7 +20,7 @@ export default async function RootLayout({ children }) {
                 {/* <div className={styles["bgl"]}></div>
                 <div className={styles["bgm"]}></div>
                 <div className={styles["bgr"]}></div> */}
-                <div className={styles["bgtop"]}></div>
+                {/* <div className={styles["bgtop"]}></div> */}
                 <UserProvider>
                     <Navbar className={nunito.className} />
                     <main id="main-content">
@@ -28,7 +28,7 @@ export default async function RootLayout({ children }) {
                     </main>
                     <Footer className={nunito.className} />
                 </UserProvider>
-                <div className={styles["bgbtm"]}></div>
+                {/* <div className={styles["bgbtm"]}></div> */}
             </body>
         </html>
     );
