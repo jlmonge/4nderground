@@ -49,8 +49,8 @@ export default function HomePage() {
                     </p>
                 </section>
             </article>
-            <Link prefetch={false} href="/register" className={styles["btn__container"]}>
-                <button className={styles["btn"]}>Please sign me up</button>
+            <Link prefetch={false} href="/register" className={styles["link"]}>
+                <button className={styles["link__btn"]}>Please sign me up</button>
             </Link>
         </div>
     );
