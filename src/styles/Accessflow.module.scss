@@ -30,6 +30,7 @@
     flex-direction: column;
     width: 100%;
     padding: 0.5rem;
+    margin-left: 0.25rem;
     gap: 0.5rem;
     border-radius: 8px;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.50) 22.67%, #B3F7BA 100%);
@@ -51,11 +52,15 @@
     all: unset;
     position: absolute;
     right: 0.25em;
+
+    &:focus-visible {
+        outline: auto;
+    }
 }
 
 .showpassword-icon {
     display: inline-block;
-    background-color: black;
+    background-color: #6E6E6E;
     width: 1em;
     height: 1em;
     mask-repeat: no-repeat;
@@ -95,11 +100,22 @@
     color: #6E6E6E;
     font-size: 2em;
     border-radius: 50%;
+    margin: 0 0.5rem 0.25rem 0;
     padding: 1rem;
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background: radial-gradient(50% 50% at 50% 50%, #FFF 0%, rgba(54, 255, 75, 0.50) 100%);
     box-shadow: 0px -1px 4px 0px #FFF inset, 0px 1px 4px 0px #000 inset;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    user-select: none;
+
+    &:hover &__text {
+        transform: translateX(0.1em);
+    }
+
+    &__text {
+        display: inline-block;
+        transition: transform 0.2s;
+    }
 }
 
 .accessform-form {
@@ -131,7 +147,9 @@
 }
 
 .underline {
-    text-decoration: underline;
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 // Replace with visually-hidden class in ./Upload.modules.css

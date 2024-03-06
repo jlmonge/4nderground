@@ -8,10 +8,18 @@
     align-items: center;
     width: fit-content;
 
+    &:hover {
+        .fl-text::before {
+            transform: scaleY(2);
+            filter: blur(2px);
+        }
+    }
 
     &__left {
         justify-content: left;
     }
+
+
 }
 
 .fl-text {
@@ -30,11 +38,13 @@
         border-radius: 50%;
         filter: blur(4px);
         z-index: -1;
+        transition: transform 0.2s, filter 0.2s;
     }
 }
 
 .fl-btn {
     @include circle-btn(1.5rem);
+    user-select: none;
 
     &--white {
         @include circle-btn(1.5rem, rgb(149 149 149 / 50%))

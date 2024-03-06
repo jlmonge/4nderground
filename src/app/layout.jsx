@@ -1,7 +1,7 @@
 import './global.scss';
 import styles from '../styles/Background.module.scss';
 // run 'npx @next/codemod@latest built-in-next-font .'
-import { publicSans, nunito } from './fonts.jsx';
+import { nunito } from './fonts.jsx';
 import Navbar from '../components/navbar.jsx';
 import UserProvider from '../user-provider.jsx';
 import Footer from '../components/footer.jsx';
@@ -15,7 +15,7 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
     return (
-        <html lang="en" className={publicSans.className}>
+        <html lang="en">
             <body>
                 {/* <div className={styles["bgl"]}></div>
                 <div className={styles["bgm"]}></div>

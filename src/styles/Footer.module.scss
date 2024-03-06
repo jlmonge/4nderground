@@ -59,4 +59,8 @@
 
 .footer-link {
     color: variables.$gg-text;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }

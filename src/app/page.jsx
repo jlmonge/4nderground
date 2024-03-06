@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import styles from "../styles/Homepage.module.scss";
-import { almarai, nunito } from './fonts';
 import colors from "../styles/Colors.module.scss"
 
 export const metadata = {
@@ -10,7 +9,7 @@ export const metadata = {
 export default function HomePage() {
 
     return (
-        <div className={`${styles["hp"]} ${almarai.className}`}>
+        <div className={styles["hp"]}>
             <p className={`${styles["headline"]}`}>
                 the Internet&apos;s newest music
             </p>
@@ -23,7 +22,7 @@ export default function HomePage() {
                 <li className={styles["features-item"]}>Share socials on your profile</li>
 
             </ul>
-            <Link prefetch={false} href="/register" className={styles["btn"]}><span className={`${nunito.className}`}>Please sign me up!!</span></Link>
+            <Link prefetch={false} href="/register" className={styles["btn"]}>Please sign me up!!</Link>
         </div>
     );
 }

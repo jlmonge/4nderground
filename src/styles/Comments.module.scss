@@ -66,14 +66,14 @@
 
     &:hover:enabled {
         .mcs-text {
-            display: inline-block;
             transform: translateX(0.2em);
         }
     }
 }
 
 .mcs-text {
-    transition: all 0.1s ease-in-out;
+    display: inline-block;
+    transition: transform 0.1s ease-in-out;
 }
 
 .clist-ul {

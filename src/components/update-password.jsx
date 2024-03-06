@@ -4,7 +4,6 @@ import AccessForm from './Shared/accessform';
 // import FancyLink from './Shared/fancylink';
 import { useSearchParams } from 'next/navigation';
 import styles from '../styles/Accessflow.module.scss'
-import { almarai } from '../app/fonts';
 
 export default function UpdatePassword({ route }) {
     // TODO: test useEffect once custom SMTP server set up
@@ -35,7 +34,7 @@ export default function UpdatePassword({ route }) {
 
     } else {
         content = (
-            <div className={`${styles["accessflow-page"]} ${almarai.className}`}>
+            <div className={styles["accessflow-page"]}>
                 <h2 className={styles["af-h2"]}>Change Password</h2>
                 <AccessForm hasPassword
                     hasRequirements action={route}
