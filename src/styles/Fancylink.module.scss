@@ -9,9 +9,12 @@
     width: fit-content;
 
     &:hover {
-        .fl-text::before {
+
+        .fl-text::before,
+        .fl-text--white::before {
             transform: scaleY(2);
             filter: blur(2px);
+            opacity: 100%;
         }
     }
 
@@ -34,11 +37,12 @@
         left: 0;
         height: 7px;
         width: 100%;
-        background-color: #82FC8F;
+        background-color: #2dff42;
+        opacity: 50%;
         border-radius: 50%;
         filter: blur(4px);
         z-index: -1;
-        transition: transform 0.2s, filter 0.2s;
+        transition: transform 0.2s, filter 0.2s, opacity 0.2s;
     }
 }
 
@@ -65,8 +69,10 @@
         height: 7px;
         width: 100%;
         background-color: black;
+        opacity: 50%;
         border-radius: 50%;
         filter: blur(4px);
         z-index: -1;
+        transition: transform 0.2s, filter 0.2s, opacity 0.2s;
     }
 }

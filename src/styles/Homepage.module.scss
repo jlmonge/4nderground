@@ -7,7 +7,7 @@ $max-btn-radius: 20rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3rem;
+    gap: 1rem;
     text-shadow:
         white -10px 0px 10px,
         white 10px 0px 10px,
@@ -15,7 +15,7 @@ $max-btn-radius: 20rem;
 
 .headline {
     margin: 0;
-    font-size: 4rem;
+    font-size: 4em;
     overflow-wrap: break-word;
 }
 
@@ -31,32 +31,25 @@ $max-btn-radius: 20rem;
 }
 
 .features {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1em;
+    margin: 0;
+    padding: 0 1em;
     list-style: none;
-    text-transform: uppercase;
-    font-size: 1em;
     text-shadow:
         white -2px 0px 2px,
         white 2px 0px 2px;
 }
 
-.features-item {
-    width: fit-content;
+.feature {
+    display: flex;
+    flex-direction: column;
     margin: 0.25rem 0;
-    padding: 0 0.25rem;
-    border-image-source: linear-gradient(to bottom, black 0%, white 100%);
-    border-image-slice: 1;
-    border-left: 2px solid;
-    background: linear-gradient(to left, transparent 50%, grey 50%) right;
-    background-size: 200%;
-    transition: all 3s ease;
+    width: 16em;
 
-    &:hover {
-        text-shadow:
-            white -1px 0px 1px,
-            white 1px 0px 1px;
-        background-position: left;
-        color: white;
-        transition: all 0.75s ease;
+    &__heading {
+        text-transform: uppercase;
     }
 }
 
@@ -65,31 +58,25 @@ $max-btn-radius: 20rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: clamp($min-btn-radius, 80vw, $max-btn-radius);
-    height: clamp($min-btn-radius, 80vw, $max-btn-radius);
-    border-radius: clamp($min-btn-radius, 80vw, $max-btn-radius);
+    border-radius: 16px;
     padding: 5rem;
-    color: black;
-    background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.66) 77.6%, #55C2FF 100%);
+    color: white;
+    background-color: black;
     font-size: 1.5rem;
     text-transform: uppercase;
     text-align: center;
-    animation: 4s ease-in-out infinite alternate up-n-down;
-    margin-bottom: 2rem;
-
-    &:hover {
-        animation-play-state: paused;
-    }
+    border-color: white;
+    border-width: 9px;
 }
 
 @keyframes up-n-down {
     from {
-        transform: translateY(-1rem);
+        transform: translateY(0rem);
         // background-position: 0 0;
     }
 
     to {
-        transform: translateY(1rem);
+        transform: translateY(2rem);
         // background-position: 100rem 100rem;
     }
 }
