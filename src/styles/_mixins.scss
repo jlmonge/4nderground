@@ -1,15 +1,8 @@
-@mixin subnav {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5em;
-    align-self: stretch;
-}
-
 @mixin logo {
     position: relative;
-    width: clamp(4em, 10vw, 5em);
-    height: clamp(4em, 10vw, 5em);
+    margin-top: -0.5rem;
+    width: clamp(3em, 10vw, 4em);
+    height: clamp(3em, 10vw, 4em);
     color: variables.$gg-text;
     filter: drop-shadow(1px 1px 1px black)
 }
