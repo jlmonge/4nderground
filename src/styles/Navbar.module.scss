@@ -8,6 +8,7 @@ $white: #FFFFFF;
     top: 0.5rem;
     display: flex;
     flex-direction: row;
+    gap: 1rem;
     margin: 0.5rem 0.5rem;
     padding: 0 0.5rem;
     // justify-content: space-between;
@@ -27,11 +28,10 @@ $white: #FFFFFF;
 
     &__links {
         display: flex;
-        flex-direction: row;
-        gap: 1rem;
+        flex-direction: column;
         width: 100%;
-        justify-content: flex-end;
-        align-items: center;
+        align-items: flex-end;
+        line-height: 1;
     }
 }
 
@@ -54,6 +54,7 @@ $white: #FFFFFF;
 
     &__name {
         display: inline-block;
+        font-size: 0.75em;
         transform: scaleY(2);
         text-transform: uppercase;
         text-shadow: 0.5px 0.5px 1px black;
@@ -68,7 +69,7 @@ $white: #FFFFFF;
 
 .nav-link {
     display: flex;
-    padding: 1em 0;
+    padding: 0;
     border: 3px solid transparent;
     flex-direction: row;
     align-items: center;
@@ -100,5 +101,21 @@ $white: #FFFFFF;
     &:active {
         transform: translateY(0);
         z-index: 2;
+    }
+}
+
+@media (min-width: 480px) {
+    .nav {
+        &__links {
+            flex-direction: row;
+            gap: 1rem;
+            align-items: center;
+            justify-content: flex-end;
+            line-height: 1.2;
+        }
+    }
+
+    .nav-link {
+        padding: 1em 0;
     }
 }
