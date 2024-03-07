@@ -33,7 +33,10 @@ $white: #FFFFFF;
         align-items: flex-end;
         line-height: 1;
     }
+
+
 }
+
 
 
 .logo {
@@ -62,7 +65,7 @@ $white: #FFFFFF;
 
     &__memo {
         font-size: 0.75em;
-        color: black;
+        color: #6E6E6E;
         font-weight: 700;
         text-shadow: white -2px 0px 2px, white 2px 0px 2px;
     }

@@ -222,12 +222,6 @@ function CommentList({ comments, onDeleteComment, curUserId }) {
                 </ul>
             </>
         );
-    } else {
-        commentContent = (
-            <>
-                <p>No comments.</p>
-            </>
-        );
     }
 
     // const debug = () => console.log(JSON.stringify(comments, null, `\t`));
@@ -289,7 +283,7 @@ export default function CommentSection({ trackId }) {
     if (trackId) {
         content = (
             <div className={styles["commentsection-container"]}>
-                <h2 className={styles["comments-heading"]}>Comments</h2>
+                <h2 className={styles["comments-heading"]}>{comments.length ?? 0} comments</h2>
                 <div className={styles["comments-container"]}>
                     {user &&
                         <AddComment
@@ -304,10 +298,6 @@ export default function CommentSection({ trackId }) {
                     />
                 </div>
             </div>
-        );
-    } else {
-        content = (
-            <p>Comments unavailable.</p>
         );
     }
 

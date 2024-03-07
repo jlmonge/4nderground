@@ -22,16 +22,16 @@
     display: flex;
     flex-direction: row;
     padding-top: 4px;
-}
 
-.extlogo-l {
-    @include logo;
-}
+    &__l {
+        @include logo;
+    }
 
-.extlogo-r {
-    @include logo;
-    margin-left: -16px;
-    transform: rotate(180deg);
+    &__r {
+        @include logo;
+        margin-left: -16px;
+        transform: rotate(180deg);
+    }
 }
 
 .links {

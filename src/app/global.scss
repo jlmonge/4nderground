@@ -20,9 +20,19 @@ body {
 main {
   // TODO: implement padding if needed on certain pages
   padding: 2rem clamp(0.5rem, 5%, 10rem);
-  animation: fadeInAnimation ease 3s;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
+  animation: 0.8s ease 1 100ms from-left backwards;
+}
+
+@keyframes from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-5%)
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInAnimation {

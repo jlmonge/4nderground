@@ -8,10 +8,10 @@ export default function Footer() {
     return (
         <footer className={`${styles["footer"]} ${colors["gg-text"]}`}>
             <div className={styles["extlogo"]}>
-                <div className={styles["extlogo-l"]}>
+                <div className={styles["extlogo__l"]}>
                     <Logo1 />
                 </div>
-                <div className={styles["extlogo-r"]}>
+                <div className={styles["extlogo__r"]}>
                     <Logo1 />
                 </div>
             </div>

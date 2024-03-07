@@ -15,7 +15,7 @@ export default function HomePage() {
             </h1>
             <article className={styles["features"]}>
                 <section className={styles["feature"]}>
-                    <h2 className={styles["feature__heading"]}>Share whatever whenever</h2>
+                    <h2 className={styles["feature__heading"]}>Share whatever, whenever</h2>
                     <p className={styles["feature__desc"]}>
                         From killer and brief melody ideas to elaborate and long compositions, this is a place for music of all kinds.
                         Capture the moment by uploading a file or recording. We support most audio types (mp3, wav, you name it).
@@ -45,7 +45,7 @@ export default function HomePage() {
                 <section className={styles["feature"]}>
                     <h2 className={styles["feature__heading"]}>Random usernames and profile pictures</h2>
                     <p className={styles["feature__desc"]}>
-                        You&apos;re only judged by the quality of your contributions. Be free.
+                        You are judged solely by the quality of your contributions. However, if you want you can share your socials on your profile.
                     </p>
                 </section>
             </article>
