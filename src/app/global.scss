@@ -7,7 +7,9 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(#c4ffa7, #96ff65 15%, #bbff99 50%, #96ff65 85%, #c4ffa7);
+  background: radial-gradient(#c4ffa7, #a0ff75 15%, #a9ff7e 50%, #ccfcb6 85%, #9eff6e);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   color: black;
   // flex is used to keep footer at bottom of page even on pages where
   // there isnt enough content to push the footer to the bottom

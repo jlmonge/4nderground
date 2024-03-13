@@ -9,13 +9,44 @@
 }
 
 .player {
-    background-image: url("/player-bg.svg");
-    background-size: 100% 100%;
-    width: 304px;
-    height: 237px;
-    position: relative;
+    display: flex;
+    flex-direction: column;
     margin: 0 auto;
     user-select: none;
+    font-size: 1em;
+
+    &__user {
+        position: relative;
+    }
+
+    &__now {
+        @include abs-pos(0px, 4px);
+        width: 240px;
+        height: 88px;
+        background: linear-gradient(rgb(164 255 122), rgb(82 255 0));
+        border-radius: 8px;
+    }
+}
+
+// "inner"
+.ctrls {
+    position: relative;
+    background: linear-gradient(#C8C8C8 33%, #9D9D9D 66%, #BFBFBF);
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+
+    // frame; used to center inner
+    &__outer {
+        @include abs-pos(192px, 0px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(#CACACA 33%, #525252 66%, #A0A0A0);
+        border-radius: 50%;
+        width: 96px;
+        height: 96px;
+    }
 }
 
 .loading {
@@ -47,16 +78,20 @@
 }
 
 .timeline {
-    @include abs-pos(61px, 127px);
     display: flex;
     flex-direction: row;
     align-items: center;
+    border: 1px solid black;
+    width: 100%;
+}
+
+.decor-bars {
+    width: 100%;
 }
 
 .playback-bar {
-    // @include abs-pos(118px, 131px);
     appearance: none;
-    width: 75px;
+    width: 100%;
     height: 8px;
     background-color: black;
     cursor: pointer;
@@ -88,14 +123,9 @@
 
 }
 
-.playback-bar__tick {
-    height: 100%;
-    background-color: white;
-}
-
 .bar-white {
     background-color: white;
-    width: 73px;
+    width: 100%;
     height: 1px;
 }
 
@@ -103,20 +133,30 @@
     position: relative;
     left: 2px;
     background-color: #707070;
-    width: 73px;
+    width: calc(100% - 2px);
     height: 1px;
 }
 
-.avi-container {
-    @include abs-pos(23px, 23px);
+.avi {
+    @include abs-pos(4px, 4px);
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
+
+    &__text {
+        @include abs-pos(40px, 4px);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
 }
 
-.report-container {
-    @include abs-pos(19px, 60px);
+.report {
+    @include abs-pos(4px, 60px);
 }
 
 .genre-container {
-    @include abs-pos(19px, 90px);
+    // @include abs-pos(19px, 90px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -137,7 +177,7 @@
         background: url("/chevrons-right.svg") 91% / 22% no-repeat;
         // stroke: white;
         stroke-width: 2px;
-        font-size: 10px;
+        font-size: 0.625em;
         padding: 3px 6px;
         border-radius: 10px;
         border: none;
@@ -152,50 +192,56 @@
 
 .genre-label {
     text-transform: uppercase;
-    font-size: 10px;
+    font-size: 0.625em;
 }
 
-.queue-container {
-    @include abs-pos(196px, 37px);
+.queue {
+    @include abs-pos(118px, 4px);
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    justify-content: space-between;
 }
 
-.queue-info {
+.qinfo {
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     gap: 2px;
+
+    &__label {
+        color: #494949;
+        font-size: 0.625em;
+        text-transform: uppercase;
+    }
+
+    &__val {
+        color: black;
+        font-size: 0.875em;
+    }
+
+    &__nowspecialcase {
+        font-size: 0.625em;
+        color: #494949;
+        text-transform: uppercase;
+    }
 }
 
-.qi-label {
-    color: #494949;
-    font-size: 10px;
+.whenposted {
+    // @include abs-pos(99px, 92px);
     text-transform: uppercase;
-}
-
-.qi-val {
-    color: black;
-    font-size: 14px;
-}
-
-.qi-nowspecialcase {
-    font-size: 10px;
     color: #494949;
-    text-transform: uppercase;
+    font-size: 0.625em;
+    font-style: italic;
 }
 
-.trackposted {
-    @include abs-pos(99px, 92px);
-    text-transform: uppercase;
-    color: #494949;
-    font-size: 10px;
+.genreposted {
+    font-size: 0.625em;
     font-style: italic;
 }
 
 .tracktime {
     color: black;
-    font-size: 14px;
+    font-size: 0.875em;
     text-shadow:
         -2px 0 8px white,
         2px 0 8px white,
@@ -207,27 +253,26 @@
 
 .skipback-btn {
     @include playerctrl-btn(url("/4nd-skipback-btn.svg"));
+    @include abs-pos(11px, 12px);
 }
 
 .pause-btn {
     @include playerctrl-btn(url("/4nd-pause-btn.svg"));
+    @include abs-pos(28px, 44px);
 }
 
 .play-btn {
     @include playerctrl-btn(url("/4nd-play-btn.svg"));
+    @include abs-pos(28px, 44px);
 }
 
 .skipnext-btn {
     @include playerctrl-btn(url("/4nd-skipnext-btn.svg"));
-}
-
-.ctrls-container {
-    @include abs-pos(159px, 162px);
-    height: 24px;
+    @include abs-pos(45px, 12px);
 }
 
 .vol-container {
-    @include abs-pos(161px, 191px);
+    // @include abs-pos(161px, 191px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -237,7 +282,7 @@
 .vol-label {
     text-transform: uppercase;
     color: #494949;
-    font-size: 12px;
+    font-size: 0.75em;
 }
 
 .vol-slider {
@@ -288,101 +333,5 @@
 @media only screen and (hover: none) and (pointer: coarse) {
     .vol-container {
         display: none;
-    }
-}
-
-@media (min-width: 744px) {
-    .player {
-        background-image: url("/player-bg624.svg");
-        background-size: 100% 100%;
-        width: 624px;
-        height: 242px;
-    }
-
-    .bar-white,
-    .bar-grey,
-    .playback-bar {
-        width: 205px;
-    }
-
-    .avi-container {
-        @include abs-pos(54px, 12px);
-    }
-
-    .report-container {
-        @include abs-pos(51px, 68px);
-    }
-
-    .genre-container {
-        @include abs-pos(51px, 98px);
-        font-size: 14px;
-    }
-
-    .timeline {
-        @include abs-pos(147px, 124px);
-    }
-
-    .queue-container {
-        // incr. x from design
-        @include abs-pos(402px, 42px);
-        width: 170px;
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 8px;
-    }
-
-    .queue-info {
-        align-items: center;
-    }
-
-    .qi-label {
-        font-size: 14px;
-    }
-
-    .qi-val {
-        font-size: 18px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .qi-nowspecialcase {
-        font-size: 14px;
-    }
-
-    .trackposted {
-        @include abs-pos(219px, 92px);
-        font-size: 14px;
-    }
-
-    .tracktime {
-        font-size: 18px;
-    }
-
-    .ctrls-container {
-        // incr. x from design
-        @include abs-pos(350px, 152px);
-        height: 40px;
-    }
-
-    .vol-container {
-        // incr. x from design, decr. y
-        @include abs-pos(351px, 200px);
-    }
-
-    .vol-label {
-        font-size: 14px;
-    }
-
-    .vol-slider {
-        width: 123px;
-    }
-
-    .genreselect-container .genreselect {
-        font-size: 14px;
-    }
-
-    .genre-label {
-        font-size: 14px;
     }
 }

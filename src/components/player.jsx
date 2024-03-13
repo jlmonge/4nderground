@@ -15,7 +15,7 @@ const DEBUG = false; // redundant; replace soon
 
 function PlayerControls({ handleBack, handlePlayPause, handleForward, isPaused, isEmpty }) {
     return (
-        <div className={styles["ctrls-container"]}>
+        <div className={styles["ctrls"]}>
             <button type="button" onClick={handleBack} className={styles["skipback-btn"]} disabled={isEmpty}>
                 {/* <SkipBackBtn className={styles["ctrls-svg"]} /> */}
             </button>
@@ -33,7 +33,6 @@ function PlayerControls({ handleBack, handlePlayPause, handleForward, isPaused, 
     )
 }
 
-// TODO: DECOUPLE (GET+SET PLAYING STATUS, SET TRACKS W/ HTML5 AUDIO)
 export default function Player() {
     // contains the current collection of tracks (depends on genre)
     const [tracks, setTracks] = useState([]);
@@ -147,7 +146,7 @@ export default function Player() {
         queueNowPosOutput = (trackIndex + 1).toString();
         if (trackIndex === 0) {
             queueNowSpecialJSX = (
-                <span className={styles["qi-nowspecialcase"]}>
+                <span className={styles["qinfo__nowspecialcase"]}>
                     (newest)
                 </span>
             )
@@ -215,19 +214,6 @@ export default function Player() {
                 </div>
             }
             <div className={styles["player"]}>
-                <audio
-                    ref={audioRef}
-                    onEnded={handleForward}
-                    onTimeUpdate={handleTimeUpdate}
-                />
-                <div className={styles["avi-container"]}>
-                    <Avatar userId={(!!tracks.length) ? tracks[trackIndex].uploader_id : null} size="small" />
-                </div>
-                {user?.id &&
-                    <div className={styles["report-container"]}>
-                        <Report contentType='track' contentId={(tracks.length) ? tracks[trackIndex].id : null} />
-                    </div>
-                }
                 <div className={styles["genre-container"]}>
                     <label htmlFor="genre" className={styles["genre-label"]}>Genre</label>
                     <div className={styles["genreselect-container"]}>
@@ -240,21 +226,16 @@ export default function Player() {
                         </select>
                     </div>
                 </div>
-                <div className={styles["queue-container"]}>
-                    <div className={styles["queue-info"]}>
-                        <p className={styles["qi-label"]}>Now</p>
-                        <p className={styles["qi-val"]}>
-                            {queueNowPosOutput} {queueNowSpecialJSX}
-                        </p>
-                    </div>
-                    <div className={styles["queue-info"]}>
-                        <p className={styles["qi-label"]}>Total</p>
-                        <p className={styles["qi-val"]}>{tracks.length}</p>
-                    </div>
+                <div>
+                    Viz goes here. Will probably end up being a canvas.
                 </div>
-                <p className={styles["trackposted"]}>{whenPostedText}</p>
+                <audio
+                    ref={audioRef}
+                    onEnded={handleForward}
+                    onTimeUpdate={handleTimeUpdate}
+                />
                 <div className={styles["timeline"]}>
-                    <p className={`${styles["tracktime"]} ${styles["curtime"]}`}>{`${Math.trunc(curTime / 60)}:${Math.trunc(curTime % 60).toString().padStart(2, '0')}`}</p>
+                    <span className={`${styles["tracktime"]} ${styles["curtime"]}`}>{`${Math.trunc(curTime / 60)}:${Math.trunc(curTime % 60).toString().padStart(2, '0')}`}</span>
                     {tracks.length ?
                         <input
                             className={styles["playback-bar"]}
@@ -273,13 +254,10 @@ export default function Player() {
                             <div className={styles["bar-white"]}></div>
                             <div className={styles["bar-grey"]}></div>
                         </div>}
-                    <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
+                    <span className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
                         {totalTimeText}
-                    </p>
+                    </span>
                 </div>
-                <PlayerControls handleBack={handleBack} handlePlayPause={handlePlayPause} handleForward={handleForward}
-                    isPaused={paused} isEmpty={!tracks.length}
-                />
                 <div className={styles["vol-container"]}>
                     <span className={styles["vol-label"]}>Vol</span>
                     <input
@@ -291,6 +269,39 @@ export default function Player() {
                         onChange={handleVolume}
                         value={volume}
                     />
+                </div>
+                <div className={styles["player__user"]}>
+                    <div className={styles["player__now"]}>
+                        <div className={styles["avi"]}>
+                            <Avatar userId={(!!tracks.length) ? tracks[trackIndex].uploader_id : null} size="small" />
+                            <div className={styles["avi__text"]}>
+                                <span className={styles["genreposted"]}>{tracks.length ? tracks[trackIndex].genre : null}</span>
+                                <span className={styles["whenposted"]}>{whenPostedText}</span>
+                            </div>
+                        </div>
+                        {user?.id &&
+                            <div className={styles["report"]}>
+                                <Report contentType='track' contentId={(tracks.length) ? tracks[trackIndex].id : null} />
+                            </div>
+                        }
+                        <div className={styles["queue"]}>
+                            <div className={styles["qinfo"]}>
+                                <span className={styles["qinfo__label"]}>Now</span>
+                                <span className={styles["qinfo__counter"]}>
+                                    {queueNowPosOutput} {queueNowSpecialJSX}
+                                </span>
+                            </div>
+                            <div className={styles["qinfo"]}>
+                                <span className={styles["qinfo__label"]}>Total</span>
+                                <span className={styles["qinfo__counter"]}>{tracks.length}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles["ctrls__outer"]}>
+                        <PlayerControls handleBack={handleBack} handlePlayPause={handlePlayPause} handleForward={handleForward}
+                            isPaused={paused} isEmpty={!tracks.length}
+                        />
+                    </div>
                 </div>
             </div>
             {/* <p>{curTime}</p>

@@ -13,7 +13,8 @@ export default function PrivacyPage() {
                 Registration requires you to provide your email address and a password.
                 Your email address is used to identify you when you sign in and to send user-initiated emails concerning change of account information.
                 We do not send marketing or promotional material.
-                At your discretion, you may share up to three of your other websites and social media profiles to display on your profile.
+                At your discretion, you may share up to three of your other websites and social media profiles to display on your profile for anyone to view.
+                We do not share your data with advertisers.
             </p>
             <h3>Cookie Policy</h3>
             <p className={styles["p"]}>

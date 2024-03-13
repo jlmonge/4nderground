@@ -17,8 +17,8 @@ export default function HomePage() {
                 <section className={styles["feature"]}>
                     <h2 className={styles["feature__heading"]}>Share whatever, whenever</h2>
                     <p className={styles["feature__desc"]}>
-                        From killer and brief melody ideas to elaborate and long compositions, this is a place for music of all kinds.
-                        Capture the moment by uploading a file or recording. We support most audio types (mp3, wav, you name it).
+                        From catchy and brief melody ideas to elaborate and long compositions, this is a place for music of all kinds.
+                        Capture the moment by uploading a file or recording. We support most audio types (mp3, wav, m4a, you name it).
                     </p>
                 </section>
                 <section className={styles["feature"]}>
@@ -31,8 +31,9 @@ export default function HomePage() {
                 <section className={styles["feature"]}>
                     <h2 className={styles["feature__heading"]}>1 track, 24 hours</h2>
                     <p className={styles["feature__desc"]}>
-                        Once you upload a track, its brief life begins. In that time, you can&apos;t upload anything else.
-                        After 24 hours, it and its comments are removed. Each day really is a new beginning.
+                        Once you upload a track, its brief life begins. In that time, you cannot upload anything else.
+                        Take this time to show other artists love and use their feedback to hone your craft.
+                        After 24 hours, your track and its comments are removed.
                     </p>
                 </section>
                 <section className={styles["feature"]}>
@@ -45,13 +46,18 @@ export default function HomePage() {
                 <section className={styles["feature"]}>
                     <h2 className={styles["feature__heading"]}>Random usernames and profile pictures</h2>
                     <p className={styles["feature__desc"]}>
-                        You are judged solely by the quality of your contributions. However, if you want you can share your socials on your profile.
+                        You are judged solely by the quality of your contributions. But hey, if you want, you can share your socials on your profile.
                     </p>
                 </section>
             </article>
-            <Link prefetch={false} href="/register" className={styles["link"]}>
-                <button className={styles["link__btn"]}>Please sign me up</button>
-            </Link>
+            <div className={styles["cta"]}>
+                <Link prefetch={false} href="/register" className={styles["flashy-link"]}>Start contributing</Link>
+                <span className={styles["cta__secondary"]}>
+                    ...or <Link prefetch={false} href="/player">listen now</Link>
+                </span>
+
+            </div>
+
         </div>
     );
 }
