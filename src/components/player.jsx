@@ -201,15 +201,13 @@ export default function Player() {
                     <div className={styles["viz"]}>
                         <div className={styles["genre-container"]}>
                             <label htmlFor="genre" className={styles["visually-hidden"]}>Select player genre</label>
-                            <div className={styles["genreselect-container"]}>
-                                <select id="genre" className={styles["genreselect"]} name="genre" onChange={handleGenreChange}>
-                                    {
-                                        Object.entries(GENRES).map(([key, str]) =>
-                                            <option className={styles["genreselect-option"]} key={key} value={key}>{str}</option>
-                                        )
-                                    }
-                                </select>
-                            </div>
+                            <select id="genre" className={styles["genreselect"]} name="genre" onChange={handleGenreChange}>
+                                {
+                                    Object.entries(GENRES).map(([key, str]) =>
+                                        <option className={styles["genreselect-option"]} key={key} value={key}>{str}</option>
+                                    )
+                                }
+                            </select>
                         </div>
                         <div>
                             Visualizer in development
