@@ -3,50 +3,64 @@
 
 
 .player-page {
+    font-size: 1em;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 2rem;
 }
 
 .player {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
     margin: 0 auto;
     user-select: none;
-    font-size: 1em;
+    background: linear-gradient(rgb(132 245 81), rgb(93 243 22));
+    border-radius: 0.5em;
+    box-shadow: 0 1em 1em 0.5em rgb(81 81 81 / 50%);
 
-    &__user {
-        position: relative;
+    &__header {
+        background: linear-gradient(#BCBCBC 0%, #909090 15%, #909090 85%, #3E3E3E 100%);
+        border-radius: 8px 8px 0 0;
+        padding: 0.125rem;
     }
 
-    &__now {
-        @include abs-pos(0px, 4px);
-        width: 240px;
-        height: 88px;
-        background: linear-gradient(rgb(164 255 122), rgb(82 255 0));
-        border-radius: 8px;
+    &__body {
+        padding: 0.25rem;
+    }
+
+    &__user {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }
 
-// "inner"
-.ctrls {
-    position: relative;
-    background: linear-gradient(#C8C8C8 33%, #9D9D9D 66%, #BFBFBF);
-    width: 88px;
-    height: 88px;
-    border-radius: 50%;
+.h1 {
+    text-transform: lowercase;
+    color: variables.$gg-text;
+    text-shadow: 1px 1px 2px black;
+}
 
-    // frame; used to center inner
-    &__outer {
-        @include abs-pos(192px, 0px);
+.pinfo {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(0 121 10);
+    border-radius: 1rem;
+    padding: 1em;
+    box-shadow: 0.5rem 0.5rem 0.5rem inset;
+    gap: 1em;
+
+    &__user {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(#CACACA 33%, #525252 66%, #A0A0A0);
-        border-radius: 50%;
-        width: 96px;
-        height: 96px;
+        flex-direction: column;
     }
+}
+
+.ctrls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .loading {
@@ -56,6 +70,7 @@
     align-items: center;
     top: 15%;
     left: 40%;
+    z-index: 1;
 
     &__text {
         border: 4px solid grey;
@@ -79,10 +94,17 @@
 
 .timeline {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     border: 1px solid black;
     width: 100%;
+
+    &__times {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+    }
 }
 
 .decor-bars {
@@ -138,47 +160,39 @@
 }
 
 .avi {
-    @include abs-pos(4px, 4px);
     display: flex;
     flex-direction: row;
     gap: 0.25rem;
 
     &__text {
-        @include abs-pos(40px, 4px);
         display: flex;
         flex-direction: column;
         gap: 4px;
     }
 }
 
-.report {
-    @include abs-pos(4px, 60px);
-}
-
 .genre-container {
     // @include abs-pos(19px, 90px);
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 0.5rem;
+    background-color: rgb(0 121 10);
+    border-radius: 1rem;
+    padding: 1em;
+    box-shadow: 0.5rem 0.5rem 0.5rem inset;
 }
 
 .genreselect-container {
     @include fanciful-btn(44px, 57px, linear-gradient(180deg, #0075FF 0%, #86BDFF 100%));
-    position: relative;
 
     .genreselect {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-
         appearance: none;
         background: url("/chevrons-right.svg") 91% / 22% no-repeat;
-        // stroke: white;
+        stroke: white;
         stroke-width: 2px;
-        font-size: 0.625em;
-        padding: 3px 6px;
+        font-size: 2em;
+        padding: 6px 12px;
         border-radius: 10px;
         border: none;
         color: white;
@@ -186,42 +200,48 @@
 
         .genreselect-option {
             background-color: grey;
+            font-size: 0.5em;
         }
     }
 }
 
 .genre-label {
     text-transform: uppercase;
-    font-size: 0.625em;
+    font-size: 1em;
 }
 
 .queue {
-    @include abs-pos(118px, 4px);
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex-direction: row;
+    gap: 0.75rem;
+    color: variables.$off-white;
+
+    &__user {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .qinfo {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    gap: 2px;
+    align-items: center;
+    gap: 0.125rem;
 
     &__label {
-        color: #494949;
-        font-size: 0.625em;
+        color: #00ff1e;
+        font-size: 1em;
         text-transform: uppercase;
+        text-shadow: 1px 1px 2px black;
     }
 
     &__val {
         color: black;
-        font-size: 0.875em;
+        font-size: 1.25em;
     }
 
     &__nowspecialcase {
-        font-size: 0.625em;
-        color: #494949;
+        font-size: 0.75em;
         text-transform: uppercase;
     }
 }
@@ -230,18 +250,18 @@
     // @include abs-pos(99px, 92px);
     text-transform: uppercase;
     color: #494949;
-    font-size: 0.625em;
+    font-size: 1em;
     font-style: italic;
 }
 
 .genreposted {
-    font-size: 0.625em;
+    font-size: 1em;
     font-style: italic;
 }
 
 .tracktime {
     color: black;
-    font-size: 0.875em;
+    font-size: 1em;
     text-shadow:
         -2px 0 8px white,
         2px 0 8px white,
@@ -253,40 +273,40 @@
 
 .skipback-btn {
     @include playerctrl-btn(url("/4nd-skipback-btn.svg"));
-    @include abs-pos(11px, 12px);
 }
 
 .pause-btn {
     @include playerctrl-btn(url("/4nd-pause-btn.svg"));
-    @include abs-pos(28px, 44px);
 }
 
 .play-btn {
     @include playerctrl-btn(url("/4nd-play-btn.svg"));
-    @include abs-pos(28px, 44px);
 }
 
 .skipnext-btn {
     @include playerctrl-btn(url("/4nd-skipnext-btn.svg"));
-    @include abs-pos(45px, 12px);
+}
+
+.report-btn {
+    @include playerctrl-btn(url("/warning-triangle.svg"));
 }
 
 .vol-container {
     // @include abs-pos(161px, 191px);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    gap: 0;
+    gap: 1.75rem;
 }
 
 .vol-label {
     text-transform: uppercase;
     color: #494949;
-    font-size: 0.75em;
+    font-size: 1em;
 }
 
 .vol-slider {
-    width: 69px;
     height: 9px;
     appearance: none;
     cursor: pointer;
@@ -295,6 +315,8 @@
     border: 0.5px solid black;
     border-radius: 4px;
     margin: 0;
+    // optically center
+    margin-left: -1.5rem;
 }
 
 // SLIDER TRACK
@@ -334,4 +356,15 @@
     .vol-container {
         display: none;
     }
+}
+
+.visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
 }
