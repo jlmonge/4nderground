@@ -1,6 +1,8 @@
 @use "variables";
 @import "mixins";
 
+$icon-bg: #4c4c4c;
+$icon-size: 1.5rem;
 
 .player-page {
     font-size: 1em;
@@ -22,10 +24,13 @@
     &__header {
         background: linear-gradient(#BCBCBC 0%, #909090 15%, #909090 85%, #3E3E3E 100%);
         border-radius: 8px 8px 0 0;
-        padding: 0.125rem;
+        padding: 0.125rem 0.25rem 0.5rem;
     }
 
     &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
         padding: 0.25rem;
     }
 
@@ -45,11 +50,8 @@
 .pinfo {
     display: flex;
     flex-direction: row;
-    background-color: rgb(0 121 10);
-    border-radius: 1rem;
-    padding: 1em;
-    box-shadow: 0.5rem 0.5rem 0.5rem inset;
     gap: 1em;
+    justify-content: space-between;
 
     &__user {
         display: flex;
@@ -65,6 +67,65 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: flex-start;
+
+    &__btn {
+        background: #e1e1e1;
+        border-radius: $icon-size;
+        padding: 0.5rem;
+        filter: drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25));
+    }
+}
+
+.icon {
+    background: $icon-bg;
+    display: inline-block;
+    width: $icon-size;
+    height: $icon-size;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    vertical-align: middle;
+    filter: drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25));
+
+    &__skipback {
+        mask-image: url("/skip-back.svg");
+    }
+
+    &__pause {
+        mask-image: url("/pause.svg");
+    }
+
+    &__play {
+        mask-image: url("/play.svg");
+    }
+
+    &__skipnext {
+        mask-image: url("/skip-forward.svg");
+    }
+
+    &__report {
+        mask-image: url("/warning-triangle.svg");
+    }
+}
+
+// .skipback-btn {
+//     @include playerctrl-btn(url("/4nd-skipback-btn.svg"));
+// }
+
+// .pause-btn {
+//     @include playerctrl-btn(url("/4nd-pause-btn.svg"));
+// }
+
+// .play-btn {
+//     @include playerctrl-btn(url("/4nd-play-btn.svg"));
+// }
+
+// .skipnext-btn {
+//     @include playerctrl-btn(url("/4nd-skipnext-btn.svg"));
+// }
+
+.report-btn {
+    @include playerctrl-btn(url("/warning-triangle.svg"));
 }
 
 .loading {
@@ -100,7 +161,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid black;
     width: 100%;
 
     &__times {
@@ -192,7 +252,7 @@
     color: white;
     cursor: pointer;
     width: 100%;
-    padding: 0 1rem;
+    padding: 0 0.25rem;
 
     .genreselect-option {
         background-color: grey;
@@ -257,33 +317,20 @@
 .tracktime {
     color: black;
     font-size: 1em;
-    text-shadow:
-        -2px 0 8px white,
-        2px 0 8px white,
-    ;
+    // text-shadow:
+    //     -2px 0 8px white,
+    //     2px 0 8px white,
+    // ;
     min-width: 3em;
-    text-align: center;
 
 }
 
-.skipback-btn {
-    @include playerctrl-btn(url("/4nd-skipback-btn.svg"));
+.curtime {
+    text-align: start;
 }
 
-.pause-btn {
-    @include playerctrl-btn(url("/4nd-pause-btn.svg"));
-}
-
-.play-btn {
-    @include playerctrl-btn(url("/4nd-play-btn.svg"));
-}
-
-.skipnext-btn {
-    @include playerctrl-btn(url("/4nd-skipnext-btn.svg"));
-}
-
-.report-btn {
-    @include playerctrl-btn(url("/warning-triangle.svg"));
+.totaltime {
+    text-align: end;
 }
 
 .vol-container {

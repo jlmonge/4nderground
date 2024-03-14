@@ -218,32 +218,6 @@ export default function Player() {
                             onTimeUpdate={handleTimeUpdate}
                         />
                     </div>
-                    <div className={styles["timeline"]}>
-                        <div className={styles["timeline__times"]}>
-                            <span className={`${styles["tracktime"]} ${styles["curtime"]}`}>{`${Math.trunc(curTime / 60)}:${Math.trunc(curTime % 60).toString().padStart(2, '0')}`}</span>
-                            <span className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
-                                {totalTimeText}
-                            </span>
-                        </div>
-                        {tracks.length ?
-                            <input
-                                className={styles["playback-bar"]}
-                                type="range"
-                                min={0}
-                                max={tracks.length ? Math.trunc(tracks[trackIndex].duration) : 0}
-                                step={1}
-                                onChange={handleSeek}
-                                value={Math.trunc(curTime)}
-                            /> :
-                            <div className={styles["decor-bars"]}>
-                                <div className={styles["bar-white"]}></div>
-                                <div className={styles["bar-grey"]}></div>
-                                <div className={styles["bar-white"]}></div>
-                                <div className={styles["bar-grey"]}></div>
-                                <div className={styles["bar-white"]}></div>
-                                <div className={styles["bar-grey"]}></div>
-                            </div>}
-                    </div>
                     <div className={styles["player__user"]}>
                         <div className={styles["pinfo"]}>
                             <div className={styles["pinfo__user"]}>
@@ -273,24 +247,52 @@ export default function Player() {
                                 </div>
                             </div>
                         </div>
+                        <div className={styles["timeline"]}>
+                            <div className={styles["timeline__times"]}>
+                                <span className={`${styles["tracktime"]} ${styles["curtime"]}`}>{`${Math.trunc(curTime / 60)}:${Math.trunc(curTime % 60).toString().padStart(2, '0')}`}</span>
+                                <span className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
+                                    {totalTimeText}
+                                </span>
+                            </div>
+                            {tracks.length ?
+                                <input
+                                    className={styles["playback-bar"]}
+                                    type="range"
+                                    min={0}
+                                    max={tracks.length ? Math.trunc(tracks[trackIndex].duration) : 0}
+                                    step={1}
+                                    onChange={handleSeek}
+                                    value={Math.trunc(curTime)}
+                                /> :
+                                <div className={styles["decor-bars"]}>
+                                    <div className={styles["bar-white"]}></div>
+                                    <div className={styles["bar-grey"]}></div>
+                                    <div className={styles["bar-white"]}></div>
+                                    <div className={styles["bar-grey"]}></div>
+                                    <div className={styles["bar-white"]}></div>
+                                    <div className={styles["bar-grey"]}></div>
+                                </div>}
+                        </div>
                         <div className={styles["ctrls"]}>
                             <div className={styles["ctrls__btns"]}>
-                                <button type="button" onClick={handleBack} className={styles["skipback-btn"]} disabled={!tracks.length}>
-                                    {/* <SkipBackBtn className={styles["ctrls-svg"]} /> */}
+                                <button type="button" onClick={handleBack}
+                                    className={styles["ctrls__btn"]} disabled={!tracks.length}
+                                >
+                                    <span className={`${styles["icon"]} ${styles["icon__skipback"]}`}></span>
                                 </button>
                                 <button type="button" onClick={handlePlayPause}
-                                    className={paused ? styles["play-btn"] : styles["pause-btn"]} disabled={!tracks.length}>
-                                    {/* {isPausedMisnomer
-                                        ? <PauseBtn className={styles["ctrls-svg"]} />
-                                        : <PlayBtn className={styles["ctrls-svg"]} />
-                                    } */}
+                                    className={styles["ctrls__btn"]} disabled={!tracks.length}
+                                >
+                                    <span className={paused ? `${styles["icon"]} ${styles["icon__play"]}` : `${styles["icon"]} ${styles["icon__pause"]}`}></span>
                                 </button>
-                                <button type="button" onClick={handleForward} className={styles["skipnext-btn"]} disabled={!tracks.length}>
-                                    {/* <SkipNextBtn className={styles["ctrls-svg"]} /> */}
+                                <button type="button" onClick={handleForward}
+                                    className={styles["ctrls__btn"]} disabled={!tracks.length}
+                                >
+                                    <span className={`${styles["icon"]} ${styles["icon__skipnext"]}`}></span>
                                 </button>
                             </div>
-                            <button type="button" className={styles["report-btn"]} disabled={!tracks.length}>
-                                {/* <SkipNextBtn className={styles["ctrls-svg"]} /> */}
+                            <button type="button" className={styles["ctrls__btn"]} disabled={!tracks.length}>
+                                <span className={`${styles["icon"]} ${styles["icon__report"]}`}></span>
                             </button>
                             <div className={styles["vol-container"]}>
                                 <span className={styles["vol-label"]}>Vol</span>
