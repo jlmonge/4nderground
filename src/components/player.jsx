@@ -13,6 +13,17 @@ import styles from '../styles/Player.module.scss'
 const BTN_SIZE = 24;
 const DEBUG = false; // redundant; replace soon
 
+const demoTrack = {
+    id: 'DEMO',
+    file_path: 'https://4nderground-static-files.s3.us-east-2.amazonaws.com/breaks2.wav',
+    uploader_id: 'e290162b-45fa-42c2-8ee1-bc702397b1c7',
+    duration: 20,
+    created_at: '2024-03-12 21:11:34',
+    file_size: 3860152,
+    genre: 'electronic',
+
+}
+
 export default function Player() {
     // contains the current collection of tracks (depends on genre)
     const [tracks, setTracks] = useState([]);
@@ -167,8 +178,8 @@ export default function Player() {
                 console.log(`ERROR: ${JSON.stringify(error)}`);
             }
 
-            setAllTracks(data ?? []);
-            setTracks(data ?? []);
+            setAllTracks(!data.length ? [demoTrack] : data);
+            setTracks(!data.length ? [demoTrack] : data);
         }
         fetchTracks();
         setLoading(false);
@@ -209,7 +220,7 @@ export default function Player() {
                                 }
                             </select>
                         </div>
-                        <div>
+                        <div className={styles["viz__body"]}>
                             Visualizer in development
                         </div>
                         <audio
@@ -228,11 +239,6 @@ export default function Player() {
                                         <span className={styles["whenposted"]}>{whenPostedText}</span>
                                     </div>
                                 </div>
-                                {(user?.id && !!tracks.length) &&
-                                    <div className={styles["report"]}>
-                                        <Report contentType='track' contentId={(tracks.length) ? tracks[trackIndex].id : null} />
-                                    </div>
-                                }
                             </div>
                             <div className={styles["queue"]}>
                                 <div className={styles["qinfo"]}>
@@ -291,11 +297,13 @@ export default function Player() {
                                     <span className={`${styles["icon"]} ${styles["icon__skipnext"]}`}></span>
                                 </button>
                             </div>
-                            <button type="button" className={styles["ctrls__btn"]} disabled={!tracks.length}>
-                                <span className={`${styles["icon"]} ${styles["icon__report"]}`}></span>
-                            </button>
+                            {(user?.id && !!tracks.length) &&
+                                <div className={styles["report"]}>
+                                    <Report contentType='track' contentId={(tracks.length) ? tracks[trackIndex].id : null} />
+                                </div>
+                            }
                             <div className={styles["vol-container"]}>
-                                <span className={styles["vol-label"]}>Vol</span>
+                                <span className={styles["visually-hidden"]}>Vol</span>
                                 <input
                                     className={styles["vol-slider"]}
                                     type="range"
@@ -310,7 +318,8 @@ export default function Player() {
                     </div>
                 </div>
             </div>
-            {/* <p>{curTime}</p>
+            {/* <p>{audioRef.current?.src}</p>
+            <p>{curTime}</p>
             <p>debug: volume: {volume}</p>
             <p>debug: trackIndex: {trackIndex}</p>
             <p>debug: tracks: {JSON.stringify(tracks, null, 2)}</p>

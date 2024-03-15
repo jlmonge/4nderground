@@ -112,6 +112,34 @@ export default function Report({ contentType, contentId = null, large = false })
         setReason(e.target.value);
     }
 
+    let openButton;
+
+    if (contentType === 'track') {
+        openButton = (
+            <button
+                className={styles["opendialog-btn--track"]}
+                style={large ? { fontSize: '1em' } : {}}
+                data="Report"
+                onClick={contentId ? handleOpen : undefined}
+                type="button" disabled={!contentId}
+            >
+                <span className={styles["icon"]}></span>
+            </button>
+        );
+    } else {
+        openButton = (
+            <button
+                className={styles["opendialog-btn"]}
+                style={large ? { fontSize: '1em' } : {}}
+                data="Report"
+                onClick={contentId ? handleOpen : undefined}
+                type="button" disabled={!contentId}
+            >
+                Report
+            </button>
+        );
+    }
+
     return (
         <>
             {contentId && (
@@ -158,15 +186,7 @@ export default function Report({ contentType, contentId = null, large = false })
                     </div>
                 </dialog>
             )}
-            <button
-                className={styles["opendialog-btn"]}
-                style={large ? { fontSize: '1em' } : {}}
-                data="Report"
-                onClick={contentId ? handleOpen : undefined}
-                type="button" disabled={!contentId}
-            >
-                Report
-            </button>
+            {openButton}
         </>
     );
 }

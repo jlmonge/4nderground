@@ -240,7 +240,7 @@ export default function CommentSection({ trackId }) {
     //const [curUserId, setCurUserId] = useState(''); // 'Assignments to the 'curUserId' variable from inside React Hook useEffect will be lost after each render.'
     const [comments, setComments] = useState([]);
     const supabase = createClientComponentClient();
-    const { user, setUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     // useEffect(() => {
     //     const getUser = async () => {            
@@ -253,12 +253,16 @@ export default function CommentSection({ trackId }) {
         if (trackId) {
             //console.log(`new trackId, fetching new comments: ${trackId}`)
             const fetchComments = async () => {
-                let { data, error } = await supabase
-                    .from('comments')
-                    .select('id, comment, user_id, posted_at')
-                    .eq('track_id', trackId)
-                    .order('posted_at', { ascending: false });
-                setComments(data);
+                if (trackId !== 'DEMO') {
+                    let { data, error } = await supabase
+                        .from('comments')
+                        .select('id, comment, user_id, posted_at')
+                        .eq('track_id', trackId)
+                        .order('posted_at', { ascending: false });
+                    setComments(data);
+                } else {
+                    setComments([])
+                }
                 //console.log(`fetched comments: ${JSON.stringify(data)}`);
             };
             fetchComments();
@@ -280,10 +284,10 @@ export default function CommentSection({ trackId }) {
         // console.log(":o bye comment");
     };
 
-    if (trackId) {
+    if (trackId && trackId !== 'DEMO') {
         content = (
             <div className={styles["commentsection-container"]}>
-                <h2 className={styles["comments-heading"]}>{comments.length ?? 0} comments</h2>
+                <h2 className={styles["comments-heading"]}>{comments ? comments.length : 0} comments</h2>
                 <div className={styles["comments-container"]}>
                     {user &&
                         <AddComment
@@ -300,7 +304,6 @@ export default function CommentSection({ trackId }) {
             </div>
         );
     }
-
 
     return (
         <>
