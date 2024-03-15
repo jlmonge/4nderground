@@ -33,10 +33,9 @@ function Password({ hasRequirements }) {
                     placeholder="Password" className={`${styles["af-inputtext"]} ${styles["af-password"]}`}
                     autoComplete="current-password" minLength={8} required
                 />
-                <button title="Show password" type="button" className={styles["showpassword-btn"]}>
+                <button title="Show password" type="button" className={styles["showpassword-btn"]} onClick={handleSeePassword}>
                     <span
                         className={`${styles["showpassword-icon"]} ${isObscured ? styles["obscured"] : styles["notobscured"]}`}
-                        onClick={handleSeePassword}
                     />
                 </button>
             </div>
@@ -128,7 +127,7 @@ export default function AccessForm({
                     {hasAgreement && <Agreement />}
                 </div>
                 <button className={styles["af-btn"]} type="submit">
-                    &gt;&gt;
+                    <span className={styles["af-btn__text"]} >&gt;&gt;</span>
                 </button>
             </form>
             <Status loading={loading} response={response} isError={isError} />

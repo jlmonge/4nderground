@@ -8,16 +8,13 @@ import { Suspense, useContext } from 'react';
 import { UserContext } from '../user-provider';
 import { Logo1 } from './svgs';
 import { nunito } from '../app/fonts';
-import { BGTop } from '../components/svgs';
 
 export default function Navbar() {
     const { user } = useContext(UserContext);
     let logo = (
-        <Link prefetch={false} href="/">
-            <div className={styles["logo"]}>
-                <Logo1 />
-            </div>
-        </Link>
+        <div className={styles["logo"]}>
+            <Logo1 />
+        </div>
     )
 
     // const textColor = !!user ? colors["ub-text"] : colors["gg-text"];
@@ -28,13 +25,21 @@ export default function Navbar() {
                 Skip to main content
             </a>
             <nav className={`${styles["nav"]} ${colors["gg-text"]} ${nunito.className}`}>
-                <div className={styles["all-flow"]}>
+                <Link prefetch={false} href="/" className={styles["logo__container"]}>
                     {logo}
+                    <div className={styles["logo__caption"]}>
+                        <span className={styles["logo__name"]}>4nderground</span>
+                        <span className={styles["logo__memo"]}>BETA</span>
+                    </div>
+                </Link>
+
+                <div className={styles["nav__links"]}>
                     <Link prefetch={false} className={styles["nav-link"]} href="/player">
                         <span className={styles["nav-text"]}>Player</span>
                     </Link>
-                </div>
-                <div className={styles["user-flow"]}>
+                    <Link prefetch={false} className={styles["nav-link"]} href="/upload">
+                        <span className={styles["nav-text"]}>Upload</span>
+                    </Link>
                     {!user
                         ? <Link prefetch={false} className={styles["nav-link"]} href="/login">
                             <span className={styles["nav-text"]}>Sign In</span>
@@ -43,9 +48,6 @@ export default function Navbar() {
                             <div className={styles["avatar-container"]}>
                                 <Avatar userId={user.id} />
                             </div>
-                            <Link prefetch={false} className={styles["nav-link"]} href="/upload">
-                                <span className={styles["nav-text"]}>Upload</span>
-                            </Link>
                         </>
                     }
                 </div>

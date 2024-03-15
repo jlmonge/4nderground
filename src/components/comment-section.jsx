@@ -3,13 +3,14 @@
 
 import Report from './report';
 import Avatar from './avatar';
+import Status from './Shared/status';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserContext } from '../user-provider';
-import Status from './Shared/status';
-import styles from '../styles/Comments.module.scss';
+import { v4 as uuidv4 } from 'uuid';
 import { COMMENT_CHARS_MAX } from '../utils/constants';
 import { useAutosizeTextArea } from '../hooks/useAutosizeTextArea';
+import styles from '../styles/Comments.module.scss';
 
 /*
 DISPLAY WISE: A comment consists of:
@@ -33,33 +34,37 @@ function Comment({ comment, onDelete, isMyComment, curUserId }) {
     const [isError, setIsError] = useState(false);
 
     const handleDelete = async () => {
-        setLoading(true);
-        setResponse('');
-        setIsError(false);
+        if (comment.track_id !== 'DEMO') {
+            setLoading(true);
+            setResponse('');
+            setIsError(false);
 
-        try {
-            const data = new FormData();
-            data.append('commentUserId', comment.user_id);
-            data.append('commentId', comment.id);
+            try {
+                const data = new FormData();
+                data.append('commentUserId', comment.user_id);
+                data.append('commentId', comment.id);
 
-            const res = await fetch('/api/comment/delete', {
-                method: 'POST',
-                body: data,
-            });
-            const resJson = await res.json();
-            setResponse(resJson.message);
+                const res = await fetch('/api/comment/delete', {
+                    method: 'POST',
+                    body: data,
+                });
+                const resJson = await res.json();
+                setResponse(resJson.message);
 
-            if (!res.ok) {
+                if (!res.ok) {
+                    setIsError(true);
+                } else {
+                    onDelete(comment.id);
+                }
+            } catch (e) {
+                console.log(e);
                 setIsError(true);
-            } else {
-                onDelete(comment.id);
+                setResponse('Something bad happened');
+            } finally {
+                setLoading(false);
             }
-        } catch (e) {
-            console.log(e);
-            setIsError(true);
-            setResponse('Something bad happened');
-        } finally {
-            setLoading(false);
+        } else {
+            onDelete(comment.id);
         }
     }
 
@@ -121,48 +126,56 @@ function AddComment({ onAddComment, trackId }) {
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState('');
     const [isError, setIsError] = useState(false);
+    const { user } = useContext(UserContext);
     const textAreaRef = useRef(null);
 
-    useAutosizeTextArea(textAreaRef.current, comment)
+    useAutosizeTextArea(textAreaRef.current, comment);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        setLoading(true);
-        setResponse('');
-        setIsError(false);
+        if (trackId !== 'DEMO') {
+            setLoading(true);
+            setResponse('');
+            setIsError(false);
 
-        try {
-            const data = new FormData();
-            const trimmedComment = comment.trim();
+            try {
+                const data = new FormData();
+                const trimmedComment = comment.trim();
 
-            data.append('comment', trimmedComment);
-            data.append('trackId', trackId);
-            if (trimmedComment.length > COMMENT_CHARS_MAX) {
-                setResponse(`Comments are limited to ${COMMENT_CHARS_MAX} characters.`);
+                data.append('comment', trimmedComment);
+                data.append('trackId', trackId);
+                if (trimmedComment.length > COMMENT_CHARS_MAX) {
+                    setResponse(`Comments are limited to ${COMMENT_CHARS_MAX} characters.`);
+                    setIsError(true);
+                    return;
+                }
+
+                const res = await fetch('/api/comment/add', {
+                    method: 'POST',
+                    body: data,
+                });
+                const resJson = await res.json();
+                setResponse(resJson.message);
+
+                if (!res.ok) {
+                    setIsError(true);
+                } else {
+                    onAddComment(resJson.commentObj); // add comment on the client-side
+                    setComment('');
+                }
+            } catch (e) {
+                console.log(e);
+                setResponse('Something bad happened');
                 setIsError(true);
-                return;
+            } finally {
+                setLoading(false);
             }
-
-            const res = await fetch('/api/comment/add', {
-                method: 'POST',
-                body: data,
-            });
-            const resJson = await res.json();
-            setResponse(resJson.message);
-
-            if (!res.ok) {
-                setIsError(true);
-            } else {
-                onAddComment(resJson.commentObj); // add comment on the client-side
-                setComment('');
-            }
-        } catch (e) {
-            console.log(e);
-            setResponse('Something bad happened');
+        } else {
+            onAddComment(comment);
+            setComment('');
+            setResponse('Comments on the demo track are not saved.');
             setIsError(true);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -203,6 +216,7 @@ function AddComment({ onAddComment, trackId }) {
     );
 }
 
+// TODO: doesn't have to be a component, so change it
 function CommentList({ comments, onDeleteComment, curUserId }) {
     let commentContent;
     if (comments?.length) {
@@ -220,12 +234,6 @@ function CommentList({ comments, onDeleteComment, curUserId }) {
                         </li>
                     )}
                 </ul>
-            </>
-        );
-    } else {
-        commentContent = (
-            <>
-                <p>No comments.</p>
             </>
         );
     }
@@ -246,7 +254,7 @@ export default function CommentSection({ trackId }) {
     //const [curUserId, setCurUserId] = useState(''); // 'Assignments to the 'curUserId' variable from inside React Hook useEffect will be lost after each render.'
     const [comments, setComments] = useState([]);
     const supabase = createClientComponentClient();
-    const { user, setUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     // useEffect(() => {
     //     const getUser = async () => {            
@@ -256,27 +264,49 @@ export default function CommentSection({ trackId }) {
     // }, [user])
 
     useEffect(() => {
-        if (trackId) {
+        if (trackId && trackId !== 'DEMO') {
             //console.log(`new trackId, fetching new comments: ${trackId}`)
             const fetchComments = async () => {
-                let { data, error } = await supabase
-                    .from('comments')
-                    .select('id, comment, user_id, posted_at')
-                    .eq('track_id', trackId)
-                    .order('posted_at', { ascending: false });
-                setComments(data);
+                if (trackId !== 'DEMO') {
+                    let { data, error } = await supabase
+                        .from('comments')
+                        .select('id, comment, user_id, posted_at')
+                        .eq('track_id', trackId)
+                        .order('posted_at', { ascending: false });
+                    setComments(data);
+                } else {
+                    setComments([])
+                }
                 //console.log(`fetched comments: ${JSON.stringify(data)}`);
             };
             fetchComments();
         }
     }, [trackId, supabase]);
 
-    const handleAddComment = (commentObj) => {
+    const handleAddComment = (comment) => {
         // console.log(`NEW COMMENT: ${JSON.stringify(commentObj, null, '\t')}`);
-        setComments([
-            commentObj,
-            ...comments,
-        ]);
+        /*
+        * I arrived to this solution because the backend should not be called for strictly frontend
+        * procedures.
+        */
+        if (typeof comment === 'object' && !Array.isArray(comment) && comment !== null) {
+            setComments([
+                comment,
+                ...comments,
+            ]);
+        } else {
+            setComments([
+                {
+                    id: uuidv4(),
+                    comment: comment,
+                    user_id: user.id,
+                    track_id: trackId,
+                    posted_at: new Date(Date.now()),
+                },
+                ...comments,
+            ])
+        }
+
     };
 
     const handleDeleteComment = (commentId) => {
@@ -289,7 +319,7 @@ export default function CommentSection({ trackId }) {
     if (trackId) {
         content = (
             <div className={styles["commentsection-container"]}>
-                <h2 className={styles["comments-heading"]}>Comments</h2>
+                <h2 className={styles["comments-heading"]}>{comments ? comments.length : 0} {comments?.length !== 1 ? 'comments' : 'comment'}</h2>
                 <div className={styles["comments-container"]}>
                     {user &&
                         <AddComment
@@ -305,12 +335,7 @@ export default function CommentSection({ trackId }) {
                 </div>
             </div>
         );
-    } else {
-        content = (
-            <p>Comments unavailable.</p>
-        );
     }
-
 
     return (
         <>

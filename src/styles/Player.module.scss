@@ -1,21 +1,136 @@
 @use "variables";
 @import "mixins";
 
-
 .player-page {
+    font-size: 1em;
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    align-items: flex-start;
+    justify-content: center;
 }
 
 .player {
-    background-image: url("/player-bg.svg");
-    background-size: 100% 100%;
-    width: 304px;
-    height: 237px;
-    position: relative;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
     user-select: none;
+    background: linear-gradient(rgb(132 245 81), rgb(93 243 22));
+    border-radius: 0.5em;
+    box-shadow: 0 1em 1em 0.5em rgb(81 81 81 / 50%);
+
+    &__header {
+        background: linear-gradient(#BCBCBC 0%, #909090 15%, #909090 85%, #3E3E3E 100%);
+        border-radius: 8px 8px 0 0;
+        padding: 0.125rem 0.25rem 0.5rem;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0;
+        background: linear-gradient(#c2c2c24f, #ffffff00, #ffffff00, #c2c2c24f),
+            linear-gradient(to left, #35CD31, #56B054, #35CD31, #56B054, #35CD31);
+    }
+
+    &__user {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0 1rem 1rem;
+    }
+}
+
+.h1 {
+    text-transform: lowercase;
+    color: variables.$gg-text;
+    text-shadow: 1px 1px 2px black;
+}
+
+.pinfo {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: space-between;
+
+    &__user {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.viz {
+    background-color: black;
+
+    &__body {
+        padding: 0 0.25rem;
+        color: rgb(90, 90, 90);
+    }
+}
+
+.ctrls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+
+    &__btns {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 2px;
+    }
+
+    &__btn {
+        background: radial-gradient(#1aff41, rgb(49 49 49 / 50%));
+        border: none;
+        border-radius: variables.$icon-size;
+        padding: 0.75rem;
+        box-shadow:
+            0 -1px 4px #FFFFFF inset,
+            0 1px 4px #000000 inset;
+        filter: drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25));
+    }
+
+    &__btn:hover .icon {
+        transform: scale(1.2);
+    }
+
+    &__btn:active .icon {
+        transform: scale(0.8);
+    }
+}
+
+.icon {
+    background: variables.$icon-bg;
+    display: inline-block;
+    width: variables.$icon-size;
+    height: variables.$icon-size;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    vertical-align: middle;
+    box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s;
+
+
+
+    &__skipback {
+        mask-image: url("/skip-back.svg");
+    }
+
+    &__pause {
+        mask-image: url("/pause.svg");
+    }
+
+    &__play {
+        mask-image: url("/play.svg");
+    }
+
+    &__skipnext {
+        mask-image: url("/skip-forward.svg");
+    }
 }
 
 .loading {
@@ -23,11 +138,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    top: 10%;
+    bottom: 20%;
     left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
 
     &__text {
-        border: 4px solid grey;
+        border: 1px solid grey;
         border-radius: 8px;
         background-color: rgb(255 255 255 / 50%);
         color: black;
@@ -47,16 +164,26 @@
 }
 
 .timeline {
-    @include abs-pos(61px, 127px);
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
+    width: 100%;
+
+    &__times {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+    }
+}
+
+.decor-bars {
+    width: 100%;
 }
 
 .playback-bar {
-    // @include abs-pos(118px, 131px);
     appearance: none;
-    width: 75px;
+    width: 100%;
     height: 8px;
     background-color: black;
     cursor: pointer;
@@ -74,7 +201,7 @@
         width: 1px;
         background-color: grey;
         border-radius: 0;
-        box-shadow: -150px 0 0 150px white;
+        box-shadow: -200px 0 0 200px white;
     }
 
     // combining this into above breaks with webkit
@@ -88,14 +215,9 @@
 
 }
 
-.playback-bar__tick {
-    height: 100%;
-    background-color: white;
-}
-
 .bar-white {
     background-color: white;
-    width: 73px;
+    width: 100%;
     height: 1px;
 }
 
@@ -103,185 +225,177 @@
     position: relative;
     left: 2px;
     background-color: #707070;
-    width: 73px;
+    width: calc(100% - 2px);
     height: 1px;
 }
 
-.avi-container {
-    @include abs-pos(23px, 23px);
-}
+.avi {
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
 
-.report-container {
-    @include abs-pos(19px, 60px);
+    &__text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
 }
 
 .genre-container {
-    @include abs-pos(19px, 90px);
+    // @include abs-pos(19px, 90px);
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
+    flex-direction: row;
+    justify-content: center;
 }
 
-.genreselect-container {
-    @include fanciful-btn(44px, 57px, linear-gradient(180deg, #0075FF 0%, #86BDFF 100%));
-    position: relative;
+.genreselect {
+    appearance: none;
+    background: url("/chevrons-right.svg") center / contain no-repeat;
+    background-size: 20px;
+    background-position: 100%;
+    font-size: 1em;
+    border: none;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    padding: 0 0.25rem;
 
-    .genreselect {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-
-        appearance: none;
-        background: url("/chevrons-right.svg") 91% / 22% no-repeat;
-        // stroke: white;
-        stroke-width: 2px;
-        font-size: 10px;
-        padding: 3px 6px;
-        border-radius: 10px;
-        border: none;
-        color: white;
-        cursor: pointer;
-
-        .genreselect-option {
-            background-color: grey;
-        }
+    .genreselect-option {
+        background-color: grey;
+        font-size: 0.75em;
     }
 }
 
 .genre-label {
     text-transform: uppercase;
-    font-size: 10px;
+    font-size: 1em;
 }
 
-.queue-container {
-    @include abs-pos(196px, 37px);
+.queue {
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
+    color: variables.$off-white;
+
+    &__user {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.qinfo {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    gap: 0.125rem;
+
+    &__label {
+        color: #00ff1e;
+        font-size: 0.875em;
+        text-transform: uppercase;
+        text-shadow: 1px 1px 2px black;
+    }
+
+    &__val {
+        color: black;
+        font-size: 1em;
+    }
+
+    &__nowspecialcase {
+        font-size: 0.75em;
+        text-transform: uppercase;
+    }
 }
 
-.queue-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.qi-label {
-    color: #494949;
-    font-size: 10px;
-    text-transform: uppercase;
-}
-
-.qi-val {
-    color: black;
-    font-size: 14px;
-}
-
-.qi-nowspecialcase {
-    font-size: 10px;
-    color: #494949;
-    text-transform: uppercase;
-}
-
-.trackposted {
-    @include abs-pos(99px, 92px);
+.whenposted {
+    // @include abs-pos(99px, 92px);
     text-transform: uppercase;
     color: #494949;
-    font-size: 10px;
+    font-size: 0.875em;
+    font-style: italic;
+}
+
+.genreposted {
+    font-size: 1em;
     font-style: italic;
 }
 
 .tracktime {
     color: black;
-    font-size: 14px;
-    text-shadow:
-        -2px 0 8px white,
-        2px 0 8px white,
-    ;
+    font-size: 0.875em;
+    // text-shadow:
+    //     -2px 0 8px white,
+    //     2px 0 8px white,
+    // ;
     min-width: 3em;
-    text-align: center;
 
 }
 
-.skipback-btn {
-    @include playerctrl-btn(url("/4nd-skipback-btn.svg"));
+.curtime {
+    text-align: start;
 }
 
-.pause-btn {
-    @include playerctrl-btn(url("/4nd-pause-btn.svg"));
-}
-
-.play-btn {
-    @include playerctrl-btn(url("/4nd-play-btn.svg"));
-}
-
-.skipnext-btn {
-    @include playerctrl-btn(url("/4nd-skipnext-btn.svg"));
-}
-
-.ctrls-container {
-    @include abs-pos(159px, 162px);
-    height: 24px;
+.totaltime {
+    text-align: end;
 }
 
 .vol-container {
-    @include abs-pos(161px, 191px);
+    // @include abs-pos(161px, 191px);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    gap: 0;
+    gap: 1.75rem;
 }
 
 .vol-label {
     text-transform: uppercase;
     color: #494949;
-    font-size: 12px;
+    font-size: 0.875em;
 }
 
 .vol-slider {
-    width: 69px;
     height: 9px;
+    width: 6rem;
     appearance: none;
     cursor: pointer;
     outline: none;
     overflow: hidden;
-    border: 0.5px solid black;
     border-radius: 4px;
     margin: 0;
+    // optically center
 }
 
 // SLIDER TRACK
 .vol-slider::-webkit-slider-runnable-track {
-    height: 7px;
-    background: #494949;
+    height: 100%;
+    background: black;
     // border: 1px solid white;
 }
 
 .vol-slider::-moz-range-track {
-    height: 7px;
-    background: #494949;
+    height: 100%;
+    background: black;
     // border: 1px solid white;
 }
 
 // SLIDER THUMB
 .vol-slider::-webkit-slider-thumb {
     appearance: none;
-    height: 7px;
-    width: 13px;
-    background-color: #494949;
-    border: 2px solid grey;
-    box-shadow: -100px 0 0 100px variables.$gg-text;
+    height: 100%;
+    width: 1px;
+    background-color: grey;
+    border-radius: 0;
+    box-shadow: -100px 0 0 100px white;
 }
 
 // don't need to clear appearance in firefox
 .vol-slider::-moz-range-thumb {
-    height: 7px;
-    width: 13px;
-    background-color: #494949;
-    border: 2px solid grey;
-    box-shadow: -100px 0 0 100px variables.$gg-text;
+    height: 100%;
+    width: 1px;
+    background-color: grey;
+    border-radius: 0;
+    box-shadow: -100px 0 0 100px white;
 }
 
 // https://stackoverflow.com/questions/42025632/how-to-detect-only-with-css-mobile-screens
@@ -291,98 +405,19 @@
     }
 }
 
-@media (min-width: 744px) {
-    .player {
-        background-image: url("/player-bg624.svg");
-        background-size: 100% 100%;
-        width: 624px;
-        height: 242px;
-    }
+.visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
 
-    .bar-white,
-    .bar-grey,
-    .playback-bar {
-        width: 205px;
-    }
-
-    .avi-container {
-        @include abs-pos(54px, 12px);
-    }
-
-    .report-container {
-        @include abs-pos(51px, 68px);
-    }
-
-    .genre-container {
-        @include abs-pos(51px, 98px);
-        font-size: 14px;
-    }
-
-    .timeline {
-        @include abs-pos(147px, 124px);
-    }
-
-    .queue-container {
-        // incr. x from design
-        @include abs-pos(402px, 42px);
-        width: 170px;
+@media screen and (min-width: 744px) {
+    .player-page {
         flex-direction: row;
-        justify-content: space-between;
-        gap: 8px;
-    }
-
-    .queue-info {
-        align-items: center;
-    }
-
-    .qi-label {
-        font-size: 14px;
-    }
-
-    .qi-val {
-        font-size: 18px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .qi-nowspecialcase {
-        font-size: 14px;
-    }
-
-    .trackposted {
-        @include abs-pos(219px, 92px);
-        font-size: 14px;
-    }
-
-    .tracktime {
-        font-size: 18px;
-    }
-
-    .ctrls-container {
-        // incr. x from design
-        @include abs-pos(350px, 152px);
-        height: 40px;
-    }
-
-    .vol-container {
-        // incr. x from design, decr. y
-        @include abs-pos(351px, 200px);
-    }
-
-    .vol-label {
-        font-size: 14px;
-    }
-
-    .vol-slider {
-        width: 123px;
-    }
-
-    .genreselect-container .genreselect {
-        font-size: 14px;
-    }
-
-    .genre-label {
-        font-size: 14px;
     }
 }

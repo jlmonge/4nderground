@@ -13,27 +13,17 @@ import styles from '../styles/Player.module.scss'
 const BTN_SIZE = 24;
 const DEBUG = false; // redundant; replace soon
 
-function PlayerControls({ handleBack, handlePlayPause, handleForward, isPaused, isEmpty }) {
-    return (
-        <div className={styles["ctrls-container"]}>
-            <button type="button" onClick={handleBack} className={styles["skipback-btn"]} disabled={isEmpty}>
-                {/* <SkipBackBtn className={styles["ctrls-svg"]} /> */}
-            </button>
-            <button type="button" onClick={handlePlayPause}
-                className={isPaused ? styles["play-btn"] : styles["pause-btn"]} disabled={isEmpty}>
-                {/* {isPausedMisnomer
-                    ? <PauseBtn className={styles["ctrls-svg"]} />
-                    : <PlayBtn className={styles["ctrls-svg"]} />
-                } */}
-            </button>
-            <button type="button" onClick={handleForward} className={styles["skipnext-btn"]} disabled={isEmpty}>
-                {/* <SkipNextBtn className={styles["ctrls-svg"]} /> */}
-            </button>
-        </div>
-    )
+const demoTrack = {
+    id: 'DEMO',
+    file_path: 'https://4nderground-static-files.s3.us-east-2.amazonaws.com/breaks2.wav',
+    uploader_id: 'e290162b-45fa-42c2-8ee1-bc702397b1c7',
+    duration: 20,
+    created_at: '2024-03-12 21:11:34',
+    file_size: 3860152,
+    genre: 'electronic',
+
 }
 
-// TODO: DECOUPLE (GET+SET PLAYING STATUS, SET TRACKS W/ HTML5 AUDIO)
 export default function Player() {
     // contains the current collection of tracks (depends on genre)
     const [tracks, setTracks] = useState([]);
@@ -147,7 +137,7 @@ export default function Player() {
         queueNowPosOutput = (trackIndex + 1).toString();
         if (trackIndex === 0) {
             queueNowSpecialJSX = (
-                <span className={styles["qi-nowspecialcase"]}>
+                <span className={styles["qinfo__nowspecialcase"]}>
                     (newest)
                 </span>
             )
@@ -188,8 +178,8 @@ export default function Player() {
                 console.log(`ERROR: ${JSON.stringify(error)}`);
             }
 
-            setAllTracks(data ?? []);
-            setTracks(data ?? []);
+            setAllTracks(!data.length ? [demoTrack] : data);
+            setTracks(!data.length ? [demoTrack] : data);
         }
         fetchTracks();
         setLoading(false);
@@ -215,85 +205,121 @@ export default function Player() {
                 </div>
             }
             <div className={styles["player"]}>
-                <audio
-                    ref={audioRef}
-                    onEnded={handleForward}
-                    onTimeUpdate={handleTimeUpdate}
-                />
-                <div className={styles["avi-container"]}>
-                    <Avatar userId={(!!tracks.length) ? tracks[trackIndex].uploader_id : null} size="small" />
+                <div className={styles["player__header"]}>
+                    <h1 className={styles["h1"]}>Player</h1>
                 </div>
-                {user?.id &&
-                    <div className={styles["report-container"]}>
-                        <Report contentType='track' contentId={(tracks.length) ? tracks[trackIndex].id : null} />
+                <div className={styles["player__body"]}>
+                    <div className={styles["viz"]}>
+                        <div className={styles["genre-container"]}>
+                            <label htmlFor="genre" className={styles["visually-hidden"]}>Select player genre</label>
+                            <select id="genre" className={styles["genreselect"]} name="genre" onChange={handleGenreChange}>
+                                {
+                                    Object.entries(GENRES).map(([key, str]) =>
+                                        <option className={styles["genreselect-option"]} key={key} value={key}>{str}</option>
+                                    )
+                                }
+                            </select>
+                        </div>
+                        <div className={styles["viz__body"]}>
+                            Visualizer in development
+                        </div>
+                        <audio
+                            ref={audioRef}
+                            onEnded={handleForward}
+                            onTimeUpdate={handleTimeUpdate}
+                        />
                     </div>
-                }
-                <div className={styles["genre-container"]}>
-                    <label htmlFor="genre" className={styles["genre-label"]}>Genre</label>
-                    <div className={styles["genreselect-container"]}>
-                        <select id="genre" className={styles["genreselect"]} name="genre" onChange={handleGenreChange}>
-                            {
-                                Object.entries(GENRES).map(([key, str]) =>
-                                    <option className={styles["genreselect-option"]} key={key} value={key}>{str}</option>
-                                )
+                    <div className={styles["player__user"]}>
+                        <div className={styles["pinfo"]}>
+                            <div className={styles["pinfo__user"]}>
+                                <div className={styles["avi"]}>
+                                    <Avatar userId={(!!tracks.length) ? tracks[trackIndex].uploader_id : null} size="small" />
+                                    <div className={styles["avi__text"]}>
+                                        <span className={styles["genreposted"]}>{tracks.length ? tracks[trackIndex].genre : null}</span>
+                                        <span className={styles["whenposted"]}>{whenPostedText}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={styles["queue"]}>
+                                <div className={styles["qinfo"]}>
+                                    <span className={styles["qinfo__label"]}>Now</span>
+                                    <span className={styles["qinfo__counter"]}>
+                                        {queueNowPosOutput} {queueNowSpecialJSX}
+                                    </span>
+                                </div>
+                                <div className={styles["qinfo"]}>
+                                    <span className={styles["qinfo__label"]}>Total</span>
+                                    <span className={styles["qinfo__counter"]}>{tracks.length}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={styles["timeline"]}>
+                            <div className={styles["timeline__times"]}>
+                                <span className={`${styles["tracktime"]} ${styles["curtime"]}`}>{`${Math.trunc(curTime / 60)}:${Math.trunc(curTime % 60).toString().padStart(2, '0')}`}</span>
+                                <span className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
+                                    {totalTimeText}
+                                </span>
+                            </div>
+                            {tracks.length ?
+                                <input
+                                    className={styles["playback-bar"]}
+                                    type="range"
+                                    min={0}
+                                    max={tracks.length ? Math.trunc(tracks[trackIndex].duration) : 0}
+                                    step={1}
+                                    onChange={handleSeek}
+                                    value={Math.trunc(curTime)}
+                                /> :
+                                <div className={styles["decor-bars"]}>
+                                    <div className={styles["bar-white"]}></div>
+                                    <div className={styles["bar-grey"]}></div>
+                                    <div className={styles["bar-white"]}></div>
+                                    <div className={styles["bar-grey"]}></div>
+                                    <div className={styles["bar-white"]}></div>
+                                    <div className={styles["bar-grey"]}></div>
+                                </div>}
+                        </div>
+                        <div className={styles["ctrls"]}>
+                            <div className={styles["ctrls__btns"]}>
+                                <button type="button" onClick={handleBack}
+                                    className={styles["ctrls__btn"]} disabled={!tracks.length}
+                                >
+                                    <span className={`${styles["icon"]} ${styles["icon__skipback"]}`}></span>
+                                </button>
+                                <button type="button" onClick={handlePlayPause}
+                                    className={styles["ctrls__btn"]} disabled={!tracks.length}
+                                >
+                                    <span className={paused ? `${styles["icon"]} ${styles["icon__play"]}` : `${styles["icon"]} ${styles["icon__pause"]}`}></span>
+                                </button>
+                                <button type="button" onClick={handleForward}
+                                    className={styles["ctrls__btn"]} disabled={!tracks.length}
+                                >
+                                    <span className={`${styles["icon"]} ${styles["icon__skipnext"]}`}></span>
+                                </button>
+                            </div>
+                            {(user?.id && !!tracks.length) &&
+                                <div className={styles["report"]}>
+                                    <Report contentType='track' contentId={(tracks.length) ? tracks[trackIndex].id : null} />
+                                </div>
                             }
-                        </select>
+                            <div className={styles["vol-container"]}>
+                                <span className={styles["visually-hidden"]}>Vol</span>
+                                <input
+                                    className={styles["vol-slider"]}
+                                    type="range"
+                                    min={0}
+                                    max={1}
+                                    step={0.01}
+                                    onChange={handleVolume}
+                                    value={volume}
+                                />
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className={styles["queue-container"]}>
-                    <div className={styles["queue-info"]}>
-                        <p className={styles["qi-label"]}>Now</p>
-                        <p className={styles["qi-val"]}>
-                            {queueNowPosOutput} {queueNowSpecialJSX}
-                        </p>
-                    </div>
-                    <div className={styles["queue-info"]}>
-                        <p className={styles["qi-label"]}>Total</p>
-                        <p className={styles["qi-val"]}>{tracks.length}</p>
-                    </div>
-                </div>
-                <p className={styles["trackposted"]}>{whenPostedText}</p>
-                <div className={styles["timeline"]}>
-                    <p className={`${styles["tracktime"]} ${styles["curtime"]}`}>{`${Math.trunc(curTime / 60)}:${Math.trunc(curTime % 60).toString().padStart(2, '0')}`}</p>
-                    {tracks.length ?
-                        <input
-                            className={styles["playback-bar"]}
-                            type="range"
-                            min={0}
-                            max={tracks.length ? Math.trunc(tracks[trackIndex].duration) : 0}
-                            step={1}
-                            onChange={handleSeek}
-                            value={Math.trunc(curTime)}
-                        /> :
-                        <div className={styles["decor-bars"]}>
-                            <div className={styles["bar-white"]}></div>
-                            <div className={styles["bar-grey"]}></div>
-                            <div className={styles["bar-white"]}></div>
-                            <div className={styles["bar-grey"]}></div>
-                            <div className={styles["bar-white"]}></div>
-                            <div className={styles["bar-grey"]}></div>
-                        </div>}
-                    <p className={`${styles["tracktime"]} ${styles["totaltime"]}`}>
-                        {totalTimeText}
-                    </p>
-                </div>
-                <PlayerControls handleBack={handleBack} handlePlayPause={handlePlayPause} handleForward={handleForward}
-                    isPaused={paused} isEmpty={!tracks.length}
-                />
-                <div className={styles["vol-container"]}>
-                    <span className={styles["vol-label"]}>Vol</span>
-                    <input
-                        className={styles["vol-slider"]}
-                        type="range"
-                        min={0}
-                        max={1}
-                        step={0.01}
-                        onChange={handleVolume}
-                        value={volume}
-                    />
                 </div>
             </div>
-            {/* <p>{curTime}</p>
+            {/* <p>{audioRef.current?.src}</p>
+            <p>{curTime}</p>
             <p>debug: volume: {volume}</p>
             <p>debug: trackIndex: {trackIndex}</p>
             <p>debug: tracks: {JSON.stringify(tracks, null, 2)}</p>

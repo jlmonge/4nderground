@@ -4,41 +4,71 @@
 $white: #FFFFFF;
 
 .nav {
+    position: sticky;
+    top: 0.5rem;
     display: flex;
-    padding: 0 clamp(0.5rem, 3vw, 2rem);
-    justify-content: space-between;
+    flex-direction: row;
+    gap: 1rem;
+    margin: 0.5rem 0.5rem 0;
+    padding: 0 0.5rem;
+    // justify-content: space-between;
     align-items: center;
-    // background-image: url("/mirrored-bgtop.svg");
-    // background-repeat: repeat-x;
-    // background-size: cover;
+    background-color: rgb(208 255 186 / 92%);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem #0000001F;
+    z-index: 1;
+    color: variables.$gg-text;
 
     &__item {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-end;
     }
+
+    &__links {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: flex-end;
+        line-height: 1;
+    }
+
+
 }
 
-.all-flow {
-    @include subnav;
-}
 
-.user-flow {
-    @include subnav;
-    padding-top: 1rem;
-}
 
 .logo {
     @include logo;
 
-    // &__text {
-    //     display: inline-block;
-    //     transform: scaleY(0.5);
-    //     text-transform: uppercase;
-    //     color: variables.$gg-text;
-    //     text-shadow: .5px .5px 1px black;
-    // }
+    &__container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        color: inherit;
+    }
+
+    &__caption {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    &__name {
+        display: inline-block;
+        font-size: 0.75em;
+        transform: scaleY(2);
+        text-transform: uppercase;
+        text-shadow: 0.5px 0.5px 1px black;
+    }
+
+    &__memo {
+        font-size: 0.75em;
+        color: #6E6E6E;
+        font-weight: 700;
+        text-shadow: white -2px 0px 2px, white 2px 0px 2px;
+    }
 }
 
 .nav-link {
@@ -47,18 +77,19 @@ $white: #FFFFFF;
     border: 3px solid transparent;
     flex-direction: row;
     align-items: center;
-    font-size: clamp(1.25em, 4vw, 2em);
+    font-size: 1em;
     text-transform: uppercase;
     color: inherit;
     text-shadow: 1px 1px 2px black;
+    transition: border 0.2s;
+
+    &:hover {
+        border-bottom: 3px solid #6E6E6E;
+    }
 }
 
 .nav-text {
     border: 3px solid transparent;
-
-    &:hover {
-        border-bottom: 3px solid $white;
-    }
 }
 
 .skip-to-content {
@@ -73,6 +104,22 @@ $white: #FFFFFF;
     &:focus,
     &:active {
         transform: translateY(0);
-        z-index: 1;
+        z-index: 2;
+    }
+}
+
+@media (min-width: 480px) {
+    .nav {
+        &__links {
+            flex-direction: row;
+            gap: 1rem;
+            align-items: center;
+            justify-content: flex-end;
+            line-height: 1.2;
+        }
+    }
+
+    .nav-link {
+        padding: 1em 0;
     }
 }

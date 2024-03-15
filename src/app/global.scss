@@ -5,25 +5,36 @@ html {
 }
 
 body {
-  // flex is used to keep footer at bottom of page even on pages where
-  // there isnt enough content to push the footer to the bottom
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-
   margin: 0;
   padding: 0;
-  height: 100%;
-  background-color: #D0FFBA;
+  background: linear-gradient(#a0ff75 15%, #e4ffd7 55%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   color: black;
+  // flex is used to keep footer at bottom of page even on pages where
+  // there isnt enough content to push the footer to the bottom
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif
 }
 
 main {
   // TODO: implement padding if needed on certain pages
   padding: 2rem clamp(0.5rem, 5%, 10rem);
-  animation: fadeInAnimation ease 3s;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
+  animation: 0.8s ease 1 100ms from-left backwards;
+}
+
+@keyframes from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-5%)
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInAnimation {
