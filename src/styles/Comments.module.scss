@@ -3,23 +3,22 @@
 .commentsection-container {
     display: flex;
     flex-direction: column;
-    padding: 0.75rem;
-    border-radius: 32px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.50) 22.67%, #B3F7BA 100%);
+    gap: 0.5rem;
+    max-width: fit-content;
 }
 
 .comments-heading {
-    font-weight: normal;
+    text-shadow: white -10px 0px 10px, white 10px 0px 10px;
 }
 
 .comments-container {
     display: flex;
     flex-direction: column;
-    padding: 0.5rem;
 }
 
 .mycomment {
     overflow-x: hidden;
+    width: clamp(10rem, 75vw, 42rem);
 }
 
 .mycomment-form {
@@ -29,6 +28,7 @@
     border: 1px solid gray;
     align-items: stretch;
     background-color: white;
+    border-radius: 0.25rem;
 
     &:focus-within {
         outline: 1px solid gray;
@@ -41,6 +41,7 @@
     padding: 0.25rem;
     margin-bottom: 1rem;
     font-family: inherit;
+    border-radius: 0.25rem;
 
     &:focus {
         outline: none;
@@ -63,6 +64,7 @@
 .mycomment-submit {
     width: auto;
     border: none;
+    border-radius: 0 0.25rem 0.25rem 0;
 
     &:hover:enabled {
         .mcs-text {
@@ -137,4 +139,10 @@
     position: absolute;
     white-space: nowrap;
     width: 1px;
+}
+
+@media screen and (min-width: 744px) {
+    .mycomment {
+        width: clamp(10rem, 75vw, 21rem);
+    }
 }

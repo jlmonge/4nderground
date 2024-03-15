@@ -4,14 +4,15 @@
 .player-page {
     font-size: 1em;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 2rem;
+    align-items: flex-start;
+    justify-content: center;
 }
 
 .player {
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
     user-select: none;
     background: linear-gradient(rgb(132 245 81), rgb(93 243 22));
     border-radius: 0.5em;
@@ -137,12 +138,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    top: 15%;
-    left: 40%;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 1;
 
     &__text {
-        border: 4px solid grey;
+        border: 1px solid grey;
         border-radius: 8px;
         background-color: rgb(255 255 255 / 50%);
         color: black;
@@ -412,4 +414,10 @@
     padding: 0;
     position: absolute;
     width: 1px;
+}
+
+@media screen and (min-width: 744px) {
+    .player-page {
+        flex-direction: row;
+    }
 }
