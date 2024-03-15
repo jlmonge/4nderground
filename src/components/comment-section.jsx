@@ -174,6 +174,8 @@ function AddComment({ onAddComment, trackId }) {
         } else {
             onAddComment(comment);
             setComment('');
+            setResponse('Comments on the demo track are not saved.');
+            setIsError(true);
         }
     };
 
@@ -317,7 +319,7 @@ export default function CommentSection({ trackId }) {
     if (trackId) {
         content = (
             <div className={styles["commentsection-container"]}>
-                <h2 className={styles["comments-heading"]}>{comments ? comments.length : 0} comments</h2>
+                <h2 className={styles["comments-heading"]}>{comments ? comments.length : 0} {comments?.length !== 1 ? 'comments' : 'comment'}</h2>
                 <div className={styles["comments-container"]}>
                     {user &&
                         <AddComment

@@ -65,39 +65,47 @@ export default function Report({ contentType, contentId = null, large = false })
     async function handleSubmit(e) {
         e.preventDefault();
 
-        setLoading(true);
         setResponse('');
         setIsError(false);
 
-        try {
-            if (!reason) throw Error('No reason');
-            if (!user) throw Error('No one is logged in');
-            const data = new FormData();
-            data.append('reportedid', contentId);
-            data.append('reporterid', user.id);
-            data.append('reason', reason);
-            data.append('type', contentType);
+        if (contentId !== 'DEMO') {
+            setLoading(true);
 
-            const res = await fetch('/api/report/add', {
-                method: 'POST',
-                body: data,
-            });
-            const resJson = await res.json();
-            setResponse(resJson.message);
+            try {
+                if (!reason) throw Error('No reason');
+                if (!user) throw Error('No one is logged in');
+                const data = new FormData();
+                data.append('reportedid', contentId);
+                data.append('reporterid', user.id);
+                data.append('reason', reason);
+                data.append('type', contentType);
 
-            if (!res.ok) {
+                const res = await fetch('/api/report/add', {
+                    method: 'POST',
+                    body: data,
+                });
+                const resJson = await res.json();
+                setResponse(resJson.message);
+
+                if (!res.ok) {
+                    setIsError(true);
+                } else {
+                    setIsReported(true);
+                }
+            } catch (e) {
+                console.log(e);
+                setResponse('Something bad happened.');
                 setIsError(true);
-            } else {
-                setIsReported(true);
-            }
-        } catch (e) {
-            console.log(e);
-            setResponse('Something bad happened.');
-            setIsError(true);
 
-        } finally {
-            setLoading(false);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            setResponse('You cannot report the demo track.');
+            setIsError(true);
+            setIsReported(true);
         }
+
     }
 
     function handleOpen() {

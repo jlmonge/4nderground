@@ -19,6 +19,7 @@
 .mycomment {
     overflow-x: hidden;
     width: clamp(10rem, 75vw, 42rem);
+    border-radius: 0.25rem;
 }
 
 .mycomment-form {
@@ -42,6 +43,7 @@
     margin-bottom: 1rem;
     font-family: inherit;
     border-radius: 0.25rem;
+    font-size: 1em;
 
     &:focus {
         outline: none;
